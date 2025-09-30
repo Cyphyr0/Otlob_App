@@ -1,5 +1,5 @@
 name: otlob_app
-description: A premium Flutter-based mobile application for Egypt's authentic local food scene.
+description: A Flutter-based mobile application for Egypt's authentic local food scene.
 publish_to: 'none'
 version: 1.0.0+1
 
@@ -11,70 +11,74 @@ dependencies:
   flutter:
     sdk: flutter
 
-  # State Management
-  flutter_riverpod: ^2.5.1
+  # State Management - Latest stable
+  flutter_riverpod: ^3.0.1
+  riverpod_annotation: ^3.0.1
+  async: ^2.13.0
 
-  # Networking
+  # Networking - Latest stable
   retrofit: ^4.7.1
   dio: ^5.9.0
   json_annotation: ^4.9.0
   dio_http_cache_lts: ^0.4.2
+  freezed_annotation: ^3.1.0
 
-  # Navigation
+  # Navigation - Latest stable
   go_router: ^16.2.4
   app_links: ^6.4.1
 
-  # Local Storage
+  # Local Storage - Latest stable
   shared_preferences: ^2.5.3
-  drift: ^2.28.1
+  drift: ^2.28.3
   sqlite3_flutter_libs: ^0.5.39
   path_provider: ^2.1.5
   path: ^1.9.1
   flutter_secure_storage: ^9.2.4
 
-  # Location
+  # Location - Latest stable
   geolocator: ^14.0.2
   geocoding: ^4.0.0
   permission_handler: ^12.0.1
 
-  # UI
+  # UI - Latest stable
   flutter_screenutil: ^5.9.3
   cached_network_image: ^3.4.1
   flutter_svg: ^2.0.10
   shimmer: ^3.0.0
   image_picker: ^1.2.0
 
-  # Internationalization
+  # Internationalization - Latest stable
   easy_localization: ^3.0.7
-
-  # Utilities
-  logger: ^2.6.1
   intl: ^0.20.2
+
+  # Utilities - Latest stable
+  logger: ^2.6.1
   uuid: ^4.5.1
   device_info_plus: ^12.1.0
   connectivity_plus: ^7.0.0
 
-  # Firebase
+  # Firebase - Latest stable
   firebase_core: ^4.1.1
   firebase_auth: ^6.1.0
   cloud_firestore: ^6.0.2
   firebase_storage: ^13.0.2
+  firebase_messaging: ^16.0.2
+  firebase_analytics: ^12.0.2
+  firebase_crashlytics: ^5.0.2
 
-  # Payment
+  # Payment - Latest stable
   flutter_paymob: ^1.0.5
   flutter_inappwebview: ^6.1.5
 
-  # Push Notifications
-  firebase_messaging: ^16.0.2
-
-  # Maps (UPDATED)
+  # Maps - Latest stable
   google_maps_flutter: ^2.9.0
+  mapbox_maps_flutter: ^2.11.0
 
-  # PDF Generation
+  # PDF Generation - Latest stable
   pdf: ^3.11.3
   printing: ^5.14.2
 
-  # Google Fonts
+  # Google Fonts - Latest stable
   google_fonts: ^6.2.0
 
   # Icons
@@ -84,16 +88,29 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  # Linting
+  # Linting - Latest stable
   flutter_lints: ^6.0.0
 
-  # Code Generation
+  # Code Generation - Latest compatible
   build_runner: ^2.8.0
   json_serializable: ^6.11.1
-  retrofit_generator: ^10.0.5
-  drift_dev: ^2.28.1
+  retrofit_generator: ^10.0.6
+  drift_dev: ^2.28.3
   freezed: ^3.2.3
-  freezed_annotation: ^3.1.0
+  riverpod_generator: ^3.0.1
+
+  # Testing - Latest stable
+  mockito: ^5.5.1
+  integration_test:
+    sdk: flutter
+
+# Dependency overrides to resolve conflicts
+dependency_overrides:
+  analyzer: ^8.2.0
+  meta: ^1.17.0
+  build: ^4.0.0
+  source_gen: ^4.0.1
+  test_api: ^0.7.7
 
 flutter:
   uses-material-design: true

@@ -50,6 +50,11 @@ The following core services have been implemented in `lib/core/services/`:
 *   **`persistent_provider.dart`:** A Riverpod provider for persisting the cart state using `shared_preferences`.
 *   **`profile_image_picker.dart`:** A service for picking images from the gallery.
 
+## 2025-10-01: Refactoring and Dependency Updates
+
+*   Refactored `lib/core/providers/persistent_provider.dart` to use the new `AsyncNotifier` API from Riverpod 3.0. This resolves previous compilation errors and aligns the project with the latest Riverpod best practices.
+*   Attempted to update all dependencies to their latest versions. Due to dependency conflicts, not all packages could be updated to the absolute latest. The dependencies have been updated to the latest compatible versions using `flutter pub upgrade`.
+
 ## Next Steps
 
 The project is now in a good state to start building features. The next logical steps are:

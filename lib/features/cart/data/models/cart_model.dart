@@ -4,7 +4,7 @@ part 'cart_model.freezed.dart';
 part 'cart_model.g.dart';
 
 @freezed
-class CartModel with _$CartModel {
+abstract class CartModel with _$CartModel {
   const factory CartModel({
     required List<CartItem> items,
     required double subtotal,
@@ -27,7 +27,7 @@ class CartModel with _$CartModel {
 }
 
 @freezed
-class CartItem with _$CartItem {
+abstract class CartItem with _$CartItem {
   const factory CartItem({
     required String id,
     required String name,
