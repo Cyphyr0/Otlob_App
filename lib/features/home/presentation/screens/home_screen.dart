@@ -4,8 +4,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shimmer/shimmer.dart';
 import 'dart:async';
-import '../../../core/providers.dart';
-import '../../domain/entities/restaurant.dart';
+import 'package:otlob_app/core/providers.dart';
+import 'package:otlob_app/features/home/domain/entities/restaurant.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -64,7 +64,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final favoritesNotifier = ref.watch(favoritesProvider.notifier);
     final restaurants = _filteredRestaurants;
     final hiddenGems = _hiddenGems;
     final localHeroes = _localHeroes;
@@ -285,7 +284,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               ),
               TextButton(
                 onPressed: () {
-                  // TODO: Navigate to full category
+                  // TODO: Navigate to full category - stub route to be added in main.dart
                 },
                 child: const Text('See All'),
               ),
@@ -318,7 +317,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         borderRadius: BorderRadius.circular(16.r),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: 0.1),
             blurRadius: 8,
             offset: const Offset(0, 4),
           ),

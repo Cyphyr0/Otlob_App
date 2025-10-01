@@ -1,4 +1,3 @@
-import 'package:otlob_app/core/errors/failures.dart';
 import 'package:otlob_app/features/auth/domain/entities/user.dart';
 
 abstract class AuthRepository {

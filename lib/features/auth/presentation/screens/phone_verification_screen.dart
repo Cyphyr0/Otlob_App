@@ -4,7 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:otlob_app/core/errors/failures.dart';
 import 'package:otlob_app/core/theme/app_theme.dart';
-import 'package:otlob_app/core/utils/shared_prefs_helper.dart';
 import 'package:otlob_app/features/auth/presentation/providers/auth_provider.dart';
 import 'package:otlob_app/features/auth/presentation/widgets/why_otlob_section.dart';
 
@@ -204,7 +203,7 @@ class _PhoneVerificationScreenState
                   'Enter the 6-digit code sent to +20 ${widget.phoneNumber}',
                   style: TextStyle(
                     fontSize: 16.sp,
-                    color: Colors.white.withOpacity(0.8),
+                    color: Colors.white.withValues(alpha: 0.8),
                   ),
                   textAlign: TextAlign.center,
                 ),
@@ -264,7 +263,7 @@ class _PhoneVerificationScreenState
                               : 'Resend in ${resendTime - _timerController.value.toInt()}s',
                           style: TextStyle(
                             fontSize: 16.sp,
-                            color: Colors.white.withOpacity(0.8),
+                            color: Colors.white.withValues(alpha: 0.8),
                           ),
                         );
                       },
@@ -278,7 +277,7 @@ class _PhoneVerificationScreenState
                           fontSize: 16.sp,
                           color: canResend
                               ? AppTheme.secondaryColor
-                              : Colors.white.withOpacity(0.5),
+                              : Colors.white.withValues(alpha: 0.5),
                           fontWeight: FontWeight.bold,
                         ),
                       ),

@@ -16,7 +16,10 @@ class WhyOtlobSection extends StatelessWidget {
         gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          colors: [AppTheme.primaryColor.withOpacity(0.1), Colors.transparent],
+          colors: [
+            AppTheme.primaryColor.withValues(alpha: 0.1),
+            Colors.transparent,
+          ],
         ),
       ),
       child: Column(
@@ -80,7 +83,7 @@ class WhyOtlobSection extends StatelessWidget {
         borderRadius: BorderRadius.circular(12.r),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: 0.1),
             blurRadius: 8.r,
             offset: Offset(0, 2.h),
           ),
@@ -92,7 +95,7 @@ class WhyOtlobSection extends StatelessWidget {
           Container(
             padding: EdgeInsets.all(8.w),
             decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
+              color: color.withValues(alpha: 0.1),
               shape: BoxShape.circle,
             ),
             child: Icon(icon, size: 24.sp, color: color),

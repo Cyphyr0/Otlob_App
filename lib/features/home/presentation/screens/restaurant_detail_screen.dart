@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../core/providers.dart';
-import '../../domain/entities/restaurant.dart';
+import 'package:otlob_app/core/providers.dart';
+import 'package:otlob_app/features/home/domain/entities/restaurant.dart';
 
 class RestaurantDetailScreen extends ConsumerWidget {
   final String id;
@@ -204,53 +204,47 @@ class RestaurantDetailScreen extends ConsumerWidget {
                                 ),
                               ),
                               SizedBox(height: 8.h),
-                              ...category['dishes']!
-                                  .map<Widget>(
-                                    (dish) => ListTile(
-                                      leading: Container(
-                                        width: 50.w,
-                                        height: 50.h,
-                                        decoration: BoxDecoration(
-                                          color: Colors.grey[300],
-                                          borderRadius: BorderRadius.circular(
-                                            8.r,
-                                          ),
-                                        ),
-                                        child: const Icon(
-                                          Icons.restaurant_menu,
-                                          color: Colors.grey,
-                                        ),
-                                      ),
-                                      title: Text(dish['name']),
-                                      subtitle: Text('\$${dish['price']}'),
-                                      trailing: ElevatedButton(
-                                        onPressed: () {
-                                          cartNotifier.addItem(
-                                            name: dish['name'],
-                                            price: dish['price'],
-                                            imageUrl: dish['imageUrl'],
-                                          );
-                                          ScaffoldMessenger.of(
-                                            context,
-                                          ).showSnackBar(
-                                            SnackBar(
-                                              content: Text(
-                                                '${dish['name']} added to cart',
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                        child: const Text('Add'),
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor: const Color(
-                                            0xFFE84545,
-                                          ),
-                                          foregroundColor: Colors.white,
-                                        ),
-                                      ),
+                              ...(category['dishes'] as List).map<Widget>(
+                                (dish) => ListTile(
+                                  leading: Container(
+                                    width: 50.w,
+                                    height: 50.h,
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey[300],
+                                      borderRadius: BorderRadius.circular(8.r),
                                     ),
-                                  )
-                                  .toList(),
+                                    child: const Icon(
+                                      Icons.restaurant_menu,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                  title: Text(dish['name']),
+                                  subtitle: Text('\$${dish['price']}'),
+                                  trailing: ElevatedButton(
+                                    onPressed: () {
+                                      cartNotifier.addItem(
+                                        name: dish['name'],
+                                        price: dish['price'],
+                                        imageUrl: dish['imageUrl'],
+                                      );
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        SnackBar(
+                                          content: Text(
+                                            '${dish['name']} added to cart',
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: const Color(0xFFE84545),
+                                      foregroundColor: Colors.white,
+                                    ),
+                                    child: const Text('Add'),
+                                  ),
+                                ),
+                              ),
                             ],
                           ),
                         ),

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../../core/theme/app_theme.dart';
-import '../../../../core/utils/shared_prefs_helper.dart';
+import 'package:otlob_app/core/theme/app_theme.dart';
+import 'package:otlob_app/core/utils/shared_prefs_helper.dart';
 
 class AuthScreen extends StatelessWidget {
   const AuthScreen({super.key});
@@ -33,7 +33,7 @@ class AuthScreen extends StatelessWidget {
                 'Please authenticate to continue',
                 style: TextStyle(
                   fontSize: 16.sp,
-                  color: Colors.white.withOpacity(0.8),
+                  color: Colors.white.withValues(alpha: 0.8),
                 ),
                 textAlign: TextAlign.center,
               ),

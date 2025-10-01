@@ -111,9 +111,9 @@ flutter:
     - assets/images/
     - assets/icons/
     - assets/translations/
+    - assets/fonts/tutano-cc/
 
   fonts:
     - family: TutanoCCV2
       fonts:
-        - asset: assets/fonts/tutano_cc_v2.ttf
-          weight: 700
+        - asset: assets/fonts/tutano-cc/tutano_cc_v2.ttf

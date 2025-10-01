@@ -6,7 +6,8 @@ import 'package:otlob_app/core/theme/app_theme.dart';
 import 'package:otlob_app/core/utils/shared_prefs_helper.dart';
 import 'package:otlob_app/features/auth/presentation/screens/auth_wrapper.dart';
 import 'package:otlob_app/features/auth/presentation/screens/phone_verification_screen.dart';
-import 'package:otlob_app/features/auth/presentation/providers/auth_provider.dart';
+import 'package:otlob_app/features/cart/presentation/screens/cart_screen.dart';
+import 'package:otlob_app/features/cart/presentation/screens/order_confirmation_screen.dart';
 import 'package:otlob_app/features/onboarding/presentation/screens/onboarding_screen.dart';
 import 'package:otlob_app/features/splash/presentation/screens/splash_screen.dart';
 import 'package:otlob_app/features/home/presentation/screens/home_screen.dart';
@@ -78,7 +79,7 @@ class MyApp extends ConsumerWidget {
         ),
         GoRoute(
           path: '/address',
-          builder: (context, state) => const Scaffold(
+          builder: (context, state) => Scaffold(
             body: Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -111,6 +112,24 @@ class MyApp extends ConsumerWidget {
           builder: (context, state) =>
               RestaurantDetailScreen(id: state.pathParameters['id']!),
         ),
+        GoRoute(
+          path: '/order-confirmation',
+          builder: (context, state) => const OrderConfirmationScreen(),
+        ),
+        GoRoute(
+          path: '/category',
+          builder: (context, state) => Scaffold(
+            appBar: AppBar(title: const Text('Category')),
+            body: const Center(child: Text('Category Screen Stub')),
+          ),
+        ),
+        GoRoute(
+          path: '/tracking',
+          builder: (context, state) => Scaffold(
+            appBar: AppBar(title: const Text('Order Tracking')),
+            body: const Center(child: Text('Tracking Screen Stub')),
+          ),
+        ),
         ShellRoute(
           builder: (context, state, child) {
             return ScaffoldWithNavBar(child: child);
@@ -142,17 +161,6 @@ class MyApp extends ConsumerWidget {
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
       routerConfig: router,
-    );
-  }
-}
-
-class CartScreen extends StatelessWidget {
-  const CartScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(child: Text('Cart Screen - Coming Soon')),
     );
   }
 }

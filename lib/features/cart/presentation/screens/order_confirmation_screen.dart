@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../core/providers.dart';
+import 'package:go_router/go_router.dart';
+import '../providers/cart_provider.dart';
 
 class OrderConfirmationScreen extends ConsumerWidget {
   const OrderConfirmationScreen({super.key});
@@ -33,7 +34,7 @@ class OrderConfirmationScreen extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Icon(Icons.check_circle, size: 80.sp, color: Colors.green),
+            Icon(Icons.check_circle, size: 80.sp, color: Colors.green),
             SizedBox(height: 16.h),
             Text(
               'Order Placed!',
@@ -49,7 +50,7 @@ class OrderConfirmationScreen extends ConsumerWidget {
               style: TextStyle(fontSize: 16.sp, color: Colors.grey[600]),
             ),
             SizedBox(height: 24.h),
-            const Text(
+            Text(
               'Order Summary',
               style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
             ),
@@ -93,7 +94,7 @@ class OrderConfirmationScreen extends ConsumerWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
+                Text(
                   'Total',
                   style: TextStyle(
                     fontSize: 18.sp,
@@ -102,7 +103,7 @@ class OrderConfirmationScreen extends ConsumerWidget {
                 ),
                 Text(
                   '\$${total.toStringAsFixed(2)}',
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 18.sp,
                     fontWeight: FontWeight.bold,
                   ),
@@ -110,7 +111,7 @@ class OrderConfirmationScreen extends ConsumerWidget {
               ],
             ),
             SizedBox(height: 24.h),
-            const Text(
+            Text(
               'Tracking',
               style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
             ),
@@ -123,16 +124,15 @@ class OrderConfirmationScreen extends ConsumerWidget {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {
-                  // TODO: Navigate to tracking screen
                   cartNotifier.clearCart();
-                  Navigator.pop(context);
+                  context.go('/tracking');
                 },
-                child: const Text('Track Order'),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFFE84545),
                   foregroundColor: Colors.white,
                   padding: EdgeInsets.symmetric(vertical: 16.h),
                 ),
+                child: const Text('Track Order'),
               ),
             ),
           ],

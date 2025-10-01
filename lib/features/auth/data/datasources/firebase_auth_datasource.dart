@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
+import 'package:logger/logger.dart';
 import 'package:otlob_app/features/auth/domain/entities/user.dart';
 
 class FirebaseAuthDataSource {
@@ -7,7 +8,7 @@ class FirebaseAuthDataSource {
   Future<void> sendOTP(String phoneNumber) async {
     // Mock implementation - simulate sending OTP
     await Future.delayed(const Duration(seconds: 1));
-    print('Mock OTP sent to $phoneNumber. Use code: 123456');
+    Logger().i('Mock OTP sent to $phoneNumber. Use code: 123456');
   }
 
   Future<User> verifyOTP(String otp, String phoneNumber) async {
@@ -28,7 +29,7 @@ class FirebaseAuthDataSource {
 
   Future<User> signInWithGoogle() async {
     // Stub - print log, return mock user
-    print(
+    Logger().i(
       'Google sign-in stubbed - would integrate with GoogleSignIn and Firebase',
     );
     await Future.delayed(const Duration(seconds: 1)); // Simulate network
@@ -43,7 +44,7 @@ class FirebaseAuthDataSource {
 
   Future<User> signInWithFacebook() async {
     // Stub - print log, return mock user
-    print(
+    Logger().i(
       'Facebook sign-in stubbed - would integrate with Facebook Auth and Firebase',
     );
     await Future.delayed(const Duration(seconds: 1));
@@ -58,7 +59,7 @@ class FirebaseAuthDataSource {
 
   Future<User> signInWithApple() async {
     // Stub - print log, return mock user
-    print(
+    Logger().i(
       'Apple sign-in stubbed - would integrate with SignInWithApple and Firebase',
     );
     await Future.delayed(const Duration(seconds: 1));
@@ -74,7 +75,7 @@ class FirebaseAuthDataSource {
   Future<void> logout() async {
     // Real Firebase logout
     await _auth.signOut();
-    print('User logged out');
+    Logger().i('User logged out');
   }
 
   User? getCurrentUser() {

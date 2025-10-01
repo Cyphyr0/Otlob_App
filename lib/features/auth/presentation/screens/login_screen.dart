@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 import 'package:otlob_app/core/errors/failures.dart';
 import 'package:otlob_app/core/theme/app_theme.dart';
 import 'package:otlob_app/features/auth/presentation/providers/auth_provider.dart';
-import 'package:otlob_app/features/auth/presentation/screens/phone_verification_screen.dart';
 import 'package:otlob_app/features/auth/presentation/widgets/why_otlob_section.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
@@ -191,17 +190,17 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       errorText: _errorText,
                       errorStyle: const TextStyle(color: Colors.red),
                       filled: true,
-                      fillColor: Colors.white.withOpacity(0.1),
+                      fillColor: Colors.white.withValues(alpha: 0.1),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12.r),
                         borderSide: BorderSide(
-                          color: Colors.white.withOpacity(0.3),
+                          color: Colors.white.withValues(alpha: 0.3),
                         ),
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12.r),
                         borderSide: BorderSide(
-                          color: Colors.white.withOpacity(0.3),
+                          color: Colors.white.withValues(alpha: 0.3),
                         ),
                       ),
                       focusedBorder: OutlineInputBorder(

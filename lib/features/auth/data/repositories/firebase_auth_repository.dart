@@ -1,3 +1,4 @@
+import 'package:logger/logger.dart';
 import 'package:otlob_app/core/errors/failures.dart';
 import 'package:otlob_app/features/auth/data/datasources/firebase_auth_datasource.dart';
 import 'package:otlob_app/features/auth/domain/entities/user.dart';
@@ -83,7 +84,7 @@ class FirebaseAuthRepository implements AuthRepository {
   Future<void> saveUser(User user) async {
     // Mock save - in real, use Firestore or Drift
     // For now, print to console
-    print('Mock saving user to local DB: ${user.name} (${user.email})');
+    Logger().i('Mock saving user to local DB: ${user.name} (${user.email})');
     // To avoid type conflict, skip actual DB insert for mock
   }
 }

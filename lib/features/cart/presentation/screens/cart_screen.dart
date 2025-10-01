@@ -2,17 +2,29 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import '../../../core/providers.dart';
-import '../../domain/entities/cart_item.dart';
+import 'package:otlob_app/features/cart/presentation/providers/cart_provider.dart';
 
-class CartScreen extends ConsumerWidget {
+class CartScreen extends ConsumerStatefulWidget {
   const CartScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<CartScreen> createState() => _CartScreenState();
+}
+
+class _CartScreenState extends ConsumerState<CartScreen> {
+  String? selectedPayment = 'cash';
+  final TextEditingController promoController = TextEditingController();
+
+  @override
+  void dispose() {
+    promoController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final cartState = ref.watch(cartProvider);
     final cartNotifier = ref.read(cartProvider.notifier);
-    final TextEditingController promoController = TextEditingController();
 
     if (cartState.isEmpty) {
       return Scaffold(
@@ -53,7 +65,6 @@ class CartScreen extends ConsumerWidget {
               SizedBox(height: 24.h),
               ElevatedButton(
                 onPressed: () => context.go('/home'),
-                child: const Text('Start Shopping'),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFFE84545),
                   foregroundColor: Colors.white,
@@ -62,14 +73,13 @@ class CartScreen extends ConsumerWidget {
                     vertical: 12.h,
                   ),
                 ),
+                child: const Text('Start Shopping'),
               ),
             ],
           ),
         ),
       );
     }
-
-    String? selectedPayment = 'cash';
 
     return Scaffold(
       appBar: AppBar(
@@ -169,7 +179,7 @@ class CartScreen extends ConsumerWidget {
                               icon: const Icon(Icons.close),
                               style: IconButton.styleFrom(
                                 backgroundColor: Colors.red[100],
-                                iconColor: Colors.red,
+                                foregroundColor: Colors.red,
                               ),
                             ),
                           ],
@@ -187,7 +197,7 @@ class CartScreen extends ConsumerWidget {
               color: Colors.white,
               boxShadow: [
                 BoxShadow(
-                  color: Colors.grey.withOpacity(0.1),
+                  color: Colors.grey.withValues(alpha: 0.1),
                   spreadRadius: 1,
                   blurRadius: 5,
                   offset: const Offset(0, -1),
@@ -278,11 +288,11 @@ class CartScreen extends ConsumerWidget {
                           }
                         }
                       },
-                      child: const Text('Apply'),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF2B3A67),
                         foregroundColor: Colors.white,
                       ),
+                      child: const Text('Apply'),
                     ),
                   ],
                 ),
@@ -302,24 +312,26 @@ class CartScreen extends ConsumerWidget {
                   'Payment Method',
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
-                RadioListTile<String>(
-                  title: const Text('Cash on Delivery'),
-                  value: 'cash',
-                  groupValue: selectedPayment,
-                  onChanged: (value) => selectedPayment = value!,
-                ),
-                RadioListTile<String>(
-                  title: const Text('Card'),
-                  value: 'card',
-                  groupValue: selectedPayment,
-                  onChanged: (value) => selectedPayment = value!,
+                RadioGroup<String>(
+                  value: selectedPayment,
+                  onValueChanged: (value) =>
+                      setState(() => selectedPayment = value),
+                  children: [
+                    ListTile(
+                      title: const Text('Cash on Delivery'),
+                      leading: const Radio<String>(value: 'cash'),
+                    ),
+                    ListTile(
+                      title: const Text('Card'),
+                      leading: const Radio<String>(value: 'card'),
+                    ),
+                  ],
                 ),
                 SizedBox(height: 24.h),
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () => context.go('/order-confirmation'),
-                    child: const Text('Place Order'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFFE84545),
                       foregroundColor: Colors.white,
@@ -328,6 +340,7 @@ class CartScreen extends ConsumerWidget {
                         borderRadius: BorderRadius.circular(12.r),
                       ),
                     ),
+                    child: const Text('Place Order'),
                   ),
                 ),
               ],

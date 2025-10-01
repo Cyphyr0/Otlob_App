@@ -51,7 +51,7 @@ class _SplashScreenState extends State<SplashScreen> {
               width: 120.w,
               height: 120.h,
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.1),
+                color: Colors.white.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(16.r),
               ),
               child: const Icon(
@@ -75,7 +75,7 @@ class _SplashScreenState extends State<SplashScreen> {
               'Discover Authentic Food',
               style: TextStyle(
                 fontSize: 16.sp,
-                color: Colors.white.withOpacity(0.8),
+                color: Colors.white.withValues(alpha: 0.8),
               ),
             ),
             SizedBox(height: 40.h),

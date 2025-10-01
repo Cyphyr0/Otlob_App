@@ -4,7 +4,10 @@ import 'package:otlob_app/features/auth/data/datasources/firebase_auth_datasourc
 import 'package:otlob_app/features/auth/data/repositories/firebase_auth_repository.dart';
 import 'package:otlob_app/features/auth/domain/repositories/auth_repository.dart';
 
-import '../features/cart/presentation/providers/cart_provider.dart';
+export '../features/cart/presentation/providers/cart_provider.dart';
+export '../features/favorites/presentation/providers/favorites_provider.dart';
+export '../features/home/presentation/providers/home_provider.dart';
+export '../features/auth/presentation/providers/auth_provider.dart';
 
 final appDatabaseProvider = Provider<AppDatabase>((ref) {
   return AppDatabase();
