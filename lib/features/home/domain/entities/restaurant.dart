@@ -11,6 +11,7 @@ class Restaurant {
   final double distance;
   final String address;
   final double priceLevel;
+  final bool isFavorite;
 
   const Restaurant({
     required this.id,
@@ -25,7 +26,40 @@ class Restaurant {
     required this.distance,
     required this.address,
     required this.priceLevel,
+    this.isFavorite = false,
   });
+
+  Restaurant copyWith({
+    String? id,
+    String? name,
+    double? rating,
+    String? imageUrl,
+    int? tawseyaCount,
+    String? cuisine,
+    String? description,
+    List<String>? menuCategories,
+    bool? isOpen,
+    double? distance,
+    String? address,
+    double? priceLevel,
+    bool? isFavorite,
+  }) {
+    return Restaurant(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      rating: rating ?? this.rating,
+      imageUrl: imageUrl ?? this.imageUrl,
+      tawseyaCount: tawseyaCount ?? this.tawseyaCount,
+      cuisine: cuisine ?? this.cuisine,
+      description: description ?? this.description,
+      menuCategories: menuCategories ?? this.menuCategories,
+      isOpen: isOpen ?? this.isOpen,
+      distance: distance ?? this.distance,
+      address: address ?? this.address,
+      priceLevel: priceLevel ?? this.priceLevel,
+      isFavorite: isFavorite ?? this.isFavorite,
+    );
+  }
 
   Map<String, dynamic> toJson() {
     return {
@@ -41,6 +75,7 @@ class Restaurant {
       'distance': distance,
       'address': address,
       'priceLevel': priceLevel,
+      'isFavorite': isFavorite,
     };
   }
 
@@ -58,6 +93,7 @@ class Restaurant {
       distance: (json['distance'] as num).toDouble(),
       address: json['address'] as String,
       priceLevel: (json['priceLevel'] as num).toDouble(),
+      isFavorite: json['isFavorite'] as bool? ?? false,
     );
   }
 }
