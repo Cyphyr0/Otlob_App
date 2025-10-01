@@ -4,6 +4,8 @@ import 'package:otlob_app/features/auth/data/datasources/firebase_auth_datasourc
 import 'package:otlob_app/features/auth/data/repositories/firebase_auth_repository.dart';
 import 'package:otlob_app/features/auth/domain/repositories/auth_repository.dart';
 
+import '../features/cart/presentation/providers/cart_provider.dart';
+
 final appDatabaseProvider = Provider<AppDatabase>((ref) {
   return AppDatabase();
 });

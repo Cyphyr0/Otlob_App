@@ -31,10 +31,55 @@ class RestaurantDetailScreen extends ConsumerWidget {
       ),
     );
 
+    final cartNotifier = ref.read(cartProvider.notifier);
     final favoritesNotifier = ref.read(favoritesProvider.notifier);
     final isFavorite = ref
         .watch(favoritesProvider)
         .any((r) => r.id == restaurant.id);
+
+    // Mock menu data
+    final mockMenu = [
+      {
+        'category': 'Appetizers',
+        'dishes': [
+          {
+            'name': 'Hummus',
+            'price': 5.0,
+            'imageUrl': 'assets/images/hummus.jpg',
+          },
+          {
+            'name': 'Falafel',
+            'price': 4.0,
+            'imageUrl': 'assets/images/falafel.jpg',
+          },
+        ],
+      },
+      {
+        'category': 'Main Courses',
+        'dishes': [
+          {
+            'name': 'Koshari',
+            'price': 8.0,
+            'imageUrl': 'assets/images/koshari.jpg',
+          },
+          {
+            'name': 'Shawarma',
+            'price': 7.0,
+            'imageUrl': 'assets/images/shawarma.jpg',
+          },
+        ],
+      },
+      {
+        'category': 'Desserts',
+        'dishes': [
+          {
+            'name': 'Kunafa',
+            'price': 6.0,
+            'imageUrl': 'assets/images/kunafa.jpg',
+          },
+        ],
+      },
+    ];
 
     return Scaffold(
       appBar: AppBar(
@@ -136,32 +181,81 @@ class RestaurantDetailScreen extends ConsumerWidget {
                       color: const Color(0xFF2B3A67),
                     ),
                   ),
-                  ...restaurant.menuCategories.map(
-                    (category) => ListTile(
-                      leading: const Icon(Icons.restaurant_menu),
-                      title: Text(category),
-                      trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-                      onTap: () {
-                        // TODO: Navigate to menu category
-                      },
-                    ),
-                  ),
-                  SizedBox(height: 24.h),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton.icon(
-                      onPressed: () => context.go('/cart'),
-                      icon: const Icon(Icons.shopping_cart),
-                      label: const Text('Add to Cart'),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFE84545),
-                        foregroundColor: Colors.white,
-                        padding: EdgeInsets.symmetric(vertical: 16.h),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12.r),
+                  SizedBox(height: 16.h),
+                  ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: mockMenu.length,
+                    itemBuilder: (context, categoryIndex) {
+                      final category = mockMenu[categoryIndex];
+                      return Card(
+                        margin: EdgeInsets.only(bottom: 16.h),
+                        child: Padding(
+                          padding: EdgeInsets.all(16.w),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                category['category'] as String,
+                                style: TextStyle(
+                                  fontSize: 18.sp,
+                                  fontWeight: FontWeight.bold,
+                                  color: const Color(0xFF2B3A67),
+                                ),
+                              ),
+                              SizedBox(height: 8.h),
+                              ...category['dishes']!
+                                  .map<Widget>(
+                                    (dish) => ListTile(
+                                      leading: Container(
+                                        width: 50.w,
+                                        height: 50.h,
+                                        decoration: BoxDecoration(
+                                          color: Colors.grey[300],
+                                          borderRadius: BorderRadius.circular(
+                                            8.r,
+                                          ),
+                                        ),
+                                        child: const Icon(
+                                          Icons.restaurant_menu,
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                      title: Text(dish['name']),
+                                      subtitle: Text('\$${dish['price']}'),
+                                      trailing: ElevatedButton(
+                                        onPressed: () {
+                                          cartNotifier.addItem(
+                                            name: dish['name'],
+                                            price: dish['price'],
+                                            imageUrl: dish['imageUrl'],
+                                          );
+                                          ScaffoldMessenger.of(
+                                            context,
+                                          ).showSnackBar(
+                                            SnackBar(
+                                              content: Text(
+                                                '${dish['name']} added to cart',
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                        child: const Text('Add'),
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: const Color(
+                                            0xFFE84545,
+                                          ),
+                                          foregroundColor: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                  .toList(),
+                            ],
+                          ),
                         ),
-                      ),
-                    ),
+                      );
+                    },
                   ),
                 ],
               ),
