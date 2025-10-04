@@ -193,9 +193,23 @@ class ScaffoldWithNavBar extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedIndex = ref.watch(navigationIndexProvider);
 
-    return Scaffold(
-      body: child,
-      bottomNavigationBar: NavigationBar(
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) async {
+        if (didPop) return;
+        
+        // If on home, exit app. Otherwise, go to home
+        if (selectedIndex == 0) {
+          // Let system handle exit
+          return;
+        } else {
+          ref.read(navigationIndexProvider.notifier).state = 0;
+          context.go('/home');
+        }
+      },
+      child: Scaffold(
+        body: child,
+        bottomNavigationBar: NavigationBar(
         destinations: const [
           NavigationDestination(
             icon: Icon(Icons.home_outlined),
@@ -236,6 +250,7 @@ class ScaffoldWithNavBar extends ConsumerWidget {
               break;
           }
         },
+      ),
       ),
     );
   }
