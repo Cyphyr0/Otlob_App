@@ -11,9 +11,9 @@ dependencies:
   flutter:
     sdk: flutter
 
-  # State Management - Latest stable
-  flutter_riverpod: ^2.4.9
-  riverpod_annotation: ^2.3.8
+  # State Management - Stable version 2.x for compatibility
+  flutter_riverpod: ^2.6.1
+  riverpod_annotation: ^2.6.1
   async: ^2.13.0
 
   # Networking - Latest stable
@@ -21,16 +21,16 @@ dependencies:
   dio: ^5.9.0
   json_annotation: ^4.8.1
   dio_http_cache_lts: ^0.4.2
-  freezed_annotation: ^2.4.1
+  freezed_annotation: ^2.4.4
 
   # Navigation - Latest stable
   go_router: ^16.2.4
   app_links: ^6.4.1
 
-  # Local Storage - Latest stable
+  # Local Storage - Compatible versions
   shared_preferences: ^2.5.3
-  drift: ^2.16.0
-  sqlite3_flutter_libs: ^0.5.18
+  drift: ^2.21.0
+  sqlite3_flutter_libs: ^0.5.40
   path_provider: ^2.1.5
   path: ^1.9.1
   flutter_secure_storage: ^9.2.4
@@ -91,13 +91,13 @@ dev_dependencies:
   # Linting - Latest stable
   flutter_lints: ^6.0.0
 
-  # Code Generation - Latest compatible
-  build_runner: ^2.4.8
-  json_serializable: ^6.5.4
-  retrofit_generator: ^8.1.2
-  drift_dev: ^2.16.0
-  freezed: ^2.4.5
-  riverpod_generator: ^2.3.8
+  # Code Generation - Compatible versions
+  build_runner: ^2.4.13
+  json_serializable: ^6.8.0
+  retrofit_generator: ^9.7.0
+  drift_dev: ^2.21.2
+  freezed: ^2.5.2
+  riverpod_generator: ^2.6.1
 
   # Testing - Latest stable
   integration_test:

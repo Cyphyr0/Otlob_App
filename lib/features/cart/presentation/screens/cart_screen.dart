@@ -313,19 +313,20 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
                 RadioGroup<String>(
-                  value: selectedPayment,
-                  onValueChanged: (value) =>
-                      setState(() => selectedPayment = value),
-                  children: [
-                    ListTile(
-                      title: const Text('Cash on Delivery'),
-                      leading: const Radio<String>(value: 'cash'),
-                    ),
-                    ListTile(
-                      title: const Text('Card'),
-                      leading: const Radio<String>(value: 'card'),
-                    ),
-                  ],
+                  groupValue: selectedPayment,
+                  onChanged: (value) => setState(() => selectedPayment = value),
+                  child: Column(
+                    children: [
+                      RadioListTile<String>(
+                        title: const Text('Cash on Delivery'),
+                        value: 'cash',
+                      ),
+                      RadioListTile<String>(
+                        title: const Text('Card'),
+                        value: 'card',
+                      ),
+                    ],
+                  ),
                 ),
                 SizedBox(height: 24.h),
                 SizedBox(

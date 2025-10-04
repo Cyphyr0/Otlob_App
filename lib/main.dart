@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:otlob_app/core/providers.dart';
 import 'package:otlob_app/core/theme/app_theme.dart';
@@ -156,11 +157,18 @@ class MyApp extends ConsumerWidget {
       ],
     );
 
-    return MaterialApp.router(
-      title: 'Otlob App',
-      theme: AppTheme.lightTheme,
-      darkTheme: AppTheme.darkTheme,
-      routerConfig: router,
+    return ScreenUtilInit(
+      designSize: const Size(375, 812), // iPhone X size as base
+      minTextAdapt: true,
+      splitScreenMode: true,
+      builder: (context, child) {
+        return MaterialApp.router(
+          title: 'Otlob App',
+          theme: AppTheme.lightTheme,
+          darkTheme: AppTheme.darkTheme,
+          routerConfig: router,
+        );
+      },
     );
   }
 }
