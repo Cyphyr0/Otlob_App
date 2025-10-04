@@ -50,3 +50,18 @@ android/app/google-services.json
 ios/Runner/GoogleService-Info.plist
 firebase.json
 .firebaserc
+
+# AI Assistant Rules (contains internal guidelines)
+.ai_rules.md
+AI_RULES.md
+
+# Environment variables
+.env
+.env.local
+.env.production
+.env.development
+
+# Secret keys
+*.key
+*.pem
+secrets/
