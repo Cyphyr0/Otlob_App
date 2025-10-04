@@ -7,12 +7,54 @@
 
 ## 📋 CRITICAL: READ THESE FILES FIRST
 
-Before making ANY code changes, you MUST read and understand:
+Before making ANY code changes, you MUST read and understand these documents IN ORDER:
 
-1. **`docs/brief.md`** - Full product vision, architecture, and requirements
-2. **`docs/CURRENT_STATUS.md`** - Current implementation status and what's working
-3. **This file** - Development plan and context
-4. Run **`flutter analyze`** - Verify code compiles with no errors
+### Phase 1: Understand the Product (Read First)
+1. **`docs/PRODUCT_REQUIREMENTS.md`** ⭐ COMPREHENSIVE PRD
+   - Complete functional requirements (FR1-FR16)
+   - Non-functional requirements (performance, security, accessibility)
+   - Epic & story breakdown with current status
+   - User persona ("Sara, the Urban Explorer")
+   - Success criteria and KPIs
+
+2. **`docs/brief.md`** - High-level product vision
+   - Problem statement and solution approach
+   - Target users and business goals
+   - MVP scope and post-MVP roadmap
+
+### Phase 2: Understand the Technical Implementation (Read Second)
+3. **`docs/FRONTEND_ARCHITECTURE.md`** ⭐ COMPLETE TECHNICAL GUIDE
+   - Clean Architecture layers explained
+   - State management patterns (Riverpod)
+   - Repository pattern for backend abstraction
+   - API integration with Dio
+   - Error handling strategy
+   - Testing strategy (unit, widget, integration)
+   - Developer coding rules and standards
+
+4. **`docs/UI_UX_SPECIFICATION.md`** ⭐ COMPLETE DESIGN GUIDE
+   - User flows with diagrams
+   - Wireframes for all key screens
+   - Design system (colors, typography, spacing)
+   - Component library
+   - Accessibility requirements (WCAG 2.1 AA)
+   - Animation patterns
+   - Performance optimization
+
+### Phase 3: Understand Current Status (Read Third)
+5. **`docs/CURRENT_STATUS.md`** - What's implemented vs what's pending
+   - Current feature implementation status
+   - Known issues and workarounds
+
+6. **This file (AI_AGENT_BRIEFING.md)** - Development context
+   - Step-by-step Firebase setup guide
+   - Code examples for replacing mocks
+   - Critical development rules
+   - Task checklists
+
+### Phase 4: Validate Everything (Do Before Coding)
+7. Run **`flutter analyze`** - Verify code compiles with no errors
+8. Review **`docs/SECURITY_IMPLEMENTATION.md`** - Security guidelines
 
 ---
 
@@ -306,7 +348,133 @@ lib/
 
 ---
 
-## 🚀 RECOMMENDED DEVELOPMENT APPROACH
+## � COMPREHENSIVE DOCUMENTATION GUIDE
+
+We have created **three comprehensive documents** that contain ALL the information from the previous Otlob project version, updated for our current implementation. These are your **primary reference materials**:
+
+### 1. PRODUCT_REQUIREMENTS.md (Your Product Bible)
+
+**What it contains:**
+- **Complete Functional Requirements (FR1-FR16)**: Every feature specified with current implementation status
+- **User Flows**: Detailed flows for order placement, favoriting, reordering, etc.
+- **Non-Functional Requirements**: Performance targets, security requirements, accessibility standards
+- **Epic & Story Breakdown**: All features organized into epics with completion status
+- **Success Metrics**: KPIs and how we measure success
+
+**When to use it:**
+- ✅ Before implementing ANY new feature (check requirements first)
+- ✅ When clarifying "what should this feature do?"
+- ✅ When prioritizing tasks (see epic status)
+- ✅ When writing user stories or tasks
+
+**Key sections for developers:**
+- Section 2: Functional Requirements (FR1-FR16) - Read for each feature you build
+- Section 7: Epic & Story Breakdown - See what's complete vs pending
+- Section 8: Success Criteria - Understand definition of done
+
+---
+
+### 2. FRONTEND_ARCHITECTURE.md (Your Technical Bible)
+
+**What it contains:**
+- **Complete Clean Architecture Guide**: Domain/Data/Presentation layers with examples
+- **State Management Patterns**: When to use AsyncNotifier vs StateNotifier vs Provider
+- **Repository Pattern**: How to abstract data sources for easy backend swapping
+- **Error Handling**: Failure types, exception handling, UI error display
+- **API Integration**: Dio setup, interceptors, request/response handling
+- **Testing Strategy**: Unit, widget, integration test examples
+- **Coding Standards**: Critical rules, pre-commit checklist, code review checklist
+
+**When to use it:**
+- ✅ Before creating ANY new feature (follow architecture patterns)
+- ✅ When confused about "where should this code go?"
+- ✅ When writing tests (see testing examples)
+- ✅ When integrating APIs (see Dio setup and error handling)
+- ✅ During code reviews (check against standards)
+
+**Key sections for developers:**
+- Section 4: Clean Architecture Layers - READ FIRST, understand entity vs model
+- Section 5: State Management with Riverpod - Copy these patterns
+- Section 6: Error Handling - Use these failure types
+- Section 7: API Integration with Dio - Copy this setup
+- Section 9: Testing Strategy - Use these templates
+- Section 11: Developer Guidelines - Critical coding rules
+
+---
+
+### 3. UI_UX_SPECIFICATION.md (Your Design Bible)
+
+**What it contains:**
+- **Complete User Flows**: Mermaid diagrams for every user journey
+- **Wireframes**: Layout for every key screen (Home, Restaurant Detail, Cart, etc.)
+- **Design System**: Colors, typography, spacing, border radius, elevation
+- **Component Library**: Restaurant Card, Buttons, Bottom Nav, AppBar specs
+- **Accessibility**: WCAG 2.1 AA requirements, touch targets, screen reader support
+- **Animation Guidelines**: Duration, curves, patterns for all interactions
+- **Performance Goals**: 60fps, < 3s startup, < 2s screen load
+
+**When to use it:**
+- ✅ Before building ANY UI component (check design system first)
+- ✅ When implementing animations (see animation patterns)
+- ✅ When styling (use defined colors, typography, spacing)
+- ✅ When implementing accessibility (check requirements)
+- ✅ When optimizing performance (see goals and strategies)
+
+**Key sections for developers:**
+- Section 3: User Flows - Understand complete user journeys
+- Section 4: Wireframes - See expected layouts
+- Section 6: Visual Design System - Use these exact values
+- Section 7: Accessibility - Meet these requirements
+- Section 9: Animation & Micro-interactions - Copy these patterns
+- Section 10: Performance Considerations - Follow these practices
+
+---
+
+### How These Documents Work Together
+
+**Example: Implementing "Add to Favorites" Feature**
+
+1. **Start with PRODUCT_REQUIREMENTS.md**
+   - Read FR11: Favorites System requirements
+   - Understand acceptance criteria
+   - Check current implementation status
+
+2. **Follow FRONTEND_ARCHITECTURE.md**
+   - See Section 4: Domain layer - Create `Favorite` entity
+   - See Section 5: State Management - Use StateNotifier pattern
+   - See Section 6: Error Handling - Handle network failures
+   - See Section 9: Testing - Write unit tests for repository
+
+3. **Implement UI with UI_UX_SPECIFICATION.md**
+   - See Section 3: Flow 3 (Favoriting & Tawseya) - Follow this flow
+   - See Section 6: Component Library - Use defined heart icon
+   - See Section 9: Animation - Use favorite toggle animation (300ms, elasticOut)
+   - See Section 7: Accessibility - Add semantic labels
+
+4. **Validate with AI_AGENT_BRIEFING.md (this file)**
+   - Check critical development rules
+   - Run flutter analyze
+   - Test on emulator
+   - Commit with clear message
+
+---
+
+### Document Update Policy
+
+These documents are **living documents** - they should be updated when:
+- ✅ New features are added (update PRODUCT_REQUIREMENTS.md)
+- ✅ Architecture patterns change (update FRONTEND_ARCHITECTURE.md)
+- ✅ Design system evolves (update UI_UX_SPECIFICATION.md)
+- ✅ Implementation status changes (update AI_AGENT_BRIEFING.md)
+
+**Version control:**
+- All updates should be committed to Git
+- Add entry to Change Log in each document
+- Update "Last Updated" date
+
+---
+
+## �🚀 RECOMMENDED DEVELOPMENT APPROACH
 
 ### Step 1: Understand the Codebase (DO THIS FIRST)
 
@@ -680,6 +848,74 @@ flutter pub upgrade --major-versions
 - [ ] Add push notifications
 - [ ] Performance optimization
 - [ ] Comprehensive testing
+
+---
+
+## 📖 QUICK REFERENCE: WHERE TO FIND WHAT
+
+When you need specific information, here's where to look:
+
+### Feature Requirements & Specifications
+| What You Need | Document | Section |
+|--------------|----------|---------|
+| "What should this feature do?" | `PRODUCT_REQUIREMENTS.md` | Section 2: Functional Requirements |
+| "What's the user flow?" | `UI_UX_SPECIFICATION.md` | Section 3: User Flows |
+| "Is this feature complete?" | `PRODUCT_REQUIREMENTS.md` | Section 7: Epic & Story Breakdown |
+| "What's the acceptance criteria?" | `PRODUCT_REQUIREMENTS.md` | Functional Requirements (FR1-FR16) |
+| "What's the MVP scope?" | `PRODUCT_REQUIREMENTS.md` | Section 6: MVP Scope |
+
+### Technical Implementation
+| What You Need | Document | Section |
+|--------------|----------|---------|
+| "Where should this code go?" | `FRONTEND_ARCHITECTURE.md` | Section 4: Clean Architecture Layers |
+| "How do I manage state?" | `FRONTEND_ARCHITECTURE.md` | Section 5: State Management |
+| "How do I call the API?" | `FRONTEND_ARCHITECTURE.md` | Section 7: API Integration |
+| "How do I handle errors?" | `FRONTEND_ARCHITECTURE.md` | Section 6: Error Handling |
+| "How do I write tests?" | `FRONTEND_ARCHITECTURE.md` | Section 10: Testing Strategy |
+| "What are the coding rules?" | `FRONTEND_ARCHITECTURE.md` | Section 11: Developer Guidelines |
+
+### UI/UX Implementation
+| What You Need | Document | Section |
+|--------------|----------|---------|
+| "What colors/fonts to use?" | `UI_UX_SPECIFICATION.md` | Section 6: Visual Design System |
+| "How should this screen look?" | `UI_UX_SPECIFICATION.md` | Section 4: Wireframes |
+| "What animation to use?" | `UI_UX_SPECIFICATION.md` | Section 9: Animation Guidelines |
+| "How do I make it accessible?" | `UI_UX_SPECIFICATION.md` | Section 7: Accessibility Requirements |
+| "What are the spacing rules?" | `UI_UX_SPECIFICATION.md` | Section 6: Spacing System |
+| "How do I optimize performance?" | `UI_UX_SPECIFICATION.md` | Section 10: Performance Considerations |
+
+### Current Status & Setup
+| What You Need | Document | Section |
+|--------------|----------|---------|
+| "What's already implemented?" | `CURRENT_STATUS.md` | Current Implementation Status |
+| "How do I setup Firebase?" | `AI_AGENT_BRIEFING.md` | Step 2: Firebase Setup |
+| "What are the critical rules?" | `AI_AGENT_BRIEFING.md` | Critical Development Rules |
+| "What's the development workflow?" | `AI_AGENT_BRIEFING.md` | Development Workflow |
+| "What are known issues?" | `AI_AGENT_BRIEFING.md` | Known Issues & Gotchas |
+
+### Example Workflows
+
+**"I need to implement the Tawseya feature"**
+1. Read `PRODUCT_REQUIREMENTS.md` → FR13: 'Tawseya' Recommendation System
+2. Read `UI_UX_SPECIFICATION.md` → Section 3: Flow 3 (Favoriting & Tawseya)
+3. Read `FRONTEND_ARCHITECTURE.md` → Section 5: State Management (for vote tracking)
+4. Read `UI_UX_SPECIFICATION.md` → Section 9: Animation (for celebratory animation)
+5. Implement following Clean Architecture pattern
+6. Test and commit
+
+**"I need to style a button"**
+1. Read `UI_UX_SPECIFICATION.md` → Section 6: Visual Design System
+2. Use `AppColors.secondary` for primary buttons
+3. Use `AppSpacing.md` for padding
+4. Use `medium` border radius (8dp)
+5. Add press animation (100ms scale down to 0.95)
+
+**"I need to handle an API error"**
+1. Read `FRONTEND_ARCHITECTURE.md` → Section 6: Error Handling
+2. Use `ServerFailure` for API errors
+3. Catch exceptions in repository
+4. Display error with `ErrorView` widget from core/widgets
+5. Show user-friendly message, not raw error
 
 ---
 
