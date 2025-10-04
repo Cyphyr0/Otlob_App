@@ -10,17 +10,26 @@ This index helps you quickly find the right documentation for your needs.
 
 If you're new to the project, read these documents in this order:
 
-1. **`brief.md`** - 5 min read
+**🎨 FOR DESIGNERS & UI DEVELOPERS (START HERE):**
+1. **`UI_UX_REDESIGN_BRIEF.md`** - 20 min read ⭐ **CRITICAL**
+   - Complete UI/UX redesign requirements
+   - Visual design system (colors, typography, spacing)
+   - Screen-by-screen redesign guide
+   - Animation and interaction patterns
+   - Component library specifications
+
+**FOR ALL DEVELOPERS:**
+2. **`brief.md`** - 5 min read
    - High-level project overview
    - Problem we're solving
    - Target users and business goals
 
-2. **`CURRENT_STATUS.md`** - 3 min read
+3. **`CURRENT_STATUS.md`** - 3 min read
    - What's implemented vs what's pending
    - Known issues
    - Next steps
 
-3. **`AI_AGENT_BRIEFING.md`** - 15 min read
+4. **`AI_AGENT_BRIEFING.md`** - 15 min read
    - Complete development context
    - Firebase setup guide
    - Critical development rules
@@ -87,15 +96,78 @@ If you're new to the project, read these documents in this order:
 
 ---
 
+#### `ADVANCED_ARCHITECTURE_PATTERNS.md` ⭐ **Advanced Patterns Reference**
+**When to Read:** When implementing complex features or patterns
+
+**What's Inside:**
+- ✅ Detailed Clean Architecture implementation with full code examples
+- ✅ 7+ Riverpod state management patterns (Provider, StateProvider, StateNotifier, FutureProvider, StreamProvider, Family, etc.)
+- ✅ Error handling with Either/Failure types
+- ✅ API client architecture with interceptors (Auth, Retry, Error)
+- ✅ Testing strategies with complete test examples
+- ✅ Component development standards
+- ✅ Performance optimization techniques
+
+**Best For:**
+- Implementing complex state management
+- Setting up API client with interceptors
+- Writing comprehensive tests
+- Understanding advanced patterns
+- Optimizing performance
+
+**Key Sections:**
+- Clean Architecture Implementation (3 layers explained)
+- Riverpod State Management Patterns (7 patterns)
+- Error Handling Patterns
+- API Client Architecture
+- Testing Strategies
+- Component Development Standards
+- Performance Optimization
+
+---
+
 ### For UI/UX Implementation
 
-#### `UI_UX_SPECIFICATION.md` ⭐ **Design Bible**
-**When to Read:** Before building ANY UI component or screen
+#### `UI_UX_REDESIGN_BRIEF.md` ⭐⭐⭐ **REDESIGN PRIORITY - READ FIRST**
+**When to Read:** BEFORE implementing ANY UI component
+
+**What's Inside:**
+- 🚨 **Critical notice:** Current UI needs complete redesign
+- ✅ Complete visual design system (Egyptian Sunset color palette)
+- ✅ Typography system (Poppins + Cairo fonts)
+- ✅ Spacing system (8-point grid)
+- ✅ Animation guidelines (durations, curves, patterns)
+- ✅ Screen-by-screen redesign guide (Splash, Onboarding, Home, Restaurant Detail, Cart, Checkout, Order Tracking)
+- ✅ Component library (buttons, cards, badges, inputs, bottom sheets)
+- ✅ Empty states & error handling UI
+- ✅ Accessibility requirements
+- ✅ Implementation checklist
+
+**Best For:**
+- Understanding design vision and priorities
+- Implementing visual design system
+- Redesigning screens from scratch
+- Creating beautiful, modern UI
+- Following Egyptian cultural design touches
+
+**Key Sections:**
+- Design Mission & Principles
+- Visual Design System (colors, typography, spacing, shadows)
+- Animation Guidelines
+- Screen-by-Screen Redesign Guide
+- Component Library
+- Accessibility Requirements
+- Implementation Checklist
+
+---
+
+#### `UI_UX_SPECIFICATION.md` ⭐ **Original Design Reference**
+**When to Read:** For reference on user flows and original wireframes
 
 **What's Inside:**
 - ✅ Complete user flows with Mermaid diagrams
-- ✅ Wireframes for all key screens
-- ✅ Complete design system (colors, typography, spacing, elevation)
+- ✅ Original wireframes for all key screens
+- ✅ Original design system (colors, typography, spacing, elevation)
 - ✅ Component library specifications
 - ✅ Accessibility requirements (WCAG 2.1 AA)
 - ✅ Animation guidelines (duration, curves, patterns)
@@ -103,10 +175,10 @@ If you're new to the project, read these documents in this order:
 
 **Best For:**
 - Understanding user journeys
-- Styling components consistently
-- Implementing animations
-- Meeting accessibility requirements
-- Optimizing performance
+- Reference for original design decisions
+- Animation patterns
+- Accessibility requirements
+- Performance considerations
 
 **Key Sections:**
 - Section 3: User Flows
