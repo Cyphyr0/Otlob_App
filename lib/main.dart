@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -14,9 +15,13 @@ import 'package:otlob_app/features/splash/presentation/screens/splash_screen.dar
 import 'package:otlob_app/features/home/presentation/screens/home_screen.dart';
 import 'package:otlob_app/features/favorites/presentation/screens/favorites_screen.dart';
 import 'package:otlob_app/features/home/presentation/screens/restaurant_detail_screen.dart';
+import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const ProviderScope(child: MyApp()));
 }
 
@@ -197,7 +202,7 @@ class ScaffoldWithNavBar extends ConsumerWidget {
       canPop: false,
       onPopInvokedWithResult: (didPop, result) async {
         if (didPop) return;
-        
+
         // If on home, exit app. Otherwise, go to home
         if (selectedIndex == 0) {
           // Let system handle exit
@@ -210,47 +215,47 @@ class ScaffoldWithNavBar extends ConsumerWidget {
       child: Scaffold(
         body: child,
         bottomNavigationBar: NavigationBar(
-        destinations: const [
-          NavigationDestination(
-            icon: Icon(Icons.home_outlined),
-            selectedIcon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.favorite_border),
-            selectedIcon: Icon(Icons.favorite),
-            label: 'Favorites',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.shopping_cart_outlined),
-            selectedIcon: Icon(Icons.shopping_cart),
-            label: 'Cart',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.person_outlined),
-            selectedIcon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-        ],
-        selectedIndex: selectedIndex,
-        onDestinationSelected: (int index) {
-          ref.read(navigationIndexProvider.notifier).state = index;
-          switch (index) {
-            case 0:
-              context.go('/home');
-              break;
-            case 1:
-              context.go('/favorites');
-              break;
-            case 2:
-              context.go('/cart');
-              break;
-            case 3:
-              context.go('/profile');
-              break;
-          }
-        },
-      ),
+          destinations: const [
+            NavigationDestination(
+              icon: Icon(Icons.home_outlined),
+              selectedIcon: Icon(Icons.home),
+              label: 'Home',
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.favorite_border),
+              selectedIcon: Icon(Icons.favorite),
+              label: 'Favorites',
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.shopping_cart_outlined),
+              selectedIcon: Icon(Icons.shopping_cart),
+              label: 'Cart',
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.person_outlined),
+              selectedIcon: Icon(Icons.person),
+              label: 'Profile',
+            ),
+          ],
+          selectedIndex: selectedIndex,
+          onDestinationSelected: (int index) {
+            ref.read(navigationIndexProvider.notifier).state = index;
+            switch (index) {
+              case 0:
+                context.go('/home');
+                break;
+              case 1:
+                context.go('/favorites');
+                break;
+              case 2:
+                context.go('/cart');
+                break;
+              case 3:
+                context.go('/profile');
+                break;
+            }
+          },
+        ),
       ),
     );
   }
