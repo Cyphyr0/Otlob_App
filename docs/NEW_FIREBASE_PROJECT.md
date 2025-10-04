@@ -16,6 +16,7 @@
 - **Package:** com.example.flutter_application_1
 - **App ID:** 1:450554002301:android:f6519685f1b9e7b11eea14
 - **SHA-1:** `EB:BB:D2:D9:E9:56:93:AE:61:68:12:EC:90:E0:A2:93:78:B5:41:BE`
+- **SHA-256:** `78:A3:8B:E3:44:0D:AB:C6:4A:4A:BE:18:18:5D:69:94:E9:76:6B:3D:7F:B4:31:4C:9C:B2:56:0E:3B:6C:9E:BF`
 
 ### iOS
 - **Bundle ID:** com.example.flutterApplication1
