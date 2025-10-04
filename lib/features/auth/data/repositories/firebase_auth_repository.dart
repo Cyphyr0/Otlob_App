@@ -63,6 +63,39 @@ class FirebaseAuthRepository implements AuthRepository {
   }
 
   @override
+  Future<User> signInAnonymously() async {
+    try {
+      final user = await _dataSource.signInAnonymously();
+      await saveUser(user);
+      return user;
+    } catch (e) {
+      throw AuthFailure(message: 'Anonymous sign-in failed: $e');
+    }
+  }
+
+  @override
+  Future<User> linkEmailPassword(String email, String password) async {
+    try {
+      final user = await _dataSource.linkEmailPassword(email, password);
+      await saveUser(user); // Update saved user data
+      return user;
+    } catch (e) {
+      throw AuthFailure(message: 'Account linking failed: $e');
+    }
+  }
+
+  @override
+  Future<User> linkPhone(String phoneNumber) async {
+    try {
+      final user = await _dataSource.linkPhone(phoneNumber);
+      await saveUser(user); // Update saved user data
+      return user;
+    } catch (e) {
+      throw AuthFailure(message: 'Phone linking failed: $e');
+    }
+  }
+
+  @override
   Future<void> logout() async {
     try {
       await _dataSource.logout();

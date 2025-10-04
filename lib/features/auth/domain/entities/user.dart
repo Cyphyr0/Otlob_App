@@ -5,6 +5,7 @@ class User {
   final String? phone;
   final DateTime createdAt;
   final bool isVerified;
+  final bool isAnonymous; // For guest/anonymous users
 
   const User({
     required this.id,
@@ -13,6 +14,7 @@ class User {
     this.phone,
     required this.createdAt,
     this.isVerified = false,
+    this.isAnonymous = false, // Default to false for regular users
   });
 
   User copyWith({
@@ -22,6 +24,7 @@ class User {
     String? phone,
     DateTime? createdAt,
     bool? isVerified,
+    bool? isAnonymous,
   }) {
     return User(
       id: id ?? this.id,
@@ -30,6 +33,7 @@ class User {
       phone: phone ?? this.phone,
       createdAt: createdAt ?? this.createdAt,
       isVerified: isVerified ?? this.isVerified,
+      isAnonymous: isAnonymous ?? this.isAnonymous,
     );
   }
 
@@ -41,6 +45,7 @@ class User {
       'phone': phone,
       'createdAt': createdAt.toIso8601String(),
       'isVerified': isVerified,
+      'isAnonymous': isAnonymous,
     };
   }
 
@@ -52,6 +57,7 @@ class User {
       phone: json['phone'] as String?,
       createdAt: DateTime.parse(json['createdAt'] as String),
       isVerified: json['isVerified'] as bool? ?? false,
+      isAnonymous: json['isAnonymous'] as bool? ?? false,
     );
   }
 }
