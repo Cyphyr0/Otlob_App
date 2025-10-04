@@ -113,62 +113,68 @@ class AuthStateNotifier extends AsyncNotifier<User?> {
     }
   }
 
-  Future<void> signInWithApple() async {
-    state = const AsyncValue.loading();
-    try {
-      debugPrint('Apple sign-in stubbed');
-      final user = User(
-        id: 'apple_mock_id',
-        email: 'apple@example.com',
-        name: 'Apple User',
-        createdAt: DateTime.now(),
-      );
-      await SharedPrefsHelper.setAuthenticated(true);
-      state = AsyncValue.data(user);
-    } catch (e, st) {
-      state = AsyncValue.error(e, st);
-    }
-  }
+  // DISABLED: Apple Sign-in - Not implemented for now
+  // Future<void> signInWithApple() async {
+  //   state = const AsyncValue.loading();
+  //   try {
+  //     debugPrint('Apple sign-in stubbed');
+  //     final user = User(
+  //       id: 'apple_mock_id',
+  //       email: 'apple@example.com',
+  //       name: 'Apple User',
+  //       createdAt: DateTime.now(),
+  //     );
+  //     await SharedPrefsHelper.setAuthenticated(true);
+  //     state = AsyncValue.data(user);
+  //   } catch (e, st) {
+  //     state = AsyncValue.error(e, st);
+  //   }
+  // }
 
-  // Anonymous sign-in for guest access
-  Future<void> signInAnonymously() async {
-    state = const AsyncValue.loading();
-    try {
-      final repository = ref.read(authRepositoryProvider);
-      final user = await repository.signInAnonymously();
-      await SharedPrefsHelper.setAuthenticated(true);
-      state = AsyncValue.data(user);
-      debugPrint('Anonymous sign-in successful - user is now browsing as guest');
-    } catch (e, st) {
-      state = AsyncValue.error(e, st);
-    }
-  }
+  // DISABLED: Anonymous sign-in - Guest mode not needed right now
+  // If you want to enable guest browsing later, uncomment these methods
 
-  // Link anonymous account to email/password
-  Future<void> linkAccountWithEmail(String email, String password) async {
-    state = const AsyncValue.loading();
-    try {
-      final repository = ref.read(authRepositoryProvider);
-      final user = await repository.linkEmailPassword(email, password);
-      state = AsyncValue.data(user);
-      debugPrint('Anonymous account linked to email: $email');
-    } catch (e, st) {
-      state = AsyncValue.error(e, st);
-    }
-  }
+  // // Anonymous sign-in for guest access
+  // Future<void> signInAnonymously() async {
+  //   state = const AsyncValue.loading();
+  //   try {
+  //     final repository = ref.read(authRepositoryProvider);
+  //     final user = await repository.signInAnonymously();
+  //     await SharedPrefsHelper.setAuthenticated(true);
+  //     state = AsyncValue.data(user);
+  //     debugPrint(
+  //       'Anonymous sign-in successful - user is now browsing as guest',
+  //     );
+  //   } catch (e, st) {
+  //     state = AsyncValue.error(e, st);
+  //   }
+  // }
 
-  // Link anonymous account to phone number
-  Future<void> linkAccountWithPhone(String phoneNumber) async {
-    state = const AsyncValue.loading();
-    try {
-      final repository = ref.read(authRepositoryProvider);
-      final user = await repository.linkPhone(phoneNumber);
-      state = AsyncValue.data(user);
-      debugPrint('Anonymous account linked to phone: $phoneNumber');
-    } catch (e, st) {
-      state = AsyncValue.error(e, st);
-    }
-  }
+  // // Link anonymous account to email/password
+  // Future<void> linkAccountWithEmail(String email, String password) async {
+  //   state = const AsyncValue.loading();
+  //   try {
+  //     final repository = ref.read(authRepositoryProvider);
+  //     final user = await repository.linkEmailPassword(email, password);
+  //     state = AsyncValue.data(user);
+  //     debugPrint('Anonymous account linked to email: $email');
+  //   } catch (e, st) {
+  //     state = AsyncValue.error(e, st);
+  //   }
+  // }
+
+  // // Link anonymous account to phone number
+  // Future<void> linkAccountWithPhone(String phoneNumber) async {
+  //   state = const AsyncValue.loading();
+  //   try {
+  //     final repository = ref.read(authRepositoryProvider);
+  //     final user = await repository.linkPhone(phoneNumber);
+  //     state = AsyncValue.data(user);
+  //     debugPrint('Anonymous account linked to phone: $phoneNumber');
+  //   } catch (e, st) {
+  //     state = AsyncValue.error(e, st);
+  //   }
+  // }
 }
 
 // Providers

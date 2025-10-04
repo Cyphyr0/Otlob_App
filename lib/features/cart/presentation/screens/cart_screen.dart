@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:otlob_app/core/utils/shared_prefs_helper.dart';
 import 'package:otlob_app/features/cart/presentation/providers/cart_provider.dart';
 
 class CartScreen extends ConsumerStatefulWidget {
@@ -332,7 +333,47 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: () => context.go('/order-confirmation'),
+                    onPressed: () async {
+                      // Check if user is authenticated
+                      final isAuthenticated =
+                          await SharedPrefsHelper.isAuthenticated();
+
+                      if (!isAuthenticated) {
+                        // Guest user - show sign in dialog
+                        if (context.mounted) {
+                          showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              title: const Text('Sign In Required'),
+                              content: const Text(
+                                'Please sign in to place your order and complete checkout.',
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Navigator.pop(context),
+                                  child: const Text('Cancel'),
+                                ),
+                                ElevatedButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                    context.go('/login');
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: const Color(0xFFE84545),
+                                  ),
+                                  child: const Text('Sign In'),
+                                ),
+                              ],
+                            ),
+                          );
+                        }
+                      } else {
+                        // User is authenticated - proceed to checkout
+                        if (context.mounted) {
+                          context.go('/order-confirmation');
+                        }
+                      }
+                    },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFFE84545),
                       foregroundColor: Colors.white,
