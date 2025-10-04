@@ -51,6 +51,12 @@ ios/Runner/GoogleService-Info.plist
 firebase.json
 .firebaserc
 
+# Keystore files (CRITICAL - Contains signing keys!)
+android/key.properties
+android/app/keystore/
+*.keystore
+*.jks
+
 # AI Assistant Rules (contains internal guidelines)
 .ai_rules.md
 AI_RULES.md
