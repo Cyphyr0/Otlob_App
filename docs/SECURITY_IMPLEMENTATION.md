@@ -1,103 +1,305 @@
-# 🛡️ Security & Rules Implementation Summary
+# � Security Guidelines - Otlob Project
 
-**Date:** October 4, 2025  
-**Status:** ✅ Comprehensive protection enabled
-
----
-
-## ✅ What Was Implemented
-
-### 1. Enhanced .gitignore Protection
-Added comprehensive ignore patterns:
-```
-# Firebase sensitive files
-lib/firebase_options.dart
-android/app/google-services.json
-ios/Runner/GoogleService-Info.plist
-firebase.json
-.firebaserc
-
-# AI Assistant Rules
-.ai_rules.md
-AI_RULES.md
-
-# Environment variables
-.env*
-
-# Secret keys
-*.key
-*.pem
-secrets/
-```
-
-### 2. AI Assistant Rules File (`.ai_rules.md`)
-**Location:** Project root (gitignored)  
-**Purpose:** Comprehensive guidelines for AI assistants
-
-**Includes:**
-- 🚨 26 Critical Security Rules
-- 🏗️ Code Architecture Guidelines
-- 🔒 Firebase Security Best Practices
-- 📱 Flutter Development Standards
-- 🧪 Testing Requirements
-- 📦 Dependency Management
-- 🚀 Deployment Checklists
-- 📝 Git Workflow Standards
-- 🐛 Debugging Protocols
-- 📞 Emergency Procedures
-
-**Key Rules:**
-- **Rule 1:** NEVER commit API keys
-- **Rule 2:** NEVER expose keys in documentation
-- **Rule 3:** Verify .gitignore before commits
-- **Rule 4:** Rotate keys if exposed
-- **Rule 8:** Always restrict Firebase API keys
-- **Rule 22:** Pre-push checklist
-
-### 3. Git Pre-Commit Hooks
-**Location:** `.git/hooks/`
-
-**Files Created:**
-- `pre-commit` (Bash/Unix)
-- `pre-commit.ps1` (PowerShell/Windows)
-- `README.md` (Setup instructions)
-
-**What the Hook Does:**
-✅ Scans for Firebase API key patterns (`AIzaSy...`)  
-✅ Blocks commits of `firebase_options.dart`  
-✅ Blocks commits of `google-services.json`  
-✅ Blocks commits of `.env` files  
-✅ Detects `API_KEY`, `SECRET_KEY` patterns  
-✅ Provides helpful error messages  
-
-**Example Output:**
-```
-🔍 Checking for sensitive files...
-❌ ERROR: Sensitive content detected in test.dart
-   Pattern: AIzaSy[A-Za-z0-9_-]{33}
-
-🚨 COMMIT BLOCKED: This file contains sensitive information!
-```
+**Project:** Otlob Food Discovery App  
+**Last Updated:** October 4, 2025  
+**Status:** Active Development
 
 ---
 
-## 🔍 Verification
+## 🎯 Purpose
 
-### Check 1: No API Keys in Repository
-```powershell
-git ls-files | ForEach-Object { 
-  Select-String -Path $_ -Pattern "AIzaSy" 
+This document provides security guidelines for developers and AI agents working on the Otlob project. Follow these rules to prevent credential leaks and maintain secure development practices.
+
+---
+
+## 🚨 CRITICAL: Never Commit These Files
+
+### Firebase & API Keys
+```
+lib/firebase_options.dart          # Contains Firebase API keys
+android/app/google-services.json   # Android Firebase config
+ios/Runner/GoogleService-Info.plist # iOS Firebase config
+.env                                # Environment variables
+```
+
+### Keystore & Certificates
+```
+android/app/keystore/              # Android signing keys
+android/key.properties             # Keystore passwords
+*.jks, *.keystore                  # Any keystore files
+*.pem, *.p12                       # Certificate files
+```
+
+### Sensitive Configuration
+```
+firebase.json                      # Firebase project config
+.firebaserc                        # Firebase project IDs
+secrets/                           # Any secrets directory
+```
+
+**These files are in `.gitignore` - DO NOT remove them from there!**
+
+---
+
+## ✅ Current Project Security Status
+
+### Protected Items
+- ✅ Firebase API keys (in `firebase_options.dart` - gitignored)
+- ✅ Google Services JSON (Android config - gitignored)
+- ✅ Keystore files (signing keys - gitignored)
+- ✅ SHA-1 fingerprint (documented but not committed)
+- ✅ Keystore passwords (in `key.properties` - gitignored)
+
+### Active Protection
+- ✅ `.gitignore` configured with all sensitive patterns
+- ✅ Git pre-commit hook scanning for API keys
+- ✅ Firebase Console has restricted API keys (domain/package restrictions)
+
+### Firebase Project Details (Reference Only)
+- **Project ID:** otlob-6e081
+- **Project Number:** 450554002301
+- **SHA-1:** `7F:92:17:18:4F:49:76:F9:FF:C6:5C:60:A6:B4:5B:2B:DD:BC:A5:EB`
+- **Support Email:** ahmedelasmy97@gmail.com (temporary)
+
+*These are project identifiers, not secrets - safe to document*
+
+---
+
+## 📋 Security Checklist for Development
+
+### Before Every Commit
+```bash
+# 1. Check what's staged
+git status
+
+# 2. Review changes
+git diff --cached
+
+# 3. Verify no sensitive files
+git ls-files --stage | grep -E "(firebase_options|google-services|\.env|key\.properties)"
+
+# 4. Run analyzer
+flutter analyze
+
+# 5. Commit with clear message
+git commit -m "feat: Add restaurant filtering"
+```
+
+### When Setting Up Firebase
+1. Run `flutterfire configure` - generates `firebase_options.dart`
+2. **VERIFY** it's in `.gitignore` before ANY commit
+3. Download `google-services.json` to `android/app/`
+4. **VERIFY** it's gitignored
+5. Test app works
+6. **NEVER** commit these files
+
+### When Working with Keystores
+1. Keep keystores in `android/app/keystore/` directory
+2. Keep passwords in `android/key.properties`
+3. **VERIFY** both are in `.gitignore`
+4. Document keystore alias/password in team docs (not in code)
+
+---
+
+## �️ Firebase Security Rules
+
+### Firestore Rules (Current - Test Mode, Expires Nov 4, 2025)
+```javascript
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if request.time < timestamp.date(2025, 11, 4);
+    }
+  }
 }
-# Result: No matches ✅
 ```
 
-### Check 2: Sensitive Files Ignored
-```powershell
-git check-ignore -v lib/firebase_options.dart
-# Result: .gitignore:48:lib/firebase_options.dart ✅
+**⚠️ ACTION REQUIRED:** Update to production rules before Nov 4, 2025
+
+### Firestore Rules (Production - TO BE IMPLEMENTED)
+```javascript
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Restaurants - Public read, Admin write
+    match /restaurants/{restaurantId} {
+      allow read: if true;
+      allow write: if request.auth != null && isAdmin();
+    }
+    
+    // Users - Owner access only
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // Orders - Owner and restaurant access
+    match /orders/{orderId} {
+      allow read: if request.auth != null && 
+        (request.auth.uid == resource.data.userId || 
+         request.auth.uid == resource.data.restaurantOwnerId);
+      allow create: if request.auth != null;
+      allow update: if request.auth != null && 
+        request.auth.uid == resource.data.restaurantOwnerId;
+    }
+    
+    // Reviews - Authenticated users can create
+    match /reviews/{reviewId} {
+      allow read: if true;
+      allow create: if request.auth != null;
+      allow update, delete: if request.auth != null && 
+        request.auth.uid == resource.data.userId;
+    }
+    
+    // Helper functions
+    function isAdmin() {
+      return request.auth.token.admin == true;
+    }
+  }
+}
 ```
 
-### Check 3: Rules File Protected
+### Storage Rules (TO BE IMPLEMENTED)
+```javascript
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Restaurant images - Public read, Admin write
+    match /restaurants/{restaurantId}/{imageId} {
+      allow read: if true;
+      allow write: if request.auth != null && isAdmin();
+    }
+    
+    // User avatars - Owner write, Public read
+    match /users/{userId}/avatar {
+      allow read: if true;
+      allow write: if request.auth != null && request.auth.uid == userId;
+    }
+  }
+}
+```
+
+---
+
+## 🔐 API Key Restrictions (Already Applied)
+
+### Firebase API Key
+**Current Settings in Console:**
+- ✅ HTTP referrers: `localhost:*`, `otlob.app/*` (when deployed)
+- ✅ Android apps: Package `com.otlob.app`, SHA-1 `7F:92:17:18...`
+- ✅ iOS apps: Bundle ID `com.otlob.app`
+
+### Google Sign-In OAuth
+**Current Settings:**
+- ✅ Authorized domains: `localhost`, Firebase hosting domain
+- ✅ Support email: ahmedelasmy97@gmail.com
+- ⏳ TODO: Update to getotlob@gmail.com before production
+
+---
+
+## 🚨 Emergency: If Keys Are Leaked
+
+### Immediate Actions
+1. **Stay calm** - Don't force push without backup
+2. **Rotate keys immediately:**
+   - Go to Firebase Console → Settings → General
+   - Delete compromised API key
+   - Create new API key with restrictions
+3. **Remove from history** (if recently committed):
+   ```bash
+   git rm --cached lib/firebase_options.dart
+   git commit -m "security: Remove accidentally committed credentials"
+   git push
+   ```
+4. **Monitor usage** in Firebase Console for 24-48 hours
+5. **Document incident** in team chat
+
+### Key Rotation Steps
+```bash
+# 1. Backup current config
+cp lib/firebase_options.dart lib/firebase_options.dart.backup
+
+# 2. Delete compromised keys in Firebase Console
+
+# 3. Regenerate configuration
+flutterfire configure
+
+# 4. Test locally
+flutter run
+
+# 5. If working, deploy
+git add lib/firebase_options.dart  # Only if it's gitignored!
+```
+
+---
+
+## 👥 For AI Agents
+
+### When Making Code Changes
+- **NEVER** include actual API keys in code examples
+- Use placeholders like `YOUR_API_KEY_HERE`
+- If you see an API key in code, flag it immediately
+- Always verify `.gitignore` includes sensitive files
+
+### When Creating Documentation
+- Document configuration **steps**, not actual keys
+- Use placeholders for sensitive values
+- Link to official Firebase docs for setup
+- Don't include `firebase_options.dart` content in docs
+
+### When Debugging Authentication
+- Check Firebase Console logs, not API keys
+- Verify package name matches Firebase config
+- Verify SHA-1 fingerprint is in Firebase Console
+- Test with `flutter run --verbose` for detailed logs
+
+---
+
+## � References
+
+### Firebase Security
+- [Security Rules Guide](https://firebase.google.com/docs/rules)
+- [API Key Restrictions](https://cloud.google.com/docs/authentication/api-keys)
+- [Authentication Best Practices](https://firebase.google.com/docs/auth/security)
+
+### Flutter Security
+- [Security Codelab](https://codelabs.developers.google.com/codelabs/flutter-security)
+- [Package Security](https://dart.dev/tools/pub/security-advisories)
+
+### Project Docs
+- `docs/AI_AGENT_BRIEFING.md` - Full development context
+- `docs/FIREBASE_SETUP_GUIDE.md` - Setup instructions
+- `.gitignore` - Protected files list
+
+---
+
+## ✅ Security Checklist Summary
+
+**Before Committing:**
+- [ ] Run `git status` and review files
+- [ ] Check no `firebase_options.dart` in staged files
+- [ ] Check no `google-services.json` in staged files
+- [ ] Check no `.env` or keystore files in staged files
+- [ ] Run `flutter analyze` with no errors
+- [ ] Commit message describes changes clearly
+
+**When Implementing Auth:**
+- [ ] Firebase API keys restricted in Console
+- [ ] SHA-1 fingerprint added to Firebase
+- [ ] Test mode expiry date noted (Nov 4, 2025)
+- [ ] Production rules ready for deployment
+
+**Monthly Security Review:**
+- [ ] Verify all keys still restricted
+- [ ] Check Firebase usage logs for anomalies
+- [ ] Update Firestore rules if needed
+- [ ] Rotate keys if suspicious activity
+
+---
+
+**Status:** 🛡️ Secure - All protections active  
+**Next Action:** Update Firestore rules before Nov 4, 2025
 ```powershell
 git check-ignore -v .ai_rules.md
 # Result: .gitignore:54:.ai_rules.md ✅
