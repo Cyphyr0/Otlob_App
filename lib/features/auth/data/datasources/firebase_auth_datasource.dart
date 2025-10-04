@@ -57,29 +57,31 @@ class FirebaseAuthDataSource {
     );
   }
 
-  Future<User> signInWithApple() async {
-    // Stub - print log, return mock user
-    Logger().i(
-      'Apple sign-in stubbed - would integrate with SignInWithApple and Firebase',
-    );
-    await Future.delayed(const Duration(seconds: 1));
-    return User(
-      id: 'apple_mock_${DateTime.now().millisecondsSinceEpoch}',
-      email: 'user@apple.com',
-      name: 'Apple User',
-      createdAt: DateTime.now(),
-      isVerified: true,
-    );
-  }
+  // DISABLED: Apple Sign-in - Not implemented for now
+  // Future<User> signInWithApple() async {
+  //   Logger().i(
+  //     'Apple sign-in stubbed - would integrate with SignInWithApple and Firebase',
+  //   );
+  //   await Future.delayed(const Duration(seconds: 1));
+  //   return User(
+  //     id: 'apple_mock_${DateTime.now().millisecondsSinceEpoch}',
+  //     email: 'user@apple.com',
+  //     name: 'Apple User',
+  //     createdAt: DateTime.now(),
+  //     isVerified: true,
+  //   );
+  // }
 
+  // DISABLED: Anonymous sign-in - Guest mode not needed right now
+  /* 
   /// Sign in anonymously - allows guest access
   Future<User> signInAnonymously() async {
     try {
       final credential = await _auth.signInAnonymously();
       final firebaseUser = credential.user!;
-      
+
       Logger().i('Anonymous sign-in successful: ${firebaseUser.uid}');
-      
+
       return User(
         id: firebaseUser.uid,
         email: '', // No email for anonymous users
@@ -101,19 +103,19 @@ class FirebaseAuthDataSource {
       if (currentUser == null || !currentUser.isAnonymous) {
         throw Exception('No anonymous user to link or user is not anonymous');
       }
-      
+
       // Create email/password credential
       final credential = firebase_auth.EmailAuthProvider.credential(
         email: email,
         password: password,
       );
-      
+
       // Link the anonymous account to the email/password credential
       final linkedCredential = await currentUser.linkWithCredential(credential);
       final linkedUser = linkedCredential.user!;
-      
+
       Logger().i('Account linked successfully: ${linkedUser.email}');
-      
+
       return User(
         id: linkedUser.uid, // Same ID, now permanent
         email: email,
@@ -136,11 +138,11 @@ class FirebaseAuthDataSource {
       if (currentUser == null || !currentUser.isAnonymous) {
         throw Exception('No anonymous user to link or user is not anonymous');
       }
-      
+
       // Note: This requires phone verification flow with OTP
       // For now, this is a placeholder
       Logger().i('Phone linking stubbed - requires OTP flow');
-      
+
       // Return updated user (in real implementation, this would happen after OTP verification)
       return User(
         id: currentUser.uid,
@@ -156,6 +158,7 @@ class FirebaseAuthDataSource {
       throw Exception('Phone linking failed: $e');
     }
   }
+  */
 
   Future<void> logout() async {
     // Real Firebase logout
@@ -169,11 +172,11 @@ class FirebaseAuthDataSource {
       return User(
         id: user.uid,
         email: user.email ?? '',
-        name: user.displayName ?? (user.isAnonymous ? 'Guest' : 'User'),
+        name: user.displayName ?? 'User',
         phone: user.phoneNumber,
         createdAt: user.metadata.creationTime ?? DateTime.now(),
         isVerified: user.emailVerified,
-        isAnonymous: user.isAnonymous, // Check Firebase's isAnonymous flag
+        // isAnonymous: user.isAnonymous, // DISABLED - anonymous feature not used
       );
     }
     return null;

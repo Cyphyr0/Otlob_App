@@ -104,21 +104,22 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     }
   }
 
-  Future<void> _signInWithApple() async {
-    final authNotifier = ref.read(authProvider.notifier);
-    try {
-      await authNotifier.signInWithApple();
-      if (mounted) {
-        context.go('/address');
-      }
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Apple sign-in failed: $e')));
-      }
-    }
-  }
+  // DISABLED: Apple Sign-in - Not implemented for now
+  // Future<void> _signInWithApple() async {
+  //   final authNotifier = ref.read(authProvider.notifier);
+  //   try {
+  //     await authNotifier.signInWithApple();
+  //     if (mounted) {
+  //       context.go('/address');
+  //     }
+  //   } catch (e) {
+  //     if (mounted) {
+  //       ScaffoldMessenger.of(
+  //         context,
+  //       ).showSnackBar(SnackBar(content: Text('Apple sign-in failed: $e')));
+  //     }
+  //   }
+  // }
 
   Future<void> _showForgotPassword() async {
     showDialog(
@@ -309,24 +310,72 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     ],
                   ),
                   SizedBox(height: 12.h),
-                  if (Theme.of(context).platform == TargetPlatform.iOS)
-                    SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton.icon(
-                        onPressed: _signInWithApple,
-                        icon: const Icon(Icons.apple, color: Colors.black),
-                        label: const Text('Apple'),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.black,
-                          foregroundColor: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12.r),
-                          ),
-                          padding: EdgeInsets.symmetric(vertical: 12.h),
-                        ),
+                  // DISABLED: Apple Sign-in button - Not implemented for now
+                  // if (Theme.of(context).platform == TargetPlatform.iOS)
+                  //   SizedBox(
+                  //     width: double.infinity,
+                  //     child: ElevatedButton.icon(
+                  //       onPressed: _signInWithApple,
+                  //       icon: const Icon(Icons.apple, color: Colors.black),
+                  //       label: const Text('Apple'),
+                  //       style: ElevatedButton.styleFrom(
+                  //         backgroundColor: Colors.black,
+                  //         foregroundColor: Colors.white,
+                  //         shape: RoundedRectangleBorder(
+                  //           borderRadius: BorderRadius.circular(12.r),
+                  //         ),
+                  //         padding: EdgeInsets.symmetric(vertical: 12.h),
+                  //       ),
+                  //     ),
+                  //   ),
+                  SizedBox(height: 40.h),
+
+                  // Guest Mode - Skip Sign In
+                  TextButton(
+                    onPressed: () {
+                      // Navigate to home without authentication
+                      context.go('/home');
+                    },
+                    child: Text(
+                      'Skip for now',
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        color: Colors.white70,
+                        decoration: TextDecoration.underline,
                       ),
                     ),
-                  SizedBox(height: 40.h),
+                  ),
+
+                  SizedBox(height: 20.h),
+
+                  // Sign Up Link
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Don't have an account? ",
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          color: Colors.white70,
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          context.go('/signup');
+                        },
+                        child: Text(
+                          'Sign Up',
+                          style: TextStyle(
+                            fontSize: 14.sp,
+                            color: AppTheme.secondaryColor,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  SizedBox(height: 20.h),
                   const WhyOtlobSection(),
                 ],
               ),

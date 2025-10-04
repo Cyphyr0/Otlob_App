@@ -5,10 +5,15 @@ abstract class AuthRepository {
   Future<User> verifyOTP(String otp, String phoneNumber);
   Future<User> signInWithGoogle();
   Future<User> signInWithFacebook();
-  Future<User> signInWithApple();
-  Future<User> signInAnonymously(); // Anonymous/Guest sign-in
-  Future<User> linkEmailPassword(String email, String password); // Link anonymous to email
-  Future<User> linkPhone(String phoneNumber); // Link anonymous to phone
+
+  // DISABLED: Apple Sign-in not implemented for now
+  // Future<User> signInWithApple();
+
+  // DISABLED: Anonymous/Guest sign-in - optional feature, not needed right now
+  // Future<User> signInAnonymously();
+  // Future<User> linkEmailPassword(String email, String password); // Link anonymous to email
+  // Future<User> linkPhone(String phoneNumber); // Link anonymous to phone
+
   Future<void> logout();
   User? getCurrentUser();
   Future<void> saveUser(User user);
