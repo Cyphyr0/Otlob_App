@@ -129,6 +129,46 @@ class AuthStateNotifier extends AsyncNotifier<User?> {
       state = AsyncValue.error(e, st);
     }
   }
+
+  // Anonymous sign-in for guest access
+  Future<void> signInAnonymously() async {
+    state = const AsyncValue.loading();
+    try {
+      final repository = ref.read(authRepositoryProvider);
+      final user = await repository.signInAnonymously();
+      await SharedPrefsHelper.setAuthenticated(true);
+      state = AsyncValue.data(user);
+      debugPrint('Anonymous sign-in successful - user is now browsing as guest');
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+    }
+  }
+
+  // Link anonymous account to email/password
+  Future<void> linkAccountWithEmail(String email, String password) async {
+    state = const AsyncValue.loading();
+    try {
+      final repository = ref.read(authRepositoryProvider);
+      final user = await repository.linkEmailPassword(email, password);
+      state = AsyncValue.data(user);
+      debugPrint('Anonymous account linked to email: $email');
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+    }
+  }
+
+  // Link anonymous account to phone number
+  Future<void> linkAccountWithPhone(String phoneNumber) async {
+    state = const AsyncValue.loading();
+    try {
+      final repository = ref.read(authRepositoryProvider);
+      final user = await repository.linkPhone(phoneNumber);
+      state = AsyncValue.data(user);
+      debugPrint('Anonymous account linked to phone: $phoneNumber');
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+    }
+  }
 }
 
 // Providers

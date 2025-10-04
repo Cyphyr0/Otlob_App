@@ -72,6 +72,91 @@ class FirebaseAuthDataSource {
     );
   }
 
+  /// Sign in anonymously - allows guest access
+  Future<User> signInAnonymously() async {
+    try {
+      final credential = await _auth.signInAnonymously();
+      final firebaseUser = credential.user!;
+      
+      Logger().i('Anonymous sign-in successful: ${firebaseUser.uid}');
+      
+      return User(
+        id: firebaseUser.uid,
+        email: '', // No email for anonymous users
+        name: 'Guest', // Default name
+        createdAt: DateTime.now(),
+        isVerified: false,
+        isAnonymous: true, // Mark as anonymous
+      );
+    } catch (e) {
+      Logger().e('Anonymous sign-in failed: $e');
+      throw Exception('Anonymous sign-in failed: $e');
+    }
+  }
+
+  /// Link anonymous account to email/password
+  Future<User> linkEmailPassword(String email, String password) async {
+    try {
+      final currentUser = _auth.currentUser;
+      if (currentUser == null || !currentUser.isAnonymous) {
+        throw Exception('No anonymous user to link or user is not anonymous');
+      }
+      
+      // Create email/password credential
+      final credential = firebase_auth.EmailAuthProvider.credential(
+        email: email,
+        password: password,
+      );
+      
+      // Link the anonymous account to the email/password credential
+      final linkedCredential = await currentUser.linkWithCredential(credential);
+      final linkedUser = linkedCredential.user!;
+      
+      Logger().i('Account linked successfully: ${linkedUser.email}');
+      
+      return User(
+        id: linkedUser.uid, // Same ID, now permanent
+        email: email,
+        name: linkedUser.displayName ?? 'User',
+        phone: linkedUser.phoneNumber,
+        createdAt: currentUser.metadata.creationTime ?? DateTime.now(),
+        isVerified: linkedUser.emailVerified,
+        isAnonymous: false, // No longer anonymous
+      );
+    } catch (e) {
+      Logger().e('Account linking failed: $e');
+      throw Exception('Account linking failed: $e');
+    }
+  }
+
+  /// Link anonymous account to phone number
+  Future<User> linkPhone(String phoneNumber) async {
+    try {
+      final currentUser = _auth.currentUser;
+      if (currentUser == null || !currentUser.isAnonymous) {
+        throw Exception('No anonymous user to link or user is not anonymous');
+      }
+      
+      // Note: This requires phone verification flow with OTP
+      // For now, this is a placeholder
+      Logger().i('Phone linking stubbed - requires OTP flow');
+      
+      // Return updated user (in real implementation, this would happen after OTP verification)
+      return User(
+        id: currentUser.uid,
+        email: '',
+        name: 'User',
+        phone: phoneNumber,
+        createdAt: currentUser.metadata.creationTime ?? DateTime.now(),
+        isVerified: true,
+        isAnonymous: false,
+      );
+    } catch (e) {
+      Logger().e('Phone linking failed: $e');
+      throw Exception('Phone linking failed: $e');
+    }
+  }
+
   Future<void> logout() async {
     // Real Firebase logout
     await _auth.signOut();
@@ -84,10 +169,11 @@ class FirebaseAuthDataSource {
       return User(
         id: user.uid,
         email: user.email ?? '',
-        name: user.displayName ?? '',
+        name: user.displayName ?? (user.isAnonymous ? 'Guest' : 'User'),
         phone: user.phoneNumber,
         createdAt: user.metadata.creationTime ?? DateTime.now(),
         isVerified: user.emailVerified,
+        isAnonymous: user.isAnonymous, // Check Firebase's isAnonymous flag
       );
     }
     return null;
