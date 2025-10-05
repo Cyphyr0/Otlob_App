@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../../../core/theme/shadcn_theme.dart';
+
 class OnboardingPage extends StatelessWidget {
   final String title;
   final String subtitle;
@@ -16,13 +18,18 @@ class OnboardingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Container(
       width: double.infinity,
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          colors: [Color(0xFF2B3A67), Color(0xFF1E2A4A)],
+          colors: [
+            theme.colorScheme.primary.withOpacity(0.8),
+            theme.colorScheme.primary,
+          ],
         ),
       ),
       child: SafeArea(
@@ -32,7 +39,10 @@ class OnboardingPage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               // Image/Placeholder
-              SizedBox(height: 250.h, child: imageWidget),
+              ShadcnTheme.shadcnCard(
+                padding: EdgeInsets.all(24.w),
+                child: SizedBox(height: 200.h, child: imageWidget),
+              ),
               SizedBox(height: 40.h),
               // Title
               Text(
@@ -40,7 +50,7 @@ class OnboardingPage extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 32.sp,
                   fontWeight: FontWeight.bold,
-                  color: Colors.white,
+                  color: theme.colorScheme.onPrimary,
                   fontFamily: 'TutanoCCV2',
                 ),
                 textAlign: TextAlign.center,
@@ -51,7 +61,7 @@ class OnboardingPage extends StatelessWidget {
                 subtitle,
                 style: GoogleFonts.cairo(
                   fontSize: 16.sp,
-                  color: Colors.white,
+                  color: theme.colorScheme.onPrimary.withOpacity(0.9),
                   height: 1.4,
                 ),
                 textAlign: TextAlign.center,
@@ -65,7 +75,7 @@ class OnboardingPage extends StatelessWidget {
                 duration: const Duration(milliseconds: 1500),
                 child: Icon(
                   Icons.arrow_forward_ios,
-                  color: Colors.white,
+                  color: theme.colorScheme.onPrimary,
                   size: 24.sp,
                 ),
               ),

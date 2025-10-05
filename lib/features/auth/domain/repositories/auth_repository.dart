@@ -5,6 +5,9 @@ abstract class AuthRepository {
   Future<User> verifyOTP(String otp, String phoneNumber);
   Future<User> signInWithGoogle();
   Future<User> signInWithFacebook();
+  // Email/password auth
+  Future<User> signInWithEmail(String email, String password);
+  Future<User> signUpWithEmail(String name, String email, String password);
 
   // DISABLED: Apple Sign-in not implemented for now
   // Future<User> signInWithApple();

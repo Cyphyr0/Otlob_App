@@ -3,9 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:otlob_app/core/providers.dart';
-import 'package:otlob_app/core/theme/app_theme.dart';
+import 'package:otlob_app/core/services/service_locator.dart';
+import 'package:otlob_app/core/services/firebase/firebase_data_seeder.dart';
+import 'package:otlob_app/core/theme/shadcn_theme.dart';
 import 'package:otlob_app/core/utils/shared_prefs_helper.dart';
+import 'package:otlob_app/core/widgets/demo/component_showcase.dart';
 import 'package:otlob_app/features/auth/presentation/screens/auth_wrapper.dart';
 import 'package:otlob_app/features/auth/presentation/screens/phone_verification_screen.dart';
 import 'package:otlob_app/features/cart/presentation/screens/cart_screen.dart';
@@ -15,11 +19,29 @@ import 'package:otlob_app/features/splash/presentation/screens/splash_screen.dar
 import 'package:otlob_app/features/home/presentation/screens/home_screen.dart';
 import 'package:otlob_app/features/favorites/presentation/screens/favorites_screen.dart';
 import 'package:otlob_app/features/home/presentation/screens/restaurant_detail_screen.dart';
-import 'firebase_options.dart';
+import 'package:otlob_app/features/profile/presentation/screens/profile_screen.dart';
+import 'package:otlob_app/firebase_options.dart';
+/*  import removed for public commit */
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize Firebase
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  // Initialize service locator with Firebase services
+  setupFirebaseServices();
+
+  // Seed data in debug mode
+  if (const bool.fromEnvironment('dart.vm.product') == false) {
+    try {
+      final seeder = getIt<FirebaseDataSeeder>();
+      await seeder.seedSampleData();
+    } catch (e) {
+      print('Error seeding data: $e');
+    }
+  }
+
   runApp(const ProviderScope(child: MyApp()));
 }
 
@@ -37,13 +59,13 @@ class MyApp extends ConsumerWidget {
 
         final location = state.matchedLocation;
 
+        // Don't redirect from splash - let the splash screen handle navigation
         if (location == '/splash') {
-          // From splash, check onboarding
-          if (isOnboardingCompleted) {
-            return isAuthenticated ? '/home' : '/auth';
-          } else {
-            return '/onboarding';
-          }
+          return null;
+        }
+
+        if (!isOnboardingCompleted && location != '/onboarding') {
+          return '/onboarding';
         }
 
         if (!isAuthenticated &&
@@ -134,6 +156,10 @@ class MyApp extends ConsumerWidget {
             body: const Center(child: Text('Tracking Screen Stub')),
           ),
         ),
+        GoRoute(
+          path: '/demo',
+          builder: (context, state) => const ComponentShowcaseScreen(),
+        ),
         ShellRoute(
           builder: (context, state, child) {
             return ScaffoldWithNavBar(child: child);
@@ -165,24 +191,39 @@ class MyApp extends ConsumerWidget {
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (context, child) {
-        return MaterialApp.router(
-          title: 'Otlob App',
-          theme: AppTheme.lightTheme,
-          darkTheme: AppTheme.darkTheme,
-          routerConfig: router,
+        return ShadTheme(
+          data: ShadThemeData(
+            brightness: Brightness.light,
+            colorScheme: ShadColorScheme(
+              background: Colors.white,
+              foreground: Colors.black,
+              card: Colors.white,
+              cardForeground: Colors.black,
+              popover: Colors.white,
+              popoverForeground: Colors.black,
+              primary: const Color(0xFFDC2626),
+              primaryForeground: Colors.white,
+              secondary: const Color(0xFFF59E0B),
+              secondaryForeground: Colors.black,
+              destructive: Colors.red,
+              destructiveForeground: Colors.white,
+              muted: const Color(0xFFF3F4F6),
+              mutedForeground: const Color(0xFF6B7280),
+              accent: const Color(0xFFF3F4F6),
+              accentForeground: const Color(0xFF374151),
+              border: const Color(0xFFE5E7EB),
+              input: const Color(0xFFE5E7EB),
+              ring: const Color(0xFFDC2626),
+              selection: const Color(0xFFDC2626),
+            ),
+          ),
+          child: MaterialApp.router(
+            title: 'Otlob App',
+            theme: ShadcnTheme.shadcnTheme,
+            routerConfig: router,
+          ),
         );
       },
-    );
-  }
-}
-
-class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(child: Text('Profile Screen - Coming Soon')),
     );
   }
 }

@@ -65,3 +65,11 @@ AI_RULES.md
 *.key
 *.pem
 secrets/
+
+# Firebase keys config (do not commit)
+lib/core/config/firebase_keys.dart
+lib/core/config/sensitive_config.dart
+
+# AI Assistant Rules (contains internal guidelines)
+.ai_rules.md
+node_modules

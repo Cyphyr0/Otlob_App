@@ -1,184 +1,84 @@
-import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:logger/logger.dart';
+import 'package:otlob_app/core/services/firebase/firebase_auth_service.dart';
 import 'package:otlob_app/features/auth/domain/entities/user.dart';
 
 class FirebaseAuthDataSource {
-  final firebase_auth.FirebaseAuth _auth = firebase_auth.FirebaseAuth.instance;
+  final FirebaseAuthService _authService;
+
+  Future<void> sendPasswordResetEmail(String email) async {
+    await _authService.sendPasswordResetEmail(email);
+  }
+
+  FirebaseAuthDataSource(this._authService);
 
   Future<void> sendOTP(String phoneNumber) async {
-    // Mock implementation - simulate sending OTP
-    await Future.delayed(const Duration(seconds: 1));
-    Logger().i('Mock OTP sent to $phoneNumber. Use code: 123456');
+    await _authService.verifyPhoneNumber(
+      phoneNumber,
+      (verificationId) =>
+          Logger().i('OTP sent, verification ID: $verificationId'),
+      (message) => Logger().i('Verification completed: $message'),
+      (message) => Logger().e('Verification failed: $message'),
+    );
   }
 
   Future<User> verifyOTP(String otp, String phoneNumber) async {
-    // Mock verification - hardcoded OTP
-    if (otp != '123456') {
-      throw Exception('Invalid OTP');
-    }
-    // Create mock user
-    return User(
-      id: 'mock_${DateTime.now().millisecondsSinceEpoch}',
-      email: '$phoneNumber@example.com',
-      name: 'New User',
-      phone: phoneNumber,
-      createdAt: DateTime.now(),
-      isVerified: true,
+    final verificationId =
+        'stored_verification_id'; // This should be stored from sendOTP
+    final credential = await _authService.signInWithPhoneCredential(
+      verificationId,
+      otp,
     );
+    final user = _authService.firebaseUserToAppUser(credential.user);
+    if (user == null) throw Exception('Failed to create user from credential');
+    return user;
   }
 
   Future<User> signInWithGoogle() async {
-    // Stub - print log, return mock user
-    Logger().i(
-      'Google sign-in stubbed - would integrate with GoogleSignIn and Firebase',
-    );
-    await Future.delayed(const Duration(seconds: 1)); // Simulate network
-    return User(
-      id: 'google_mock_${DateTime.now().millisecondsSinceEpoch}',
-      email: 'user@gmail.com',
-      name: 'Google User',
-      createdAt: DateTime.now(),
-      isVerified: true,
-    );
+    final credential = await _authService.signInWithGoogle();
+    final user = _authService.firebaseUserToAppUser(credential?.user);
+    if (user == null) throw Exception('Google sign-in failed');
+    return user;
   }
 
   Future<User> signInWithFacebook() async {
-    // Stub - print log, return mock user
-    Logger().i(
-      'Facebook sign-in stubbed - would integrate with Facebook Auth and Firebase',
+    // Facebook sign-in would need facebook_auth package
+    // For now, throw not implemented
+    throw Exception('Facebook sign-in not implemented');
+  }
+
+  // Email/password auth
+  Future<User> signInWithEmail(String email, String password) async {
+    final credential = await _authService.signInWithEmailAndPassword(
+      email,
+      password,
     );
-    await Future.delayed(const Duration(seconds: 1));
-    return User(
-      id: 'fb_mock_${DateTime.now().millisecondsSinceEpoch}',
-      email: 'user@fb.com',
-      name: 'Facebook User',
-      createdAt: DateTime.now(),
-      isVerified: true,
+    final user = _authService.firebaseUserToAppUser(credential.user);
+    if (user == null) throw Exception('Email sign-in failed');
+    return user;
+  }
+
+  Future<User> signUpWithEmail(
+    String name,
+    String email,
+    String password,
+  ) async {
+    final credential = await _authService.createUserWithEmailAndPassword(
+      email,
+      password,
     );
+    // Update display name
+    await _authService.updateProfile(displayName: name);
+    final user = _authService.firebaseUserToAppUser(credential.user);
+    if (user == null) throw Exception('Email sign-up failed');
+    return user;
   }
-
-  // DISABLED: Apple Sign-in - Not implemented for now
-  // Future<User> signInWithApple() async {
-  //   Logger().i(
-  //     'Apple sign-in stubbed - would integrate with SignInWithApple and Firebase',
-  //   );
-  //   await Future.delayed(const Duration(seconds: 1));
-  //   return User(
-  //     id: 'apple_mock_${DateTime.now().millisecondsSinceEpoch}',
-  //     email: 'user@apple.com',
-  //     name: 'Apple User',
-  //     createdAt: DateTime.now(),
-  //     isVerified: true,
-  //   );
-  // }
-
-  // DISABLED: Anonymous sign-in - Guest mode not needed right now
-  /* 
-  /// Sign in anonymously - allows guest access
-  Future<User> signInAnonymously() async {
-    try {
-      final credential = await _auth.signInAnonymously();
-      final firebaseUser = credential.user!;
-
-      Logger().i('Anonymous sign-in successful: ${firebaseUser.uid}');
-
-      return User(
-        id: firebaseUser.uid,
-        email: '', // No email for anonymous users
-        name: 'Guest', // Default name
-        createdAt: DateTime.now(),
-        isVerified: false,
-        isAnonymous: true, // Mark as anonymous
-      );
-    } catch (e) {
-      Logger().e('Anonymous sign-in failed: $e');
-      throw Exception('Anonymous sign-in failed: $e');
-    }
-  }
-
-  /// Link anonymous account to email/password
-  Future<User> linkEmailPassword(String email, String password) async {
-    try {
-      final currentUser = _auth.currentUser;
-      if (currentUser == null || !currentUser.isAnonymous) {
-        throw Exception('No anonymous user to link or user is not anonymous');
-      }
-
-      // Create email/password credential
-      final credential = firebase_auth.EmailAuthProvider.credential(
-        email: email,
-        password: password,
-      );
-
-      // Link the anonymous account to the email/password credential
-      final linkedCredential = await currentUser.linkWithCredential(credential);
-      final linkedUser = linkedCredential.user!;
-
-      Logger().i('Account linked successfully: ${linkedUser.email}');
-
-      return User(
-        id: linkedUser.uid, // Same ID, now permanent
-        email: email,
-        name: linkedUser.displayName ?? 'User',
-        phone: linkedUser.phoneNumber,
-        createdAt: currentUser.metadata.creationTime ?? DateTime.now(),
-        isVerified: linkedUser.emailVerified,
-        isAnonymous: false, // No longer anonymous
-      );
-    } catch (e) {
-      Logger().e('Account linking failed: $e');
-      throw Exception('Account linking failed: $e');
-    }
-  }
-
-  /// Link anonymous account to phone number
-  Future<User> linkPhone(String phoneNumber) async {
-    try {
-      final currentUser = _auth.currentUser;
-      if (currentUser == null || !currentUser.isAnonymous) {
-        throw Exception('No anonymous user to link or user is not anonymous');
-      }
-
-      // Note: This requires phone verification flow with OTP
-      // For now, this is a placeholder
-      Logger().i('Phone linking stubbed - requires OTP flow');
-
-      // Return updated user (in real implementation, this would happen after OTP verification)
-      return User(
-        id: currentUser.uid,
-        email: '',
-        name: 'User',
-        phone: phoneNumber,
-        createdAt: currentUser.metadata.creationTime ?? DateTime.now(),
-        isVerified: true,
-        isAnonymous: false,
-      );
-    } catch (e) {
-      Logger().e('Phone linking failed: $e');
-      throw Exception('Phone linking failed: $e');
-    }
-  }
-  */
 
   Future<void> logout() async {
-    // Real Firebase logout
-    await _auth.signOut();
+    await _authService.signOut();
     Logger().i('User logged out');
   }
 
   User? getCurrentUser() {
-    final user = _auth.currentUser;
-    if (user != null) {
-      return User(
-        id: user.uid,
-        email: user.email ?? '',
-        name: user.displayName ?? 'User',
-        phone: user.phoneNumber,
-        createdAt: user.metadata.creationTime ?? DateTime.now(),
-        isVerified: user.emailVerified,
-        // isAnonymous: user.isAnonymous, // DISABLED - anonymous feature not used
-      );
-    }
-    return null;
+    return _authService.firebaseUserToAppUser(_authService.currentUser);
   }
 }

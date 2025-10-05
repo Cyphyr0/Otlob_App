@@ -1,6 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'cart_item.freezed.dart';
+part 'cart_item.g.dart';
 
 @freezed
 class CartItem with _$CartItem {
@@ -11,4 +12,7 @@ class CartItem with _$CartItem {
     required int quantity,
     required String imageUrl,
   }) = _CartItem;
+
+  factory CartItem.fromJson(Map<String, dynamic> json) =>
+      _$CartItemFromJson(json);
 }

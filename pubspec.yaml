@@ -11,6 +11,9 @@ dependencies:
   flutter:
     sdk: flutter
 
+  # Lottie Animations
+  lottie: ^3.1.0
+
   # State Management - Stable version 2.x for compatibility
   flutter_riverpod: ^2.6.1
   riverpod_annotation: ^2.6.1
@@ -29,11 +32,9 @@ dependencies:
 
   # Local Storage - Compatible versions
   shared_preferences: ^2.5.3
-  drift: ^2.21.0
-  sqlite3_flutter_libs: ^0.5.40
   path_provider: ^2.1.5
   path: ^1.9.1
-  flutter_secure_storage: ^9.2.4
+  # flutter_secure_storage: ^9.2.4  # Temporarily removed due to Windows build issues
 
   # Location - Latest stable
   geolocator: ^14.0.2
@@ -46,6 +47,7 @@ dependencies:
   flutter_svg: ^2.0.10
   shimmer: ^3.0.0
   image_picker: ^1.2.0
+  shadcn_ui: ^0.36.1
 
   # Internationalization - Latest stable
   easy_localization: ^3.0.7
@@ -65,6 +67,8 @@ dependencies:
   firebase_messaging: ^16.0.2
   firebase_analytics: ^12.0.2
   firebase_crashlytics: ^5.0.2
+  google_sign_in: ^6.2.1
+  get_it: ^7.6.7
 
   # Payment - Latest stable
   flutter_paymob: ^1.0.5
@@ -95,7 +99,6 @@ dev_dependencies:
   build_runner: ^2.4.13
   json_serializable: ^6.8.0
   retrofit_generator: ^9.7.0
-  drift_dev: ^2.21.2
   freezed: ^2.5.2
   riverpod_generator: ^2.6.1
 
@@ -112,6 +115,7 @@ flutter:
     - assets/icons/
     - assets/translations/
     - assets/fonts/tutano-cc/
+    - assets/animations/
 
   fonts:
     - family: TutanoCCV2

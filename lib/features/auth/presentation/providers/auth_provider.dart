@@ -1,24 +1,19 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:otlob_app/core/errors/failures.dart';
+import 'package:otlob_app/core/services/service_locator.dart';
 import 'package:otlob_app/core/utils/shared_prefs_helper.dart';
+import 'package:otlob_app/features/auth/data/repositories/firebase_auth_repository.dart';
 import 'package:otlob_app/features/auth/domain/entities/user.dart';
 import 'package:otlob_app/features/auth/domain/repositories/auth_repository.dart';
 
 class AuthStateNotifier extends AsyncNotifier<User?> {
   @override
   Future<User?> build() async {
-    // Check initial auth state from shared prefs
-    final isAuthenticated = await SharedPrefsHelper.isAuthenticated();
-    if (isAuthenticated) {
-      // In real app, get user from Firebase or local DB
-      // For mock, return a dummy user
-      return User(
-        id: 'mock_user_id',
-        email: 'mock@example.com',
-        name: 'Mock User',
-        createdAt: DateTime.now(),
-      );
+    final repository = ref.read(authRepositoryProvider);
+    final user = repository.getCurrentUser();
+    if (user != null) {
+      return user;
     }
     return null;
   }
@@ -26,14 +21,9 @@ class AuthStateNotifier extends AsyncNotifier<User?> {
   Future<void> sendOTP(String phoneNumber) async {
     state = const AsyncValue.loading();
     try {
-      // Mock: Simulate sending OTP
-      // In real: Call repository.sendOTP(phoneNumber)
-      await Future.delayed(const Duration(seconds: 1));
-      if (phoneNumber.length < 10) {
-        throw AuthFailure(message: 'Invalid phone number');
-      }
+      final repository = ref.read(authRepositoryProvider);
+      await repository.sendOTP(phoneNumber);
       state = AsyncValue.data(state.value);
-      // Store phone for verification - removed for mock
     } catch (e, st) {
       state = AsyncValue.error(e, st);
     }
@@ -42,21 +32,10 @@ class AuthStateNotifier extends AsyncNotifier<User?> {
   Future<void> verifyOTP(String otp, String phoneNumber) async {
     state = const AsyncValue.loading();
     try {
-      // Mock: Hardcoded OTP '123456'
-      if (otp != '123456') {
-        throw AuthFailure(message: 'Invalid OTP');
-      }
-      // Create user
-      final user = User(
-        id: 'mock_${DateTime.now().millisecondsSinceEpoch}',
-        email: '$phoneNumber@example.com', // Mock email
-        name: 'User', // Name can be added later
-        phone: phoneNumber,
-        createdAt: DateTime.now(),
-        isVerified: true,
-      );
-      // Save to repo (mock) - Skip for now due to type conflict, handle in repo later
-      // await ref.read(authRepositoryProvider).saveUser(user);
+      // Call repository to verify OTP
+      final repository = ref.read(authRepositoryProvider);
+      final user = await repository.verifyOTP(otp, phoneNumber);
+
       // Set authenticated
       await SharedPrefsHelper.setAuthenticated(true);
       state = AsyncValue.data(user);
@@ -68,8 +47,8 @@ class AuthStateNotifier extends AsyncNotifier<User?> {
   Future<void> logout() async {
     state = const AsyncValue.loading();
     try {
-      // Mock logout
-      await SharedPrefsHelper.setAuthenticated(false);
+      final repository = ref.read(authRepositoryProvider);
+      await repository.logout();
       state = const AsyncValue.data(null);
     } catch (e, st) {
       state = AsyncValue.error(e, st);
@@ -80,16 +59,8 @@ class AuthStateNotifier extends AsyncNotifier<User?> {
   Future<void> signInWithGoogle() async {
     state = const AsyncValue.loading();
     try {
-      // Stub: Print log
-      debugPrint('Google sign-in stubbed');
-      // Mock success
-      final user = User(
-        id: 'google_mock_id',
-        email: 'google@example.com',
-        name: 'Google User',
-        createdAt: DateTime.now(),
-      );
-      await SharedPrefsHelper.setAuthenticated(true);
+      final repository = ref.read(authRepositoryProvider);
+      final user = await repository.signInWithGoogle();
       state = AsyncValue.data(user);
     } catch (e, st) {
       state = AsyncValue.error(e, st);
@@ -99,17 +70,40 @@ class AuthStateNotifier extends AsyncNotifier<User?> {
   Future<void> signInWithFacebook() async {
     state = const AsyncValue.loading();
     try {
-      debugPrint('Facebook sign-in stubbed');
-      final user = User(
-        id: 'fb_mock_id',
-        email: 'fb@example.com',
-        name: 'Facebook User',
-        createdAt: DateTime.now(),
-      );
-      await SharedPrefsHelper.setAuthenticated(true);
+      final repository = ref.read(authRepositoryProvider);
+      final user = await repository.signInWithFacebook();
       state = AsyncValue.data(user);
     } catch (e, st) {
       state = AsyncValue.error(e, st);
+    }
+  }
+
+  // New: Email/password sign-in
+  Future<void> signInWithEmail(String email, String password) async {
+    state = const AsyncValue.loading();
+    try {
+      final repository = ref.read(authRepositoryProvider);
+      final user = await repository.signInWithEmail(email, password);
+      state = AsyncValue.data(user);
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+      rethrow;
+    }
+  }
+
+  Future<void> signUpWithEmail(
+    String name,
+    String email,
+    String password,
+  ) async {
+    state = const AsyncValue.loading();
+    try {
+      final repository = ref.read(authRepositoryProvider);
+      final user = await repository.signUpWithEmail(name, email, password);
+      state = AsyncValue.data(user);
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+      rethrow;
     }
   }
 
@@ -175,6 +169,23 @@ class AuthStateNotifier extends AsyncNotifier<User?> {
   //     state = AsyncValue.error(e, st);
   //   }
   // }
+  // Password reset
+  Future<void> sendPasswordResetEmail(String email) async {
+    state = const AsyncValue.loading();
+    try {
+      // Use the repository's method if available, otherwise access service directly
+      final repository = ref.read(authRepositoryProvider);
+      if (repository is FirebaseAuthRepository) {
+        // Use a public method for password reset if available
+        await (repository as dynamic).sendPasswordResetEmail(email);
+      } else {
+        throw Exception('Password reset not implemented for this repository');
+      }
+      state = AsyncValue.data(state.value);
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+    }
+  }
 }
 
 // Providers
@@ -185,6 +196,5 @@ final authProvider = AsyncNotifierProvider<AuthStateNotifier, User?>(
 final phoneProvider = StateProvider<String>((ref) => '');
 
 final authRepositoryProvider = Provider<AuthRepository>((ref) {
-  // Will be implemented later
-  throw UnimplementedError('AuthRepository not implemented yet');
+  return getIt<FirebaseAuthRepository>();
 });

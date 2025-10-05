@@ -2,7 +2,7 @@ class Restaurant {
   final String id;
   final String name;
   final double rating;
-  final String imageUrl;
+  final String? imageUrl;
   final int tawseyaCount;
   final String cuisine;
   final String description;
@@ -17,7 +17,7 @@ class Restaurant {
     required this.id,
     required this.name,
     required this.rating,
-    required this.imageUrl,
+    this.imageUrl,
     required this.tawseyaCount,
     required this.cuisine,
     required this.description,

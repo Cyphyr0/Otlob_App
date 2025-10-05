@@ -1,29 +1,44 @@
-import 'package:drift/drift.dart';
-import 'dart:io';
-import 'package:drift/native.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:path/path.dart' as p;
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-part 'database.g.dart';
+class AppDatabase {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-class Users extends Table {
-  IntColumn get id => integer().autoIncrement()();
-  TextColumn get uid => text()();
-  TextColumn get email => text()();
-}
+  // Simple web-compatible database using Firestore
+  Future<void> insertUser(String uid, String email) async {
+    if (kIsWeb) {
+      // Use Firestore for web
+      await _firestore.collection('users').doc(uid).set({
+        'uid': uid,
+        'email': email,
+        'createdAt': FieldValue.serverTimestamp(),
+      });
+    } else {
+      // For mobile, we'll implement drift later
+      // For now, just log that mobile database is not implemented
+      print('Mobile database not implemented yet');
+    }
+  }
 
-@DriftDatabase(tables: [Users])
-class AppDatabase extends _$AppDatabase {
-  AppDatabase() : super(_openConnection());
+  Future<Map<String, dynamic>?> getUser(String uid) async {
+    if (kIsWeb) {
+      final doc = await _firestore.collection('users').doc(uid).get();
+      return doc.data();
+    } else {
+      // For mobile, return null for now
+      print('Mobile database not implemented yet');
+      return null;
+    }
+  }
 
-  @override
-  int get schemaVersion => 1;
-}
-
-LazyDatabase _openConnection() {
-  return LazyDatabase(() async {
-    final dbFolder = await getApplicationDocumentsDirectory();
-    final file = File(p.join(dbFolder.path, 'db.sqlite'));
-    return NativeDatabase(file);
-  });
+  Future<List<Map<String, dynamic>>> getAllUsers() async {
+    if (kIsWeb) {
+      final snapshot = await _firestore.collection('users').get();
+      return snapshot.docs.map((doc) => doc.data()).toList();
+    } else {
+      // For mobile, return empty list for now
+      print('Mobile database not implemented yet');
+      return [];
+    }
+  }
 }

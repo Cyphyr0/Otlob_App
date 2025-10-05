@@ -2,8 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:shimmer/shimmer.dart';
-import 'dart:async';
+import 'package:otlob_app/core/theme/app_colors.dart';
+import 'package:otlob_app/core/theme/app_typography.dart';
+import 'package:otlob_app/core/theme/app_spacing.dart';
+import 'package:otlob_app/core/theme/app_shadows.dart';
+import 'package:otlob_app/core/theme/app_radius.dart';
+import 'package:otlob_app/core/theme/shadcn_theme.dart';
+import 'package:otlob_app/core/widgets/branding/otlob_logo.dart';
+import 'package:otlob_app/core/widgets/buttons/primary_button.dart';
+import 'package:otlob_app/core/widgets/buttons/secondary_button.dart';
+import 'package:otlob_app/core/widgets/buttons/icon_button_custom.dart';
+import 'package:otlob_app/core/widgets/inputs/search_bar_widget.dart';
+import 'package:otlob_app/core/widgets/cards/restaurant_card.dart';
 import 'package:otlob_app/core/providers.dart';
 import 'package:otlob_app/features/home/domain/entities/restaurant.dart';
 
@@ -15,238 +25,305 @@ class HomeScreen extends ConsumerStatefulWidget {
 }
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
-  Timer? _debounce;
   String _selectedCuisine = 'All';
   double _minRating = 0.0;
   String _priceRange = 'All';
 
-  @override
-  void dispose() {
-    _debounce?.cancel();
-    super.dispose();
-  }
-
-  List<Restaurant> get _filteredRestaurants {
-    final all = ref.watch(filteredRestaurantsProvider);
-    var filtered = all;
-    if (_selectedCuisine != 'All') {
-      filtered = filtered.where((r) => r.cuisine == _selectedCuisine).toList();
-    }
-    if (_minRating > 0) {
-      filtered = filtered.where((r) => r.rating >= _minRating).toList();
-    }
-    if (_priceRange != 'All') {
-      switch (_priceRange) {
-        case 'Budget':
-          filtered = filtered.where((r) => r.priceLevel <= 1.5).toList();
-          break;
-        case 'Premium':
-          filtered = filtered.where((r) => r.priceLevel > 1.5).toList();
-          break;
-      }
-    }
-    return filtered;
-  }
-
-  List<Restaurant> get _hiddenGems {
-    return _filteredRestaurants
-        .where((r) => ['Egyptian', 'Street Food'].contains(r.cuisine))
-        .take(3)
-        .toList();
-  }
-
-  List<Restaurant> get _localHeroes {
-    return _filteredRestaurants
-        .where((r) => r.tawseyaCount > 20)
-        .take(3)
-        .toList();
-  }
+  final ScrollController _scrollController = ScrollController();
+  bool _isLoadingMore = false;
+  bool _hasMoreData = true;
 
   @override
   Widget build(BuildContext context) {
-    final restaurants = _filteredRestaurants;
-    final hiddenGems = _hiddenGems;
-    final localHeroes = _localHeroes;
+    final restaurantsAsync = ref.watch(filteredRestaurantsProvider);
+    final hiddenGemsAsync = ref.watch(hiddenGemsProvider);
+    final localHeroesAsync = ref.watch(localHeroesProvider);
+    final cartState = ref.watch(cartProvider);
+    final cartNotifier = ref.read(cartProvider.notifier);
+    final cartCount = cartNotifier.isLoading ? 0 : cartState.length;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Row(
-          children: [
-            Text(
-              'Otlob',
-              style: TextStyle(
-                fontFamily: 'TutanoCCV2',
-                fontSize: 24.sp,
-                fontWeight: FontWeight.bold,
-                color: const Color(0xFFE84545),
-              ),
-            ),
-            const Spacer(),
-            SizedBox(
-              width: 200.w,
-              child: TextField(
-                decoration: InputDecoration(
-                  hintText: 'Search...',
-                  hintStyle: TextStyle(color: Colors.grey[400]),
-                  prefixIcon: const Icon(Icons.search, color: Colors.grey),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8.r),
-                    borderSide: BorderSide.none,
-                  ),
-                  filled: true,
-                  fillColor: Colors.white,
-                  contentPadding: EdgeInsets.symmetric(vertical: 8.h),
-                ),
-                onChanged: (value) {
-                  _debounce?.cancel();
-                  _debounce = Timer(const Duration(milliseconds: 500), () {
-                    ref.read(searchQueryProvider.notifier).state = value;
-                  });
-                },
-              ),
-            ),
-          ],
-        ),
-        backgroundColor: const Color(0xFF2B3A67),
+    return restaurantsAsync.when(
+      loading: () => _buildLoadingState(),
+      error: (error, stack) => Scaffold(
+        body: Center(child: Text('Error loading restaurants: $error')),
       ),
-      body: Column(
-        children: [
-          Padding(
-            padding: EdgeInsets.all(16.w),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Discover amazing food',
-                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                    color: const Color(0xFF2B3A67),
-                  ),
-                ),
-                SizedBox(height: 8.h),
-                Text(
-                  'Find your favorite local spots',
-                  style: TextStyle(color: Colors.grey[600], fontSize: 16.sp),
-                ),
-                SizedBox(height: 16.h),
-                if (_selectedCuisine != 'All' ||
-                    _minRating > 0 ||
-                    _priceRange != 'All')
-                  Wrap(
-                    spacing: 8.w,
-                    children: [
-                      if (_selectedCuisine != 'All')
-                        Chip(
-                          label: Text(_selectedCuisine),
-                          onDeleted: () =>
-                              setState(() => _selectedCuisine = 'All'),
+      data: (restaurants) {
+        // Apply client-side filters
+        var filtered = restaurants;
+        if (_selectedCuisine != 'All') {
+          filtered = filtered
+              .where((r) => r.cuisine == _selectedCuisine)
+              .toList();
+        }
+        if (_minRating > 0) {
+          filtered = filtered.where((r) => r.rating >= _minRating).toList();
+        }
+        if (_priceRange != 'All') {
+          switch (_priceRange) {
+            case 'Budget':
+              filtered = filtered.where((r) => r.priceLevel <= 1.5).toList();
+              break;
+            case 'Premium':
+              filtered = filtered.where((r) => r.priceLevel > 1.5).toList();
+              break;
+          }
+        }
+
+        return hiddenGemsAsync.when(
+          loading: () => _buildLoadingState(),
+          error: (error, stack) => Scaffold(
+            body: Center(child: Text('Error loading hidden gems: $error')),
+          ),
+          data: (hiddenGems) {
+            return localHeroesAsync.when(
+              loading: () => _buildLoadingState(),
+              error: (error, stack) => Scaffold(
+                body: Center(child: Text('Error loading local heroes: $error')),
+              ),
+              data: (localHeroes) {
+                return Scaffold(
+                  backgroundColor: Theme.of(context).colorScheme.surface,
+                  body: CustomScrollView(
+                    slivers: [
+                      // App Bar
+                      _buildAppBar(cartCount),
+
+                      // Content
+                      SliverToBoxAdapter(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(height: AppSpacing.md),
+
+                            // Search Bar
+                            _buildSearchSection(),
+
+                            SizedBox(height: AppSpacing.md),
+
+                            // Filter & Surprise Me Buttons
+                            _buildActionButtons(filtered),
+
+                            SizedBox(height: AppSpacing.sectionSpacing),
+
+                            // Hidden Gems Section
+                            if (hiddenGems.isNotEmpty) ...[
+                              _buildHiddenGemsSection(hiddenGems),
+                              SizedBox(height: AppSpacing.sectionSpacing),
+                            ],
+
+                            // Local Heroes Section
+                            if (localHeroes.isNotEmpty) ...[
+                              _buildLocalHeroesSection(localHeroes),
+                              SizedBox(height: AppSpacing.sectionSpacing),
+                            ],
+
+                            // All Restaurants Section
+                            _buildAllRestaurantsSection(filtered),
+
+                            SizedBox(
+                              height: 100.h,
+                            ), // Bottom padding for nav bar
+                          ],
                         ),
-                      if (_minRating > 0)
-                        Chip(
-                          label: Text('Rating >= $_minRating'),
-                          onDeleted: () => setState(() => _minRating = 0.0),
-                        ),
-                      if (_priceRange != 'All')
-                        Chip(
-                          label: Text(_priceRange),
-                          onDeleted: () => setState(() => _priceRange = 'All'),
-                        ),
-                      IconButton(
-                        icon: const Icon(Icons.clear_all),
-                        onPressed: () => setState(() {
-                          _selectedCuisine = 'All';
-                          _minRating = 0.0;
-                          _priceRange = 'All';
-                        }),
                       ),
                     ],
                   ),
-                SizedBox(height: 16.h),
-                ElevatedButton.icon(
-                  onPressed: restaurants.isEmpty
-                      ? null
-                      : () {
-                          final random = List<Restaurant>.from(restaurants)
-                            ..shuffle();
-                          final selected = random.first;
-                          context.go('/restaurant/${selected.id}');
-                        },
-                  icon: const Icon(Icons.casino),
-                  label: const Text('Surprise Me!'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFE84545),
-                    foregroundColor: Colors.white,
-                    minimumSize: Size(double.infinity, 50.h),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12.r),
+                );
+              },
+            );
+          },
+        );
+      },
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    if (_scrollController.position.pixels >=
+            _scrollController.position.maxScrollExtent - 200 &&
+        !_isLoadingMore &&
+        _hasMoreData) {
+      _loadMoreData();
+    }
+  }
+
+  Future<void> _loadMoreData() async {
+    if (_isLoadingMore) return;
+
+    setState(() => _isLoadingMore = true);
+
+    try {
+      final currentPage = ref.read(restaurantsPageProvider);
+      final nextPage = currentPage + 1;
+
+      final repository = ref.read(homeRepositoryProvider);
+      final newData = await repository.getRestaurantsPaginated(
+        page: nextPage,
+        limit: 20,
+      );
+
+      if (mounted) {
+        if (newData.isEmpty) {
+          setState(() => _hasMoreData = false);
+        } else {
+          ref.read(restaurantsPageProvider.notifier).state = nextPage;
+        }
+      }
+    } catch (e) {
+      // Handle error - could show snackbar
+      debugPrint('Error loading more data: $e');
+    } finally {
+      if (mounted) {
+        setState(() => _isLoadingMore = false);
+      }
+    }
+  }
+
+  Widget _buildAppBar(int cartCount) {
+    return SliverAppBar(
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      elevation: 0,
+      pinned: true,
+      expandedHeight: 70.h,
+      flexibleSpace: Container(
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.surface,
+          boxShadow: AppShadows.sm,
+        ),
+        child: SafeArea(
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: AppSpacing.screenPadding,
+              vertical: AppSpacing.sm,
+            ),
+            child: Row(
+              children: [
+                // Otlob Logo
+                const OtlobLogo(size: LogoSize.small),
+
+                SizedBox(width: AppSpacing.md),
+
+                // Location Selector
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () {
+                      // TODO: Open location selector
+                    },
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: AppSpacing.sm,
+                        vertical: AppSpacing.xs,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.surface,
+                        borderRadius: BorderRadius.circular(AppRadius.sm),
+                        boxShadow: AppShadows.sm,
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.location_on,
+                            size: 16.sp,
+                            color: AppColors.logoRed,
+                          ),
+                          SizedBox(width: 4.w),
+                          Flexible(
+                            child: Text(
+                              'Dokki, Cairo',
+                              style: AppTypography.bodyMedium.copyWith(
+                                color: Theme.of(context).colorScheme.onSurface,
+                                fontWeight: FontWeight.w600,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          SizedBox(width: 2.w),
+                          Icon(
+                            Icons.keyboard_arrow_down,
+                            size: 16.sp,
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.onSurfaceVariant,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-                SizedBox(height: 24.h),
+
+                SizedBox(width: AppSpacing.md),
+
+                // Cart Button
+                IconButtonCustom(
+                  icon: Icons.shopping_cart_outlined,
+                  badgeCount: cartCount,
+                  onPressed: () => context.go('/cart'),
+                ),
               ],
             ),
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSearchSection() {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: AppSpacing.screenPadding),
+      child: SearchBarWidget(
+        hintText: 'Search restaurants or dishes...',
+        onSearch: (query) {
+          ref.read(searchQueryProvider.notifier).state = query;
+        },
+        onClear: () {
+          ref.read(searchQueryProvider.notifier).state = '';
+        },
+      ),
+    );
+  }
+
+  Widget _buildActionButtons(List<Restaurant> restaurants) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: AppSpacing.screenPadding),
+      child: Row(
+        children: [
+          // Filter Button
           Expanded(
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildCarouselSection(
-                    context,
-                    title: 'Hidden Gems',
-                    restaurants: hiddenGems,
-                    subtitle: 'Undiscovered local favorites',
-                  ),
-                  SizedBox(height: 24.h),
-                  _buildCarouselSection(
-                    context,
-                    title: 'Local Heroes',
-                    restaurants: localHeroes,
-                    subtitle: 'Community favorites with Tawseya votes',
-                  ),
-                  SizedBox(height: 24.h),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16.w),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                'All Restaurants (${restaurants.length})',
-                                style: Theme.of(context).textTheme.titleLarge,
-                              ),
-                            ),
-                            IconButton(
-                              icon: const Icon(Icons.tune),
-                              onPressed: () => _showFilterBottomSheet(context),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 12.h),
-                        if (restaurants.isEmpty)
-                          const Center(
-                            child: Padding(
-                              padding: EdgeInsets.all(32.0),
-                              child: Text(
-                                'No restaurants match your filters. Try adjusting them.',
-                              ),
-                            ),
-                          )
-                        else
-                          ...restaurants.map(
-                            (restaurant) => _buildRestaurantCard(
-                              context,
-                              restaurant,
-                              ref.watch(favoritesProvider.notifier),
-                            ),
-                          ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 100.h),
-                ],
-              ),
+            child: SecondaryButton(
+              text: 'Filter',
+              icon: Icons.tune,
+              onPressed: () => _showFilterBottomSheet(context),
+            ),
+          ),
+
+          SizedBox(width: AppSpacing.md),
+
+          // Surprise Me Button
+          Expanded(
+            flex: 2,
+            child: PrimaryButton(
+              text: 'Surprise Me!',
+              icon: Icons.casino,
+              onPressed: restaurants.isEmpty
+                  ? null
+                  : () {
+                      final random = List<Restaurant>.from(restaurants)
+                        ..shuffle();
+                      final selected = random.first;
+                      context.go('/restaurant/${selected.id}');
+                    },
             ),
           ),
         ],
@@ -254,54 +331,74 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     );
   }
 
-  Widget _buildCarouselSection(
-    BuildContext context, {
-    required String title,
-    required List<Restaurant> restaurants,
-    required String subtitle,
-  }) {
-    if (restaurants.isEmpty) return const SizedBox.shrink();
+  Widget _buildHiddenGemsSection(List<Restaurant> restaurants) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        // Section Header
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16.w),
+          padding: EdgeInsets.symmetric(horizontal: AppSpacing.screenPadding),
           child: Row(
             children: [
               Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(title, style: Theme.of(context).textTheme.titleLarge),
-                    Text(
-                      subtitle,
-                      style: Theme.of(
-                        context,
-                      ).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
-                    ),
-                  ],
+                child: Text(
+                  'Hidden Gems 💎',
+                  style: AppTypography.headlineMedium.copyWith(
+                    color: Theme.of(context).colorScheme.onSurface,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ),
               TextButton(
                 onPressed: () {
-                  // TODO: Navigate to full category - stub route to be added in main.dart
+                  // TODO: Navigate to full category
                 },
-                child: const Text('See All'),
+                child: Text(
+                  'See All',
+                  style: AppTypography.bodyMedium.copyWith(
+                    color: Theme.of(context).colorScheme.primary,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
               ),
             ],
           ),
         ),
-        SizedBox(height: 12.h),
+
+        SizedBox(height: AppSpacing.md),
+
+        // Horizontal Carousel
         SizedBox(
-          height: 220.h,
+          height: 280.h,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
-            padding: EdgeInsets.symmetric(horizontal: 16.w),
+            padding: EdgeInsets.symmetric(horizontal: AppSpacing.screenPadding),
             itemCount: restaurants.length,
             itemBuilder: (context, index) {
+              final restaurant = restaurants[index];
               return Padding(
-                padding: EdgeInsets.only(right: 12.w),
-                child: _buildCarouselCard(context, restaurants[index]),
+                padding: EdgeInsets.only(
+                  right: index < restaurants.length - 1 ? AppSpacing.md : 0,
+                ),
+                child: SizedBox(
+                  width: 260.w,
+                  child: RestaurantCard(
+                    imageUrl: restaurant.imageUrl,
+                    name: restaurant.name,
+                    cuisines: restaurant.cuisine.split(', '),
+                    rating: restaurant.rating,
+                    distance: '${restaurant.distance.toStringAsFixed(1)} km',
+                    hasTawseya: restaurant.tawseyaCount > 0,
+                    tawseyaCount: restaurant.tawseyaCount,
+                    isFavorite: ref
+                        .watch(favoritesProvider)
+                        .any((r) => r.id == restaurant.id),
+                    onTap: () => context.go('/restaurant/${restaurant.id}'),
+                    onFavoritePressed: () => ref
+                        .read(favoritesProvider.notifier)
+                        .toggleFavorite(restaurant),
+                  ),
+                ),
               );
             },
           ),
@@ -310,135 +407,342 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     );
   }
 
-  Widget _buildCarouselCard(BuildContext context, Restaurant restaurant) {
-    return Container(
-      width: 160.w,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16.r),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
-            blurRadius: 8,
-            offset: const Offset(0, 4),
+  Widget _buildLocalHeroesSection(List<Restaurant> restaurants) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Section Header
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: AppSpacing.screenPadding),
+          child: Row(
+            children: [
+              Expanded(
+                child: Text(
+                  'Local Heroes 🏆',
+                  style: AppTypography.headlineMedium.copyWith(
+                    color: Theme.of(context).colorScheme.onSurface,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+              TextButton(
+                onPressed: () {
+                  // TODO: Navigate to full category
+                },
+                child: Text(
+                  'See All',
+                  style: AppTypography.bodyMedium.copyWith(
+                    color: Theme.of(context).colorScheme.primary,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
+        ),
+
+        SizedBox(height: AppSpacing.md),
+
+        // Horizontal Carousel
+        SizedBox(
+          height: 280.h,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            padding: EdgeInsets.symmetric(horizontal: AppSpacing.screenPadding),
+            itemCount: restaurants.length,
+            itemBuilder: (context, index) {
+              final restaurant = restaurants[index];
+              return Padding(
+                padding: EdgeInsets.only(
+                  right: index < restaurants.length - 1 ? AppSpacing.md : 0,
+                ),
+                child: SizedBox(
+                  width: 260.w,
+                  child: RestaurantCard(
+                    imageUrl: restaurant.imageUrl,
+                    name: restaurant.name,
+                    cuisines: restaurant.cuisine.split(', '),
+                    rating: restaurant.rating,
+                    distance: '${restaurant.distance.toStringAsFixed(1)} km',
+                    hasTawseya: restaurant.tawseyaCount > 0,
+                    tawseyaCount: restaurant.tawseyaCount,
+                    isFavorite: ref
+                        .watch(favoritesProvider)
+                        .any((r) => r.id == restaurant.id),
+                    onTap: () => context.go('/restaurant/${restaurant.id}'),
+                    onFavoritePressed: () => ref
+                        .read(favoritesProvider.notifier)
+                        .toggleFavorite(restaurant),
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildAllRestaurantsSection(List<Restaurant> restaurants) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: AppSpacing.screenPadding),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ClipRRect(
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
-            child: Container(
-              height: 120.h,
-              width: double.infinity,
-              color: Colors.grey[300],
-              child: restaurant.imageUrl.isNotEmpty
-                  ? Image.asset(restaurant.imageUrl, fit: BoxFit.cover)
-                  : Shimmer.fromColors(
-                      baseColor: Colors.grey[300]!,
-                      highlightColor: Colors.grey[100]!,
-                      child: Container(color: Colors.white),
-                    ),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.all(8.w),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  restaurant.name,
-                  style: Theme.of(context).textTheme.titleMedium,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                Row(
+          // Section Header
+          Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Icon(Icons.star, color: Colors.amber, size: 16.sp),
-                    SizedBox(width: 4.w),
-                    Text('${restaurant.rating}'),
-                    const Spacer(),
-                    Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 6.w,
-                        vertical: 2.h,
+                    Text(
+                      'All Restaurants',
+                      style: AppTypography.headlineMedium.copyWith(
+                        color: Theme.of(context).colorScheme.onSurface,
+                        fontWeight: FontWeight.w700,
                       ),
-                      decoration: BoxDecoration(
-                        color: Colors.green,
-                        borderRadius: BorderRadius.circular(10.r),
-                      ),
-                      child: Text(
-                        '${restaurant.tawseyaCount} Tawseya',
-                        style: TextStyle(fontSize: 10.sp, color: Colors.white),
+                    ),
+                    SizedBox(height: 4.h),
+                    Text(
+                      '${restaurants.length} restaurant${restaurants.length != 1 ? 's' : ''}',
+                      style: AppTypography.bodyMedium.copyWith(
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
                       ),
                     ),
                   ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
+
+          SizedBox(height: AppSpacing.md),
+
+          // Restaurant List
+          if (restaurants.isEmpty)
+            Center(
+              child: Padding(
+                padding: EdgeInsets.all(AppSpacing.xl),
+                child: Column(
+                  children: [
+                    Icon(Icons.search_off, size: 64.sp, color: AppColors.gray),
+                    SizedBox(height: AppSpacing.md),
+                    Text(
+                      'No restaurants found',
+                      style: AppTypography.titleLarge.copyWith(
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
+                    ),
+                    SizedBox(height: AppSpacing.xs),
+                    Text(
+                      'Try adjusting your filters',
+                      style: AppTypography.bodyMedium.copyWith(
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            )
+          else
+            ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: restaurants.length,
+              itemBuilder: (context, index) {
+                final restaurant = restaurants[index];
+                return Padding(
+                  padding: EdgeInsets.only(
+                    bottom: index < restaurants.length - 1 ? AppSpacing.md : 0,
+                  ),
+                  child: _buildCompactRestaurantCard(restaurant),
+                );
+              },
+            ),
         ],
       ),
     );
   }
 
-  Widget _buildRestaurantCard(
-    BuildContext context,
-    Restaurant restaurant,
-    FavoritesNotifier favoritesNotifier,
-  ) {
+  Widget _buildCompactRestaurantCard(Restaurant restaurant) {
     final isFavorite = ref
         .watch(favoritesProvider)
         .any((r) => r.id == restaurant.id);
 
-    return Card(
-      margin: EdgeInsets.only(bottom: 12.h),
-      child: ListTile(
-        leading: ClipRRect(
-          borderRadius: BorderRadius.circular(8.r),
-          child: Container(
-            width: 60.w,
-            height: 60.h,
-            color: Colors.grey[300],
-            child: restaurant.imageUrl.isNotEmpty
-                ? Image.asset(restaurant.imageUrl, fit: BoxFit.cover)
-                : Shimmer.fromColors(
-                    baseColor: Colors.grey[300]!,
-                    highlightColor: Colors.grey[100]!,
-                    child: Container(color: Colors.white),
+    return GestureDetector(
+      onTap: () => context.go('/restaurant/${restaurant.id}'),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.surface,
+          borderRadius: AppRadius.cardRadius,
+          boxShadow: AppShadows.card,
+        ),
+        child: Padding(
+          padding: EdgeInsets.all(AppSpacing.md),
+          child: Row(
+            children: [
+              // Restaurant Image
+              ClipRRect(
+                borderRadius: BorderRadius.circular(AppRadius.md),
+                child: Container(
+                  width: 80.w,
+                  height: 80.h,
+                  color: AppColors.lightGray,
+                  child:
+                      restaurant.imageUrl != null &&
+                          restaurant.imageUrl!.isNotEmpty
+                      ? (restaurant.imageUrl!.startsWith('assets/')
+                            ? Image.asset(
+                                restaurant.imageUrl!.replaceFirst(
+                                  'assets/',
+                                  '',
+                                ),
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Icon(
+                                    Icons.restaurant,
+                                    size: 32.sp,
+                                    color: AppColors.gray,
+                                  );
+                                },
+                              )
+                            : Image.network(
+                                restaurant.imageUrl!,
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Icon(
+                                    Icons.restaurant,
+                                    size: 32.sp,
+                                    color: AppColors.gray,
+                                  );
+                                },
+                              ))
+                      : Icon(
+                          Icons.restaurant,
+                          size: 32.sp,
+                          color: AppColors.gray,
+                        ),
+                ),
+              ),
+
+              SizedBox(width: AppSpacing.md),
+
+              // Restaurant Details
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Name and Rating
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            restaurant.name,
+                            style: AppTypography.titleMedium.copyWith(
+                              color: Theme.of(context).colorScheme.onSurface,
+                              fontWeight: FontWeight.w600,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                        SizedBox(width: AppSpacing.xs),
+                        Icon(
+                          Icons.star,
+                          size: 14.sp,
+                          color: AppColors.primaryGold,
+                        ),
+                        SizedBox(width: 2.w),
+                        Text(
+                          restaurant.rating.toStringAsFixed(1),
+                          style: AppTypography.bodySmall.copyWith(
+                            color: Theme.of(context).colorScheme.onSurface,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    SizedBox(height: AppSpacing.xs),
+
+                    // Cuisine
+                    Text(
+                      restaurant.cuisine,
+                      style: AppTypography.bodySmall.copyWith(
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+
+                    SizedBox(height: AppSpacing.xs),
+
+                    // Distance and Tawseya
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.location_on,
+                          size: 12.sp,
+                          color: AppColors.gray,
+                        ),
+                        SizedBox(width: 2.w),
+                        Text(
+                          '${restaurant.distance.toStringAsFixed(1)} km',
+                          style: AppTypography.bodySmall.copyWith(
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                        if (restaurant.tawseyaCount > 0) ...[
+                          SizedBox(width: AppSpacing.sm),
+                          Icon(
+                            Icons.diamond,
+                            size: 12.sp,
+                            color: AppColors.primaryGold,
+                          ),
+                          SizedBox(width: 2.w),
+                          Text(
+                            '${restaurant.tawseyaCount}',
+                            style: AppTypography.bodySmall.copyWith(
+                              color: AppColors.primaryGold,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+
+              SizedBox(width: AppSpacing.sm),
+
+              // Favorite Button
+              GestureDetector(
+                onTap: () => ref
+                    .read(favoritesProvider.notifier)
+                    .toggleFavorite(restaurant),
+                child: Container(
+                  padding: EdgeInsets.all(AppSpacing.xs),
+                  decoration: BoxDecoration(
+                    color: isFavorite
+                        ? Theme.of(context).colorScheme.error.withOpacity(0.1)
+                        : Theme.of(context).colorScheme.surfaceVariant,
+                    shape: BoxShape.circle,
                   ),
+                  child: Icon(
+                    isFavorite ? Icons.favorite : Icons.favorite_border,
+                    color: isFavorite
+                        ? Theme.of(context).colorScheme.error
+                        : Theme.of(context).colorScheme.onSurfaceVariant,
+                    size: 20.sp,
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
-        title: Text(restaurant.name),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Icon(Icons.star, color: Colors.amber, size: 14.sp),
-                SizedBox(width: 4.w),
-                Text('${restaurant.rating}'),
-                SizedBox(width: 16.w),
-                Text(restaurant.cuisine),
-              ],
-            ),
-            Text('${restaurant.tawseyaCount} Tawseya'),
-          ],
-        ),
-        trailing: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            IconButton(
-              icon: Icon(
-                isFavorite ? Icons.favorite : Icons.favorite_border,
-                color: isFavorite ? Colors.red : null,
-              ),
-              onPressed: () => favoritesNotifier.toggleFavorite(restaurant),
-            ),
-            const Icon(Icons.arrow_forward_ios, size: 16),
-          ],
-        ),
-        onTap: () => context.go('/restaurant/${restaurant.id}'),
       ),
     );
   }
@@ -446,8 +750,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   void _showFilterBottomSheet(BuildContext context) {
     showModalBottomSheet(
       context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.xl)),
       ),
       builder: (context) => FilterBottomSheet(
         selectedCuisine: _selectedCuisine,
@@ -457,6 +762,191 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             setState(() => _selectedCuisine = cuisine),
         onRatingChanged: (rating) => setState(() => _minRating = rating),
         onPriceChanged: (price) => setState(() => _priceRange = price),
+      ),
+    );
+  }
+
+  Widget _buildLoadingState() {
+    return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      body: CustomScrollView(
+        controller: _scrollController,
+        slivers: [
+          // App Bar
+          _buildAppBar(0),
+
+          // Content
+          SliverToBoxAdapter(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: AppSpacing.md),
+
+                // Search Bar Placeholder
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: AppSpacing.screenPadding,
+                  ),
+                  child: Container(
+                    height: 56.h,
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.surface,
+                      borderRadius: BorderRadius.circular(AppRadius.md),
+                      boxShadow: AppShadows.sm,
+                    ),
+                  ),
+                ),
+
+                SizedBox(height: AppSpacing.md),
+
+                // Action Buttons Placeholder
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: AppSpacing.screenPadding,
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Container(
+                          height: 48.h,
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).colorScheme.surface,
+                            borderRadius: BorderRadius.circular(AppRadius.md),
+                            boxShadow: AppShadows.sm,
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: AppSpacing.md),
+                      Expanded(
+                        flex: 2,
+                        child: Container(
+                          height: 48.h,
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).colorScheme.primary,
+                            borderRadius: BorderRadius.circular(AppRadius.md),
+                            boxShadow: AppShadows.sm,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                SizedBox(height: AppSpacing.sectionSpacing),
+
+                // Hidden Gems Section Placeholder
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: AppSpacing.screenPadding,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        height: 24.h,
+                        width: 150.w,
+                        color: Theme.of(context).colorScheme.surface,
+                      ),
+                      SizedBox(height: AppSpacing.md),
+                      SizedBox(
+                        height: 280.h,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: 3,
+                          itemBuilder: (context, index) => Padding(
+                            padding: EdgeInsets.only(
+                              right: index < 2 ? AppSpacing.md : 0,
+                            ),
+                            child: SizedBox(
+                              width: 260.w,
+                              child: RestaurantCard.loading(),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                SizedBox(height: AppSpacing.sectionSpacing),
+
+                // Local Heroes Section Placeholder
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: AppSpacing.screenPadding,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        height: 24.h,
+                        width: 140.w,
+                        color: Theme.of(context).colorScheme.surface,
+                      ),
+                      SizedBox(height: AppSpacing.md),
+                      SizedBox(
+                        height: 280.h,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: 3,
+                          itemBuilder: (context, index) => Padding(
+                            padding: EdgeInsets.only(
+                              right: index < 2 ? AppSpacing.md : 0,
+                            ),
+                            child: SizedBox(
+                              width: 260.w,
+                              child: RestaurantCard.loading(),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                SizedBox(height: AppSpacing.sectionSpacing),
+
+                // All Restaurants Section Placeholder
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: AppSpacing.screenPadding,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        height: 24.h,
+                        width: 180.w,
+                        color: Theme.of(context).colorScheme.surface,
+                      ),
+                      SizedBox(height: AppSpacing.md),
+                      ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: 5,
+                        itemBuilder: (context, index) => Padding(
+                          padding: EdgeInsets.only(
+                            bottom: index < 4 ? AppSpacing.md : 0,
+                          ),
+                          child: Container(
+                            height: 100.h,
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).colorScheme.surface,
+                              borderRadius: AppRadius.cardRadius,
+                              boxShadow: AppShadows.card,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                SizedBox(height: 100.h), // Bottom padding for nav bar
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -499,33 +989,45 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.all(16.w),
+    return Container(
+      padding: EdgeInsets.all(AppSpacing.lg),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Header
           Row(
             children: [
-              const Icon(Icons.filter_list),
-              SizedBox(width: 8.w),
-              const Text(
-                'Filters',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              Icon(
+                Icons.tune,
+                color: Theme.of(context).colorScheme.onSurface,
+                size: 24.sp,
               ),
-              const Spacer(),
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('Apply'),
+              SizedBox(width: AppSpacing.sm),
+              Text(
+                'Filters',
+                style: AppTypography.headlineSmall.copyWith(
+                  color: Theme.of(context).colorScheme.onSurface,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
             ],
           ),
-          SizedBox(height: 16.h),
+
+          SizedBox(height: AppSpacing.lg),
+
           // Cuisine Filter
-          Text('Cuisine', style: Theme.of(context).textTheme.titleMedium),
-          SizedBox(height: 8.h),
+          Text(
+            'Cuisine',
+            style: AppTypography.titleMedium.copyWith(
+              color: Theme.of(context).colorScheme.onSurface,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          SizedBox(height: AppSpacing.sm),
           Wrap(
-            spacing: 8.w,
+            spacing: AppSpacing.sm,
+            runSpacing: AppSpacing.sm,
             children:
                 [
                       'All',
@@ -540,7 +1042,18 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                     .map(
                       (cuisine) => FilterChip(
                         label: Text(cuisine),
+                        labelStyle: AppTypography.bodyMedium.copyWith(
+                          color: _selectedCuisine == cuisine
+                              ? Theme.of(context).colorScheme.onPrimary
+                              : Theme.of(context).colorScheme.onSurface,
+                          fontWeight: FontWeight.w600,
+                        ),
                         selected: _selectedCuisine == cuisine,
+                        selectedColor: Theme.of(context).colorScheme.primary,
+                        backgroundColor: Theme.of(
+                          context,
+                        ).colorScheme.surfaceVariant,
+                        checkmarkColor: Theme.of(context).colorScheme.onPrimary,
                         onSelected: (selected) {
                           setState(() {
                             _selectedCuisine = selected ? cuisine : 'All';
@@ -550,32 +1063,83 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                     )
                     .toList(),
           ),
-          SizedBox(height: 16.h),
+
+          SizedBox(height: AppSpacing.lg),
+
           // Rating Filter
           Text(
             'Minimum Rating',
-            style: Theme.of(context).textTheme.titleMedium,
+            style: AppTypography.titleMedium.copyWith(
+              color: Theme.of(context).colorScheme.onSurface,
+              fontWeight: FontWeight.w600,
+            ),
           ),
-          SizedBox(height: 8.h),
-          Slider(
-            value: _minRating,
-            min: 0.0,
-            max: 5.0,
-            divisions: 10,
-            label: _minRating.toStringAsFixed(1),
-            onChanged: (value) => setState(() => _minRating = value),
+          SizedBox(height: AppSpacing.sm),
+          Row(
+            children: [
+              Expanded(
+                child: Slider(
+                  value: _minRating,
+                  min: 0.0,
+                  max: 5.0,
+                  divisions: 10,
+                  label: _minRating.toStringAsFixed(1),
+                  activeColor: Theme.of(context).colorScheme.primary,
+                  inactiveColor: Theme.of(context).colorScheme.surfaceVariant,
+                  onChanged: (value) => setState(() => _minRating = value),
+                ),
+              ),
+              SizedBox(width: AppSpacing.sm),
+              Container(
+                padding: EdgeInsets.symmetric(
+                  horizontal: AppSpacing.sm,
+                  vertical: AppSpacing.xs,
+                ),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(AppRadius.sm),
+                ),
+                child: Text(
+                  _minRating.toStringAsFixed(1),
+                  style: AppTypography.bodyMedium.copyWith(
+                    color: Theme.of(context).colorScheme.primary,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ],
           ),
-          SizedBox(height: 16.h),
+
+          SizedBox(height: AppSpacing.lg),
+
           // Price Range Filter
-          Text('Price Range', style: Theme.of(context).textTheme.titleMedium),
-          SizedBox(height: 8.h),
+          Text(
+            'Price Range',
+            style: AppTypography.titleMedium.copyWith(
+              color: Theme.of(context).colorScheme.onSurface,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          SizedBox(height: AppSpacing.sm),
           Wrap(
-            spacing: 8.w,
+            spacing: AppSpacing.sm,
+            runSpacing: AppSpacing.sm,
             children: ['All', 'Budget', 'Premium']
                 .map(
                   (price) => FilterChip(
                     label: Text(price),
+                    labelStyle: AppTypography.bodyMedium.copyWith(
+                      color: _priceRange == price
+                          ? Theme.of(context).colorScheme.onPrimary
+                          : Theme.of(context).colorScheme.onSurface,
+                      fontWeight: FontWeight.w600,
+                    ),
                     selected: _priceRange == price,
+                    selectedColor: Theme.of(context).colorScheme.primary,
+                    backgroundColor: Theme.of(
+                      context,
+                    ).colorScheme.surfaceVariant,
+                    checkmarkColor: Theme.of(context).colorScheme.onPrimary,
                     onSelected: (selected) {
                       setState(() {
                         _priceRange = selected ? price : 'All';
@@ -585,33 +1149,40 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                 )
                 .toList(),
           ),
-          SizedBox(height: 16.h),
+
+          SizedBox(height: AppSpacing.xl),
+
+          // Action Buttons
           Row(
             children: [
               Expanded(
-                child: TextButton(
+                child: SecondaryButton(
+                  text: 'Clear All',
                   onPressed: () {
                     widget.onCuisineChanged('All');
                     widget.onRatingChanged(0.0);
                     widget.onPriceChanged('All');
                     Navigator.pop(context);
                   },
-                  child: const Text('Clear All'),
                 ),
               ),
+              SizedBox(width: AppSpacing.md),
               Expanded(
-                child: ElevatedButton(
+                flex: 2,
+                child: PrimaryButton(
+                  text: 'Apply Filters',
                   onPressed: () {
                     widget.onCuisineChanged(_selectedCuisine);
                     widget.onRatingChanged(_minRating);
                     widget.onPriceChanged(_priceRange);
                     Navigator.pop(context);
                   },
-                  child: const Text('Apply Filters'),
                 ),
               ),
             ],
           ),
+
+          SizedBox(height: AppSpacing.md),
         ],
       ),
     );

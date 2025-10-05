@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:shadcn_ui/shadcn_ui.dart';
 
-import '../../../../core/theme/app_theme.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_typography.dart';
+import '../../../../core/theme/shadcn_theme.dart';
 import '../../../../core/utils/shared_prefs_helper.dart';
+import 'package:lottie/lottie.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -40,55 +44,39 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Scaffold(
-      backgroundColor: AppTheme.primaryColor,
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            // Logo placeholder
-            Container(
-              width: 120.w,
-              height: 120.h,
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(16.r),
+      body: Container(
+        decoration: BoxDecoration(color: theme.colorScheme.primary),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(
+                height: 180.h,
+                width: 180.h,
+                child: Lottie.asset(
+                  'assets/animations/Otlob.json',
+                  repeat: true,
+                  fit: BoxFit.contain,
+                ),
               ),
-              child: const Icon(
-                Icons.restaurant,
-                size: 80,
-                color: Colors.white,
+              SizedBox(height: 16.h),
+              Text(
+                'Discover Authentic Food',
+                style: AppTypography.bodyLarge.copyWith(
+                  color: theme.colorScheme.onPrimary.withOpacity(0.9),
+                  letterSpacing: 0.5,
+                ),
               ),
-            ),
-            SizedBox(height: 24.h),
-            Text(
-              'Otlob',
-              style: TextStyle(
-                fontSize: 32.sp,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-                fontFamily: 'TutanoCCV2',
+              SizedBox(height: 48.h),
+              // Loading indicator using Shadcn UI
+              const ShadProgress(
+                value: null, // Indeterminate progress
               ),
-            ),
-            SizedBox(height: 8.h),
-            Text(
-              'Discover Authentic Food',
-              style: TextStyle(
-                fontSize: 16.sp,
-                color: Colors.white.withValues(alpha: 0.8),
-              ),
-            ),
-            SizedBox(height: 40.h),
-            // Loading indicator
-            SizedBox(
-              width: 24.w,
-              height: 24.h,
-              child: const CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                strokeWidth: 2,
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

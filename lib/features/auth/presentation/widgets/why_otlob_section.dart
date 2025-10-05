@@ -35,8 +35,10 @@ class WhyOtlobSection extends StatelessWidget {
             ),
           ),
           SizedBox(height: 16.h),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          Wrap(
+            spacing: 8.w,
+            runSpacing: 8.h,
+            alignment: WrapAlignment.spaceEvenly,
             children: [
               _buildWhyCard(
                 icon: Icons.access_time,
@@ -59,7 +61,7 @@ class WhyOtlobSection extends StatelessWidget {
               _buildWhyCard(
                 icon: Icons.local_offer,
                 title: 'First Order',
-                description: '50% off with WELCOME50',
+                description: '50% off',
                 color: AppTheme.secondaryColor,
               ),
             ],

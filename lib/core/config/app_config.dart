@@ -1,3 +1,5 @@
+import 'sensitive_config.dart';
+
 class AppConfig {
   static const String appName = 'Otlob';
   static const String appVersion = '1.0.0';
@@ -33,20 +35,20 @@ class AppConfig {
   static const int maxCacheAge = 7; // days
   static const int maxCacheSize = 100; // MB
 
-  // Firebase Config
-  static const String firebaseApiKey = ''; // Add your Firebase API Key
-  static const String firebaseProjectId = ''; // Add your Firebase Project ID
-  static const String firebaseMessagingSenderId =
-      ''; // Add your Firebase Messaging Sender ID
+  // Firebase Config - Now handled by firebase_keys.dart for platform-specific keys
+  static const String firebaseProjectId = 'otlob-6e081';
+  static const String firebaseMessagingSenderId = '450554002301';
 
   // Map Config
-  static const String googleMapsApiKey = ''; // Add your Google Maps API Key
+  static String get googleMapsApiKey => SensitiveConfig.googleMapsApiKey;
   static const double defaultLatitude = 30.0444; // Cairo's latitude
   static const double defaultLongitude = 31.2357; // Cairo's longitude
 
   // Payment Config
-  static const String payMobApiKey = ''; // Add your PayMob API Key
-  static const String payMobFrameId = ''; // Add your PayMob Frame ID
-  static const String payMobIntegrationId =
-      ''; // Add your PayMob Integration ID
+  static String get payMobApiKey => SensitiveConfig.payMobApiKey;
+  static String get payMobFrameId => SensitiveConfig.payMobFrameId;
+  static String get payMobIntegrationId => SensitiveConfig.payMobIntegrationId;
+
+  // Unsplash Config
+  static String get unsplashAccessKey => SensitiveConfig.unsplashAccessKey;
 }

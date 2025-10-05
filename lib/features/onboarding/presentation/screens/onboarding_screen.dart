@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shadcn_ui/shadcn_ui.dart';
 
-import 'package:otlob_app/core/theme/app_theme.dart';
+import 'package:otlob_app/core/theme/shadcn_theme.dart';
 import 'package:otlob_app/core/utils/shared_prefs_helper.dart';
 import 'package:otlob_app/features/onboarding/presentation/widgets/onboarding_page.dart';
 
@@ -113,6 +114,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Scaffold(
       body: Stack(
         children: [
@@ -151,8 +154,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       width: _currentPage == index ? 24.w : 8.w,
                       decoration: BoxDecoration(
                         color: _currentPage == index
-                            ? AppTheme.secondaryColor
-                            : Colors.white.withValues(alpha: 0.5),
+                            ? theme.colorScheme.secondary
+                            : Colors.white.withOpacity(0.5),
                         borderRadius: BorderRadius.circular(4.r),
                       ),
                     ),
@@ -161,38 +164,41 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 SizedBox(height: 40.h),
                 // Buttons
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    TextButton(
-                      onPressed: () => _navigateToAuth(),
-                      child: Text(
-                        'Skip',
-                        style: TextStyle(color: Colors.white, fontSize: 16.sp),
+                    Expanded(
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: ShadButton.outline(
+                          child: Text(
+                            'Skip',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16.sp,
+                            ),
+                          ),
+                          onPressed: () => _navigateToAuth(),
+                        ),
                       ),
                     ),
-                    ElevatedButton(
-                      onPressed: _currentPage == _pages.length - 1
-                          ? _navigateToAuth
-                          : () => _pageController.nextPage(
-                              duration: const Duration(milliseconds: 300),
-                              curve: Curves.easeInOut,
+                    Expanded(
+                      child: Align(
+                        alignment: Alignment.centerRight,
+                        child: ShadButton(
+                          child: Text(
+                            _currentPage == _pages.length - 1
+                                ? 'Start'
+                                : 'Next',
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
                             ),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppTheme.primaryColor,
-                        foregroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12.r),
-                        ),
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 32.w,
-                          vertical: 12.h,
-                        ),
-                      ),
-                      child: Text(
-                        _currentPage == _pages.length - 1 ? 'Start' : 'Next',
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
+                          ),
+                          onPressed: _currentPage == _pages.length - 1
+                              ? _navigateToAuth
+                              : () => _pageController.nextPage(
+                                  duration: const Duration(milliseconds: 300),
+                                  curve: Curves.easeInOut,
+                                ),
                         ),
                       ),
                     ),

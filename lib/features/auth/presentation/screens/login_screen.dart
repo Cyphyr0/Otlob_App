@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:otlob_app/core/errors/failures.dart';
-import 'package:otlob_app/core/theme/app_theme.dart';
+import 'package:otlob_app/core/theme/app_colors.dart';
+import 'package:otlob_app/core/theme/app_typography.dart';
+import 'package:otlob_app/core/theme/app_spacing.dart';
+import 'package:otlob_app/core/widgets/branding/otlob_logo.dart';
+import 'package:otlob_app/core/widgets/buttons/primary_button.dart';
+import 'package:otlob_app/core/widgets/buttons/secondary_button.dart';
+import 'package:otlob_app/core/widgets/inputs/custom_text_field.dart';
 import 'package:otlob_app/features/auth/presentation/providers/auth_provider.dart';
-import 'package:otlob_app/features/auth/presentation/widgets/why_otlob_section.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -15,60 +18,44 @@ class LoginScreen extends ConsumerStatefulWidget {
 }
 
 class _LoginScreenState extends ConsumerState<LoginScreen> {
-  final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
-  String? _errorText;
+  String? _emailError;
+  String? _passwordError;
 
   @override
   void dispose() {
-    _phoneController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
     super.dispose();
   }
 
-  Future<void> _sendOTP() async {
-    if (!_formKey.currentState!.validate()) return;
+  Future<void> _handleLogin() async {
+    setState(() {
+      _emailError = null;
+      _passwordError = null;
+    });
 
-    final phone = '+20${_phoneController.text.trim()}';
-    if (phone.length != 13 || _phoneController.text.length != 10) {
-      setState(() {
-        _errorText = 'Please enter a valid Egyptian phone number (10 digits)';
-      });
+    // Basic validation
+    if (_emailController.text.trim().isEmpty) {
+      setState(() => _emailError = 'Please enter your email');
+      return;
+    }
+    if (_passwordController.text.isEmpty) {
+      setState(() => _passwordError = 'Please enter your password');
       return;
     }
 
-    setState(() {
-      _isLoading = true;
-      _errorText = null;
-    });
+    setState(() => _isLoading = true);
 
-    final authNotifier = ref.read(authProvider.notifier);
-    try {
-      await authNotifier.sendOTP(phone);
-      if (mounted) {
-        context.push('/phone-verification', extra: phone);
-      }
-    } on AuthFailure catch (e) {
-      if (mounted) {
-        setState(() {
-          _errorText = e.message;
-        });
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(e.message)));
-      }
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text('An error occurred')));
-      }
-    } finally {
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
-      }
+    // TODO: Implement actual email/password login
+    await Future.delayed(const Duration(seconds: 1));
+
+    if (mounted) {
+      setState(() => _isLoading = false);
+      context.go('/home');
     }
   }
 
@@ -77,7 +64,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     try {
       await authNotifier.signInWithGoogle();
       if (mounted) {
-        context.go('/address');
+        context.go('/home');
       }
     } catch (e) {
       if (mounted) {
@@ -93,7 +80,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     try {
       await authNotifier.signInWithFacebook();
       if (mounted) {
-        context.go('/address');
+        context.go('/home');
       }
     } catch (e) {
       if (mounted) {
@@ -104,36 +91,17 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     }
   }
 
-  // DISABLED: Apple Sign-in - Not implemented for now
-  // Future<void> _signInWithApple() async {
-  //   final authNotifier = ref.read(authProvider.notifier);
-  //   try {
-  //     await authNotifier.signInWithApple();
-  //     if (mounted) {
-  //       context.go('/address');
-  //     }
-  //   } catch (e) {
-  //     if (mounted) {
-  //       ScaffoldMessenger.of(
-  //         context,
-  //       ).showSnackBar(SnackBar(content: Text('Apple sign-in failed: $e')));
-  //     }
-  //   }
-  // }
-
-  Future<void> _showForgotPassword() async {
+  void _handleForgotPassword() {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Forgot Password'),
-        content: const Text(
-          'This feature will be implemented later. For now, use phone OTP to login.',
+        title: Text('Forgot Password', style: AppTypography.titleMedium),
+        content: Text(
+          'Password reset feature will be implemented soon. For now, please use social login.',
+          style: AppTypography.bodyMedium,
         ),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('OK'),
-          ),
+          PrimaryButton(text: 'OK', onPressed: () => Navigator.pop(context)),
         ],
       ),
     );
@@ -142,245 +110,224 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color(0xFF2B3A67), Color(0xFF1E2A44)],
-          ),
-        ),
-        child: SafeArea(
-          child: SingleChildScrollView(
-            padding: EdgeInsets.all(24.w),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                children: [
-                  SizedBox(height: 50.h),
-                  Text(
-                    'Welcome back!',
-                    style: TextStyle(
-                      fontSize: 32.sp,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                      fontFamily: 'TutanoCCV2',
-                    ),
+      backgroundColor: AppColors.offWhite,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: AppSpacing.allMd,
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                SizedBox(height: AppSpacing.xl),
+
+                // Otlob Logo
+                Center(child: OtlobLogo(size: LogoSize.large)),
+
+                SizedBox(height: AppSpacing.lg),
+
+                // Welcome Back Title
+                Text(
+                  'Welcome Back',
+                  style: AppTypography.displaySmall.copyWith(
+                    color: AppColors.primaryDark,
                   ),
-                  SizedBox(height: 8.h),
-                  Text(
-                    'Please enter your phone number to login',
-                    style: TextStyle(fontSize: 16.sp, color: Colors.white70),
-                    textAlign: TextAlign.center,
+                  textAlign: TextAlign.center,
+                ),
+
+                SizedBox(height: AppSpacing.xs),
+
+                Text(
+                  'Login to continue ordering delicious food',
+                  style: AppTypography.bodyLarge.copyWith(
+                    color: AppColors.gray,
                   ),
-                  SizedBox(height: 50.h),
-                  TextFormField(
-                    controller: _phoneController,
-                    keyboardType: TextInputType.phone,
-                    decoration: InputDecoration(
-                      prefixText: '+20 ',
-                      prefixStyle: TextStyle(
-                        color: Colors.white,
-                        fontSize: 18.sp,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      labelText: 'Phone Number',
-                      labelStyle: TextStyle(color: Colors.white70),
-                      hintText: 'Enter 10 digit phone number',
-                      hintStyle: TextStyle(color: Colors.white54),
-                      errorText: _errorText,
-                      errorStyle: const TextStyle(color: Colors.red),
-                      filled: true,
-                      fillColor: Colors.white.withValues(alpha: 0.1),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12.r),
-                        borderSide: BorderSide(
-                          color: Colors.white.withValues(alpha: 0.3),
-                        ),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12.r),
-                        borderSide: BorderSide(
-                          color: Colors.white.withValues(alpha: 0.3),
-                        ),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12.r),
-                        borderSide: const BorderSide(
-                          color: AppTheme.secondaryColor,
-                          width: 2,
-                        ),
-                      ),
-                    ),
-                    style: const TextStyle(color: Colors.white),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your phone number';
-                      }
-                      if (value.length != 10) {
-                        return 'Phone number must be 10 digits';
-                      }
-                      return null;
-                    },
-                  ),
-                  SizedBox(height: 30.h),
-                  SizedBox(
-                    width: double.infinity,
-                    height: 56.h,
-                    child: ElevatedButton(
-                      onPressed: _isLoading ? null : _sendOTP,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppTheme.secondaryColor,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12.r),
-                        ),
-                      ),
-                      child: _isLoading
-                          ? const SizedBox(
-                              height: 20,
-                              width: 20,
-                              child: CircularProgressIndicator(
-                                color: Colors.white,
-                                strokeWidth: 2,
-                              ),
-                            )
-                          : const Text(
-                              'Continue',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                            ),
-                    ),
-                  ),
-                  SizedBox(height: 20.h),
-                  TextButton(
-                    onPressed: _showForgotPassword,
+                  textAlign: TextAlign.center,
+                ),
+
+                SizedBox(height: AppSpacing.sectionSpacing),
+
+                // Email Field
+                CustomTextField(
+                  controller: _emailController,
+                  label: 'Email',
+                  hint: 'Enter your email',
+                  prefixIcon: Icons.email_outlined,
+                  keyboardType: TextInputType.emailAddress,
+                  textInputAction: TextInputAction.next,
+                  errorText: _emailError,
+                  onChanged: (_) => setState(() => _emailError = null),
+                ),
+
+                SizedBox(height: AppSpacing.md),
+
+                // Password Field
+                CustomTextField(
+                  controller: _passwordController,
+                  label: 'Password',
+                  hint: 'Enter your password',
+                  prefixIcon: Icons.lock_outline,
+                  obscureText: true,
+                  textInputAction: TextInputAction.done,
+                  errorText: _passwordError,
+                  onChanged: (_) => setState(() => _passwordError = null),
+                  onSubmitted: (_) => _handleLogin(),
+                ),
+
+                SizedBox(height: AppSpacing.sm),
+
+                // Forgot Password Link
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: TextButton(
+                    onPressed: _handleForgotPassword,
                     child: Text(
                       'Forgot Password?',
-                      style: TextStyle(fontSize: 16.sp, color: Colors.white70),
-                    ),
-                  ),
-                  SizedBox(height: 30.h),
-                  const Text(
-                    'OR',
-                    style: TextStyle(
-                      color: Colors.white70,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  SizedBox(height: 30.h),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: ElevatedButton.icon(
-                          onPressed: _signInWithGoogle,
-                          icon: const Icon(
-                            Icons.g_mobiledata,
-                            color: Colors.white,
-                          ),
-                          label: const Text('Google'),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.white,
-                            foregroundColor: Colors.black87,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12.r),
-                            ),
-                            padding: EdgeInsets.symmetric(vertical: 12.h),
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: 12.w),
-                      Expanded(
-                        child: ElevatedButton.icon(
-                          onPressed: _signInWithFacebook,
-                          icon: const Icon(Icons.facebook, color: Colors.white),
-                          label: const Text('Facebook'),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF4267B2),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12.r),
-                            ),
-                            padding: EdgeInsets.symmetric(vertical: 12.h),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 12.h),
-                  // DISABLED: Apple Sign-in button - Not implemented for now
-                  // if (Theme.of(context).platform == TargetPlatform.iOS)
-                  //   SizedBox(
-                  //     width: double.infinity,
-                  //     child: ElevatedButton.icon(
-                  //       onPressed: _signInWithApple,
-                  //       icon: const Icon(Icons.apple, color: Colors.black),
-                  //       label: const Text('Apple'),
-                  //       style: ElevatedButton.styleFrom(
-                  //         backgroundColor: Colors.black,
-                  //         foregroundColor: Colors.white,
-                  //         shape: RoundedRectangleBorder(
-                  //           borderRadius: BorderRadius.circular(12.r),
-                  //         ),
-                  //         padding: EdgeInsets.symmetric(vertical: 12.h),
-                  //       ),
-                  //     ),
-                  //   ),
-                  SizedBox(height: 40.h),
-
-                  // Guest Mode - Skip Sign In
-                  TextButton(
-                    onPressed: () {
-                      // Navigate to home without authentication
-                      context.go('/home');
-                    },
-                    child: Text(
-                      'Skip for now',
-                      style: TextStyle(
-                        fontSize: 16.sp,
-                        color: Colors.white70,
-                        decoration: TextDecoration.underline,
+                      style: AppTypography.bodyMedium.copyWith(
+                        color: AppColors.accentOrange,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
                   ),
+                ),
 
-                  SizedBox(height: 20.h),
+                SizedBox(height: AppSpacing.md),
 
-                  // Sign Up Link
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "Don't have an account? ",
-                        style: TextStyle(
-                          fontSize: 14.sp,
-                          color: Colors.white70,
+                // Login Button
+                PrimaryButton(
+                  text: 'Login',
+                  onPressed: _isLoading ? null : _handleLogin,
+                  isLoading: _isLoading,
+                  fullWidth: true,
+                ),
+
+                SizedBox(height: AppSpacing.lg),
+
+                // Divider with OR
+                Row(
+                  children: [
+                    Expanded(child: Divider(color: AppColors.lightGray)),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: AppSpacing.md),
+                      child: Text(
+                        'OR',
+                        style: AppTypography.labelMedium.copyWith(
+                          color: AppColors.gray,
                         ),
                       ),
-                      TextButton(
-                        onPressed: () {
-                          context.go('/signup');
-                        },
-                        child: Text(
-                          'Sign Up',
-                          style: TextStyle(
-                            fontSize: 14.sp,
-                            color: AppTheme.secondaryColor,
-                            fontWeight: FontWeight.bold,
-                          ),
+                    ),
+                    Expanded(child: Divider(color: AppColors.lightGray)),
+                  ],
+                ),
+
+                SizedBox(height: AppSpacing.lg),
+
+                // Google Login Button
+                _SocialLoginButton(
+                  icon: Icons.g_mobiledata,
+                  label: 'Continue with Google',
+                  backgroundColor: AppColors.white,
+                  textColor: AppColors.darkGray,
+                  onPressed: _signInWithGoogle,
+                ),
+
+                SizedBox(height: AppSpacing.md),
+
+                // Facebook Login Button
+                _SocialLoginButton(
+                  icon: Icons.facebook,
+                  label: 'Continue with Facebook',
+                  backgroundColor: const Color(0xFF4267B2),
+                  textColor: AppColors.white,
+                  onPressed: _signInWithFacebook,
+                ),
+
+                SizedBox(height: AppSpacing.lg),
+
+                // Don't have account? Sign up link
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Don't have an account? ",
+                      style: AppTypography.bodyMedium.copyWith(
+                        color: AppColors.gray,
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: () => context.go('/signup'),
+                      style: TextButton.styleFrom(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: AppSpacing.xs,
+                        ),
+                        minimumSize: Size.zero,
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      ),
+                      child: Text(
+                        'Sign Up',
+                        style: AppTypography.bodyMedium.copyWith(
+                          color: AppColors.accentOrange,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
+                ),
 
-                  SizedBox(height: 20.h),
-                  const WhyOtlobSection(),
-                ],
-              ),
+                SizedBox(height: AppSpacing.md),
+
+                // Skip for now button
+                SecondaryButton(
+                  text: 'Skip for now',
+                  onPressed: () => context.go('/home'),
+                  fullWidth: true,
+                ),
+
+                SizedBox(height: AppSpacing.lg),
+              ],
             ),
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class _SocialLoginButton extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final Color backgroundColor;
+  final Color textColor;
+  final VoidCallback onPressed;
+
+  const _SocialLoginButton({
+    required this.icon,
+    required this.label,
+    required this.backgroundColor,
+    required this.textColor,
+    required this.onPressed,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 48,
+      child: OutlinedButton.icon(
+        onPressed: onPressed,
+        icon: Icon(icon, color: textColor),
+        label: Text(label),
+        style: OutlinedButton.styleFrom(
+          backgroundColor: backgroundColor,
+          foregroundColor: textColor,
+          side: BorderSide(
+            color: backgroundColor == AppColors.white
+                ? AppColors.lightGray
+                : backgroundColor,
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          textStyle: AppTypography.labelLarge,
         ),
       ),
     );

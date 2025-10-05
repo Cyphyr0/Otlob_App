@@ -12,6 +12,10 @@ class OrderConfirmationScreen extends ConsumerWidget {
     final cartState = ref.watch(cartProvider);
     final cartNotifier = ref.read(cartProvider.notifier);
 
+    if (cartNotifier.isLoading || cartState.isEmpty) {
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
+
     final subtotal = cartNotifier.subtotal;
     final deliveryFee = cartNotifier.deliveryFee;
     final discount = cartNotifier.discount;

@@ -7,6 +7,11 @@ import 'package:otlob_app/features/auth/domain/repositories/auth_repository.dart
 class FirebaseAuthRepository implements AuthRepository {
   final FirebaseAuthDataSource _dataSource;
 
+  // Expose password reset for provider
+  Future<void> sendPasswordResetEmail(String email) async {
+    await _dataSource.sendPasswordResetEmail(email);
+  }
+
   FirebaseAuthRepository(this._dataSource);
 
   @override
@@ -48,6 +53,32 @@ class FirebaseAuthRepository implements AuthRepository {
       return user;
     } catch (e) {
       throw AuthFailure(message: 'Facebook sign-in failed: $e');
+    }
+  }
+
+  @override
+  Future<User> signInWithEmail(String email, String password) async {
+    try {
+      final user = await _dataSource.signInWithEmail(email, password);
+      await saveUser(user);
+      return user;
+    } catch (e) {
+      throw AuthFailure(message: 'Email sign-in failed: $e');
+    }
+  }
+
+  @override
+  Future<User> signUpWithEmail(
+    String name,
+    String email,
+    String password,
+  ) async {
+    try {
+      final user = await _dataSource.signUpWithEmail(name, email, password);
+      await saveUser(user);
+      return user;
+    } catch (e) {
+      throw AuthFailure(message: 'Email sign-up failed: $e');
     }
   }
 
