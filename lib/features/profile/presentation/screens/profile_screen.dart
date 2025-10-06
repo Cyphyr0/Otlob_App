@@ -225,6 +225,13 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               // TODO: Navigate to about
             },
           ),
+          SizedBox(height: AppSpacing.sm),
+          _buildMenuItem(
+            icon: Icons.developer_mode,
+            title: 'Component Showcase',
+            subtitle: 'View UI components',
+            onTap: () => context.go('/demo'),
+          ),
 
           SizedBox(height: AppSpacing.xl),
 
@@ -250,6 +257,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   Widget _buildMenuItem({
     required IconData icon,
     required String title,
+    String? subtitle,
     required VoidCallback onTap,
   }) {
     return GestureDetector(
@@ -273,11 +281,25 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             ),
             SizedBox(width: AppSpacing.md),
             Expanded(
-              child: Text(
-                title,
-                style: AppTypography.bodyLarge.copyWith(
-                  fontWeight: FontWeight.w500,
-                ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: AppTypography.bodyLarge.copyWith(
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  if (subtitle != null) ...[
+                    SizedBox(height: AppSpacing.xs),
+                    Text(
+                      subtitle,
+                      style: AppTypography.bodySmall.copyWith(
+                        color: AppColors.gray,
+                      ),
+                    ),
+                  ],
+                ],
               ),
             ),
             Icon(Icons.arrow_forward_ios, size: 16.sp, color: AppColors.gray),

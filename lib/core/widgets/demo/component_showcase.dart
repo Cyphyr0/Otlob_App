@@ -15,6 +15,47 @@ import '../../theme/app_colors.dart';
 import '../../theme/app_spacing.dart';
 import '../../theme/app_typography.dart';
 
+class _SocialLoginButton extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final Color backgroundColor;
+  final Color textColor;
+  final VoidCallback onPressed;
+
+  const _SocialLoginButton({
+    required this.icon,
+    required this.label,
+    required this.backgroundColor,
+    required this.textColor,
+    required this.onPressed,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 48,
+      child: OutlinedButton.icon(
+        onPressed: onPressed,
+        icon: Icon(icon, color: textColor),
+        label: Text(label),
+        style: OutlinedButton.styleFrom(
+          backgroundColor: backgroundColor,
+          foregroundColor: textColor,
+          side: BorderSide(
+            color: backgroundColor == AppColors.white
+                ? AppColors.lightGray
+                : backgroundColor,
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          textStyle: AppTypography.labelLarge,
+        ),
+      ),
+    );
+  }
+}
+
 class ComponentShowcaseScreen extends StatefulWidget {
   const ComponentShowcaseScreen({super.key});
 
@@ -26,6 +67,8 @@ class ComponentShowcaseScreen extends StatefulWidget {
 class _ComponentShowcaseScreenState extends State<ComponentShowcaseScreen> {
   final _searchController = TextEditingController();
   final _textController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
   bool _primaryLoading = false;
   bool _secondaryLoading = false;
 
@@ -33,6 +76,8 @@ class _ComponentShowcaseScreenState extends State<ComponentShowcaseScreen> {
   void dispose() {
     _searchController.dispose();
     _textController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
     super.dispose();
   }
 
@@ -353,9 +398,74 @@ class _ComponentShowcaseScreenState extends State<ComponentShowcaseScreen> {
             ],
           ),
 
-          // 6. States
+          // 6. Auth Components
           _buildSection(
-            title: '6. States',
+            title: '6. Auth Components',
+            children: [
+              _buildCard(
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text('Login Form Fields'),
+                    SizedBox(height: AppSpacing.sm),
+                    CustomTextField(
+                      controller: _emailController,
+                      label: 'Email',
+                      hint: 'Enter your email',
+                      prefixIcon: Icons.email_outlined,
+                      keyboardType: TextInputType.emailAddress,
+                      textInputAction: TextInputAction.next,
+                    ),
+                    SizedBox(height: AppSpacing.sm),
+                    CustomTextField(
+                      controller: _passwordController,
+                      label: 'Password',
+                      hint: 'Enter your password',
+                      prefixIcon: Icons.lock_outline,
+                      obscureText: true,
+                      textInputAction: TextInputAction.done,
+                    ),
+                    SizedBox(height: AppSpacing.md),
+                    const Text('Social Login Buttons'),
+                    SizedBox(height: AppSpacing.sm),
+                    _SocialLoginButton(
+                      icon: Icons.g_mobiledata,
+                      label: 'Continue with Google',
+                      backgroundColor: AppColors.white,
+                      textColor: AppColors.darkGray,
+                      onPressed: () {},
+                    ),
+                    SizedBox(height: AppSpacing.sm),
+                    _SocialLoginButton(
+                      icon: Icons.facebook,
+                      label: 'Continue with Facebook',
+                      backgroundColor: const Color(0xFF4267B2),
+                      textColor: AppColors.white,
+                      onPressed: () {},
+                    ),
+                    SizedBox(height: AppSpacing.md),
+                    const Text('Auth Action Buttons'),
+                    SizedBox(height: AppSpacing.sm),
+                    PrimaryButton(
+                      text: 'Login',
+                      onPressed: () {},
+                      fullWidth: true,
+                    ),
+                    SizedBox(height: AppSpacing.sm),
+                    SecondaryButton(
+                      text: 'Skip for now',
+                      onPressed: () {},
+                      fullWidth: true,
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+
+          // 7. States
+          _buildSection(
+            title: '7. States',
             children: [
               _buildCard(
                 Column(
