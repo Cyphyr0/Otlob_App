@@ -8,6 +8,7 @@ import 'package:otlob_app/core/widgets/branding/otlob_logo.dart';
 import 'package:otlob_app/core/widgets/buttons/primary_button.dart';
 import 'package:otlob_app/core/widgets/buttons/secondary_button.dart';
 import 'package:otlob_app/core/widgets/inputs/custom_text_field.dart';
+import 'package:otlob_app/core/errors/failures.dart';
 import 'package:otlob_app/features/auth/presentation/providers/auth_provider.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
@@ -38,24 +39,71 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       _passwordError = null;
     });
 
-    // Basic validation
-    if (_emailController.text.trim().isEmpty) {
+    final email = _emailController.text.trim();
+    final password = _passwordController.text;
+    bool hasError = false;
+    if (email.isEmpty) {
       setState(() => _emailError = 'Please enter your email');
-      return;
+      hasError = true;
+    } else if (!RegExp(r"^[\w-.]+@([\w-]+\.)+[\w-]{2,4}").hasMatch(email)) {
+      setState(() => _emailError = 'Please enter a valid email');
+      hasError = true;
     }
-    if (_passwordController.text.isEmpty) {
+    if (password.isEmpty) {
       setState(() => _passwordError = 'Please enter your password');
-      return;
+      hasError = true;
     }
+    if (hasError) return;
 
     setState(() => _isLoading = true);
-
-    // TODO: Implement actual email/password login
-    await Future.delayed(const Duration(seconds: 1));
-
-    if (mounted) {
+    final authNotifier = ref.read(authProvider.notifier);
+    try {
+      await authNotifier.signInWithEmail(email, password);
+      if (!mounted) return;
       setState(() => _isLoading = false);
       context.go('/home');
+    } on AuthFailure catch (e) {
+      if (!mounted) return;
+      setState(() => _isLoading = false);
+      final msg = e.message.isNotEmpty
+          ? e.message
+          : 'Login failed. Please try again.';
+      // Try to map error to field
+      if (msg.toLowerCase().contains('email')) {
+        setState(() => _emailError = msg);
+      } else if (msg.toLowerCase().contains('password')) {
+        setState(() => _passwordError = msg);
+      } else {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Login Error'),
+            content: Text(msg),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
+    } catch (e) {
+      if (!mounted) return;
+      setState(() => _isLoading = false);
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Login Error'),
+          content: Text('An unexpected error occurred: $e'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text('OK'),
+            ),
+          ],
+        ),
+      );
     }
   }
 
@@ -92,19 +140,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 
   void _handleForgotPassword() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Forgot Password', style: AppTypography.titleMedium),
-        content: Text(
-          'Password reset feature will be implemented soon. For now, please use social login.',
-          style: AppTypography.bodyMedium,
-        ),
-        actions: [
-          PrimaryButton(text: 'OK', onPressed: () => Navigator.pop(context)),
-        ],
-      ),
-    );
+    // Navigate to the Forgot Password screen where user can request a reset link
+    context.go('/forgot-password');
   }
 
   @override
@@ -176,9 +213,18 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
                 SizedBox(height: AppSpacing.sm),
 
-                // Forgot Password Link
-                Align(
-                  alignment: Alignment.centerRight,
+                // Login Button
+                PrimaryButton(
+                  text: 'Login',
+                  onPressed: _isLoading ? null : _handleLogin,
+                  isLoading: _isLoading,
+                  fullWidth: true,
+                ),
+
+                SizedBox(height: AppSpacing.sm),
+
+                // Forgot Password Link (always visible below login)
+                Center(
                   child: TextButton(
                     onPressed: _handleForgotPassword,
                     child: Text(
@@ -192,16 +238,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 ),
 
                 SizedBox(height: AppSpacing.md),
-
-                // Login Button
-                PrimaryButton(
-                  text: 'Login',
-                  onPressed: _isLoading ? null : _handleLogin,
-                  isLoading: _isLoading,
-                  fullWidth: true,
-                ),
-
-                SizedBox(height: AppSpacing.lg),
 
                 // Divider with OR
                 Row(

@@ -55,20 +55,24 @@ class CuisineTag extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Get dynamic color based on cuisine type
+    final cuisineColor = AppColors.getCuisineColor(name);
+
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: AppSpacing.sm,
         vertical: AppSpacing.xs,
       ),
       decoration: BoxDecoration(
-        color: backgroundColor ?? AppColors.accentPeach.withOpacity(0.3),
+        color: backgroundColor ?? cuisineColor.withOpacity(0.15),
         borderRadius: BorderRadius.circular(AppRadius.sm),
+        border: Border.all(color: cuisineColor.withOpacity(0.3), width: 1),
       ),
       child: Text(
         name,
         style: AppTypography.labelSmall.copyWith(
-          color: textColor ?? AppColors.primaryDark,
-          fontWeight: FontWeight.w500,
+          color: textColor ?? cuisineColor,
+          fontWeight: FontWeight.w600,
           fontSize: 11.sp,
         ),
       ),

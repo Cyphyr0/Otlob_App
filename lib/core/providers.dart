@@ -6,8 +6,6 @@ import 'package:otlob_app/core/services/service_locator.dart';
 import 'package:otlob_app/core/services/unsplash_service.dart';
 import 'package:otlob_app/features/auth/data/repositories/firebase_auth_repository.dart';
 import 'package:otlob_app/features/auth/domain/repositories/auth_repository.dart';
-import 'package:otlob_app/features/cart/data/repositories/firebase_cart_repository.dart';
-import 'package:otlob_app/features/cart/domain/repositories/cart_repository.dart';
 
 export '../features/cart/presentation/providers/cart_provider.dart';
 export '../features/favorites/presentation/providers/favorites_provider.dart';

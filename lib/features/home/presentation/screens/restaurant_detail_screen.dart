@@ -11,6 +11,7 @@ import 'package:otlob_app/core/widgets/branding/otlob_logo.dart';
 import 'package:otlob_app/core/widgets/badges/tawseya_badge.dart';
 import 'package:otlob_app/core/providers.dart';
 import 'package:otlob_app/features/home/domain/entities/restaurant.dart';
+import 'package:otlob_app/features/cart/domain/entities/cart_item.dart';
 
 class RestaurantDetailScreen extends ConsumerWidget {
   final String id;
@@ -20,6 +21,8 @@ class RestaurantDetailScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final restaurantsAsync = ref.watch(restaurantsProvider);
+    final cartState = ref.watch(cartProvider);
+    final cartNotifier = ref.read(cartProvider.notifier);
 
     return restaurantsAsync.when(
       loading: () =>
@@ -47,7 +50,6 @@ class RestaurantDetailScreen extends ConsumerWidget {
           ),
         );
 
-        final cartNotifier = ref.read(cartProvider.notifier);
         final favoritesNotifier = ref.read(favoritesProvider.notifier);
         final isFavorite = ref
             .watch(favoritesProvider)
@@ -68,6 +70,7 @@ class RestaurantDetailScreen extends ConsumerWidget {
                     SizedBox(height: AppSpacing.sectionSpacing),
                     _buildMenu(
                       restaurant.menuCategories,
+                      cartState,
                       cartNotifier,
                       context,
                     ),
@@ -307,6 +310,7 @@ class RestaurantDetailScreen extends ConsumerWidget {
 
   Widget _buildMenu(
     List<String> menuCategories,
+    List cartState,
     cartNotifier,
     BuildContext context,
   ) {
@@ -370,7 +374,12 @@ class RestaurantDetailScreen extends ConsumerWidget {
                                 ? AppSpacing.md
                                 : 0,
                           ),
-                          child: _buildDishItem(dish, cartNotifier, context),
+                          child: _buildDishItem(
+                            dish,
+                            cartState,
+                            cartNotifier,
+                            context,
+                          ),
                         );
                       },
                     ),
@@ -384,7 +393,22 @@ class RestaurantDetailScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildDishItem(dish, cartNotifier, BuildContext context) {
+  Widget _buildDishItem(
+    dish,
+    List cartState,
+    cartNotifier,
+    BuildContext context,
+  ) {
+    // Find if this dish is in the cart (safe)
+    CartItem? cartItem;
+    try {
+      cartItem = cartState.firstWhere(
+        (item) => item.name == dish['name'] && item.price == dish['price'],
+      );
+    } catch (_) {
+      cartItem = null;
+    }
+    final quantity = cartItem != null ? cartItem.quantity : 0;
     return Container(
       decoration: BoxDecoration(
         color: AppColors.white,
@@ -430,39 +454,115 @@ class RestaurantDetailScreen extends ConsumerWidget {
               ),
             ),
 
-            // Add to Cart Button
-            GestureDetector(
-              onTap: () {
-                cartNotifier.addItem(
-                  name: dish['name'],
-                  price: dish['price'],
-                  imageUrl: dish['imageUrl'],
-                );
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('${dish['name']} added to cart'),
-                    backgroundColor: AppColors.primaryGold,
-                    behavior: SnackBarBehavior.floating,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(AppRadius.md),
+            // Quantity Selector
+            quantity == 0
+                ? GestureDetector(
+                    onTap: () {
+                      cartNotifier.addItem(
+                        name: dish['name'],
+                        price: dish['price'],
+                        imageUrl: dish['imageUrl'],
+                      );
+                      ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('${dish['name']} added to cart'),
+                          backgroundColor: AppColors.success,
+                          duration: const Duration(milliseconds: 1500),
+                          behavior: SnackBarBehavior.floating,
+                          margin: EdgeInsets.only(
+                            bottom: kBottomNavigationBarHeight + 80.h,
+                            left: 16.w,
+                            right: 16.w,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(AppRadius.md),
+                          ),
+                          action: SnackBarAction(
+                            label: 'VIEW CART',
+                            textColor: Colors.white,
+                            onPressed: () => context.go('/cart'),
+                          ),
+                        ),
+                      );
+                    },
+                    child: Container(
+                      padding: EdgeInsets.all(AppSpacing.sm),
+                      decoration: BoxDecoration(
+                        color: AppColors.logoRed,
+                        shape: BoxShape.circle,
+                        boxShadow: AppShadows.sm,
+                      ),
+                      child: Icon(
+                        Icons.add,
+                        color: AppColors.white,
+                        size: 20.sp,
+                      ),
                     ),
+                  )
+                : Row(
+                    children: [
+                      // Decrement button
+                      GestureDetector(
+                        onTap: () {
+                          if (cartItem != null) {
+                            final id = cartItem.id;
+                            if (quantity > 1) {
+                              cartNotifier.updateQuantity(id, quantity - 1);
+                            } else {
+                              cartNotifier.updateQuantity(id, 0);
+                            }
+                          }
+                        },
+                        child: Container(
+                          padding: EdgeInsets.all(AppSpacing.sm),
+                          decoration: BoxDecoration(
+                            color: AppColors.gray,
+                            shape: BoxShape.circle,
+                            boxShadow: AppShadows.sm,
+                          ),
+                          child: Icon(
+                            Icons.remove,
+                            color: AppColors.white,
+                            size: 20.sp,
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 12.w),
+                      // Quantity display
+                      Text(
+                        '$quantity',
+                        style: AppTypography.titleMedium.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(width: 12.w),
+                      // Increment button
+                      GestureDetector(
+                        onTap: () {
+                          if (cartItem != null) {
+                            cartNotifier.updateQuantity(
+                              cartItem.id,
+                              quantity + 1,
+                            );
+                          }
+                        },
+                        child: Container(
+                          padding: EdgeInsets.all(AppSpacing.sm),
+                          decoration: BoxDecoration(
+                            color: AppColors.logoRed,
+                            shape: BoxShape.circle,
+                            boxShadow: AppShadows.sm,
+                          ),
+                          child: Icon(
+                            Icons.add,
+                            color: AppColors.white,
+                            size: 20.sp,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                );
-              },
-              child: Container(
-                padding: EdgeInsets.all(AppSpacing.sm),
-                decoration: BoxDecoration(
-                  color: AppColors.logoRed,
-                  shape: BoxShape.circle,
-                  boxShadow: AppShadows.sm,
-                ),
-                child: Icon(
-                  Icons.add_shopping_cart,
-                  color: AppColors.white,
-                  size: 20.sp,
-                ),
-              ),
-            ),
           ],
         ),
       ),

@@ -195,12 +195,7 @@ class _RestaurantCardState extends State<RestaurantCard>
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
-            // Make the details area flexible so it can shrink when the
-            // parent gives limited height (prevents small RenderFlex overflow)
-            children: [
-              _buildImage(),
-              Flexible(child: _buildDetails()),
-            ],
+            children: [_buildImage(), _buildDetails()],
           ),
         ),
       ),
@@ -348,50 +343,51 @@ class _RestaurantCardState extends State<RestaurantCard>
   Widget _buildDetails() {
     return Padding(
       padding: EdgeInsets.all(AppSpacing.md),
-      child: ConstrainedBox(
-        constraints: BoxConstraints(minHeight: 70.h, maxHeight: 120.h),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // Restaurant name and rating
-            Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    widget.name,
-                    style: AppTypography.titleLarge.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Restaurant name and rating
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  widget.name,
+                  style: AppTypography.titleLarge.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              if (widget.rating != null) ...[
+                SizedBox(width: AppSpacing.sm),
+                Icon(
+                  Icons.star,
+                  size: 16.sp,
+                  color: AppColors.getRatingColor(widget.rating!),
+                ),
+                SizedBox(width: 2.w),
+                Text(
+                  widget.rating!.toStringAsFixed(1),
+                  style: AppTypography.bodyMedium.copyWith(
+                    color: AppColors.getRatingColor(widget.rating!),
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
-                if (widget.rating != null) ...[
-                  SizedBox(width: AppSpacing.sm),
-                  Icon(Icons.star, size: 16.sp, color: AppColors.primaryGold),
-                  SizedBox(width: 2.w),
-                  Text(
-                    widget.rating!.toStringAsFixed(1),
-                    style: AppTypography.bodyMedium.copyWith(
-                      color: AppColors.primaryDark,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
               ],
-            ),
-            SizedBox(height: AppSpacing.sm),
-            Wrap(
-              spacing: AppSpacing.xs,
-              runSpacing: AppSpacing.xs,
-              children: widget.cuisines
-                  .take(3)
-                  .map((cuisine) => CuisineTag(name: cuisine))
-                  .toList(),
-            ),
-          ],
-        ),
+            ],
+          ),
+          SizedBox(height: AppSpacing.xs),
+          Wrap(
+            spacing: AppSpacing.xs,
+            runSpacing: AppSpacing.xs,
+            children: widget.cuisines
+                .take(2)
+                .map((cuisine) => CuisineTag(name: cuisine))
+                .toList(),
+          ),
+        ],
       ),
     );
   }

@@ -8,6 +8,7 @@ import 'package:otlob_app/core/widgets/branding/otlob_logo.dart';
 import 'package:otlob_app/core/widgets/buttons/primary_button.dart';
 import 'package:otlob_app/core/widgets/buttons/secondary_button.dart';
 import 'package:otlob_app/core/widgets/inputs/custom_text_field.dart';
+import 'package:otlob_app/core/errors/failures.dart';
 import 'package:otlob_app/features/auth/presentation/providers/auth_provider.dart';
 
 class SignupScreen extends ConsumerStatefulWidget {
@@ -49,37 +50,39 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
     });
 
     // Basic validation
+    final name = _nameController.text.trim();
+    final email = _emailController.text.trim();
+    final password = _passwordController.text;
+    final confirmPassword = _confirmPasswordController.text;
     bool hasError = false;
-
-    if (_nameController.text.trim().isEmpty) {
+    if (name.isEmpty) {
       setState(() => _nameError = 'Please enter your name');
       hasError = true;
-    } else if (_nameController.text.trim().length < 2) {
+    } else if (name.length < 2) {
       setState(() => _nameError = 'Name must be at least 2 characters');
       hasError = true;
     }
-
-    if (_emailController.text.trim().isEmpty) {
+    if (email.isEmpty) {
       setState(() => _emailError = 'Please enter your email');
       hasError = true;
+    } else if (!RegExp(r"^[\w-.]+@([\w-]+\.)+[\w-]{2,4}").hasMatch(email)) {
+      setState(() => _emailError = 'Please enter a valid email');
+      hasError = true;
     }
-
-    if (_passwordController.text.isEmpty) {
+    if (password.isEmpty) {
       setState(() => _passwordError = 'Please enter a password');
       hasError = true;
-    } else if (_passwordController.text.length < 6) {
+    } else if (password.length < 6) {
       setState(() => _passwordError = 'Password must be at least 6 characters');
       hasError = true;
     }
-
-    if (_confirmPasswordController.text.isEmpty) {
+    if (confirmPassword.isEmpty) {
       setState(() => _confirmPasswordError = 'Please confirm your password');
       hasError = true;
-    } else if (_passwordController.text != _confirmPasswordController.text) {
+    } else if (password != confirmPassword) {
       setState(() => _confirmPasswordError = 'Passwords do not match');
       hasError = true;
     }
-
     if (!_acceptedTerms) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -89,17 +92,58 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
       );
       hasError = true;
     }
-
     if (hasError) return;
 
     setState(() => _isLoading = true);
-
-    // TODO: Implement actual signup
-    await Future.delayed(const Duration(seconds: 1));
-
-    if (mounted) {
+    final authNotifier = ref.read(authProvider.notifier);
+    try {
+      await authNotifier.signUpWithEmail(name, email, password);
+      if (!mounted) return;
       setState(() => _isLoading = false);
       context.go('/home');
+    } on AuthFailure catch (e) {
+      if (!mounted) return;
+      setState(() => _isLoading = false);
+      final msg = e.message.isNotEmpty
+          ? e.message
+          : 'Sign up failed. Please try again.';
+      if (msg.toLowerCase().contains('email')) {
+        setState(() => _emailError = msg);
+      } else if (msg.toLowerCase().contains('password')) {
+        setState(() => _passwordError = msg);
+      } else if (msg.toLowerCase().contains('name')) {
+        setState(() => _nameError = msg);
+      } else {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Sign Up Error'),
+            content: Text(msg),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
+    } catch (e) {
+      if (!mounted) return;
+      setState(() => _isLoading = false);
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Sign Up Error'),
+          content: Text('An unexpected error occurred: $e'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text('OK'),
+            ),
+          ],
+        ),
+      );
     }
   }
 

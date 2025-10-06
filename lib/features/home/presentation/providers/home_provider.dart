@@ -1,10 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:otlob_app/core/services/service_locator.dart';
-import 'package:otlob_app/core/services/firebase/firebase_firestore_service.dart';
 
-import '../../../../core/providers.dart';
 import '../../data/repositories/firebase_home_repository.dart';
-import '../../data/repositories/mock_home_repository.dart';
 import '../../domain/entities/restaurant.dart';
 import '../../domain/repositories/home_repository.dart';
 

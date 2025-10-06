@@ -1,111 +1,145 @@
 import 'package:flutter/material.dart';
 
-/// Otlob App Unified Color System
+/// Otlob App Color System
 ///
-/// A cohesive 3-color system designed for consistency across all screens.
-/// Every color has a clear, specific purpose.
+/// Based on the curated color palette:
+/// - Imperial Red (#FA3A46) - Primary brand color
+/// - Light Coral (#F9777F) - Accents & highlights
+/// - Jet (#313131) - Text & high contrast
+/// - Isabelline (#F9F2ED) - Backgrounds & surfaces
+/// - Platinum (#E3E3E3) - Borders & dividers
 class AppColors {
   // Prevent instantiation
   AppColors._();
 
   // ============================================================================
-  // PRIMARY BRAND COLORS - The Core 3-Color System
+  // PRIMARY BRAND COLORS
   // ============================================================================
 
-  /// Logo Red (#FA3A46) - Primary brand color
+  /// Imperial Red (#FA3A46) - Main brand color
   ///
   /// USE FOR:
   /// - Otlob logo
   /// - Primary CTAs (Order Now, Checkout, Confirm)
   /// - Important action buttons
-  /// - Active navigation states
-  /// - Selected items and borders
+  /// - Active states
+  /// - Selected items
   /// - Progress indicators
-  ///
-  /// DO NOT USE FOR: Success or error states
   static const Color logoRed = Color(0xFFFA3A46);
 
-  /// Primary Gold (#F4D06F) - Success & Value color
-  ///
-  /// USE FOR:
-  /// - Success messages and backgrounds
-  /// - Completed actions
-  /// - Tawseya badges (authenticity marker)
-  /// - Premium features
-  /// - Star ratings
-  /// - Secondary action buttons (Apply, Save)
-  ///
-  /// DO NOT USE FOR: Primary CTAs or errors
-  static const Color primaryGold = Color(0xFFF4D06F);
+  /// Alias for consistency
+  static const Color primary = logoRed;
 
-  /// Primary Black (#0D1B2A) - Error & Text color
+  /// Light Coral (#F9777F) - Lighter variant for highlights
   ///
   /// USE FOR:
-  /// - Error messages and backgrounds
-  /// - Failed actions
+  /// - Hover states
+  /// - Secondary buttons
+  /// - Active selections
+  /// - Highlights
+  static const Color primaryLight = Color(0xFFF9777F);
+
+  /// Darker red for pressed states
+  static const Color primaryDark = Color(0xFFE82838);
+
+  // ============================================================================
+  // NEUTRAL COLORS
+  // ============================================================================
+
+  /// Jet (#313131) - Primary text color
+  ///
+  /// USE FOR:
+  /// - Headlines and titles
   /// - Primary body text
-  /// - Headers and titles
-  /// - Navigation bars
+  /// - Icons
+  /// - High contrast elements
+  static const Color primaryBlack = Color(0xFF313131);
+
+  /// Text color alias
+  static const Color textPrimary = primaryBlack;
+
+  /// Isabelline (#F9F2ED) - Warm background
   ///
-  /// DO NOT USE FOR: Success states
-  static const Color primaryBlack = Color(0xFF0D1B2A);
+  /// USE FOR:
+  /// - Main app background
+  /// - Card backgrounds
+  /// - Light surfaces
+  static const Color offWhite = Color(0xFFF9F2ED);
 
-  // ============================================================================
-  // DEPRECATED - Legacy colors (to be phased out)
-  // ============================================================================
+  /// Background alias
+  static const Color background = offWhite;
 
-  /// @deprecated Use primaryBlack instead
-  static const Color primaryDark = primaryBlack;
+  /// Platinum (#E3E3E3) - Light gray
+  ///
+  /// USE FOR:
+  /// - Borders
+  /// - Dividers
+  /// - Disabled states
+  /// - Secondary backgrounds
+  static const Color lightGray = Color(0xFFE3E3E3);
 
-  /// @deprecated Use logoRed for CTAs or primaryGold for secondary actions
-  static const Color accentOrange = Color(0xFFE07A5F);
+  /// Border alias
+  static const Color border = lightGray;
 
-  /// @deprecated Use primaryGold instead
-  static const Color accentGold = primaryGold;
-
-  /// @deprecated No replacement - avoid using
-  static const Color primaryBase = Color(0xFF1B2A41);
-
-  /// @deprecated No replacement - avoid using
-  static const Color primaryLight = Color(0xFF415A77);
-
-  /// @deprecated No replacement - avoid using
-  static const Color accentPeach = Color(0xFFF2CC8F);
-
-  // ============================================================================
-  // SEMANTIC COLORS - Mapped to 3-Color System
-  // ============================================================================
-
-  /// Success states - Uses primaryGold
-  static const Color success = primaryGold;
-
-  /// Warning states - Uses logoRed
-  static const Color warning = logoRed;
-
-  /// Error states - Uses primaryBlack
-  static const Color error = primaryBlack;
-
-  /// Info states - Uses primaryBlack with lower opacity
-  static Color get info => primaryBlack.withAlpha(179);
-
-  // ============================================================================
-  // NEUTRAL COLORS - Text & Backgrounds
-  // ============================================================================
-
-  /// Pure white - Primary text on dark backgrounds, card surfaces
+  /// Pure white for cards and surfaces
   static const Color white = Color(0xFFFFFFFF);
 
-  /// Off-white - Main app background, subtle card backgrounds
-  /// Reduces eye strain compared to pure white
-  static const Color offWhite = Color(0xFFFAF9F7);
+  /// Secondary text (70% opacity)
+  static Color get textSecondary => primaryBlack.withOpacity(0.7);
 
-  /// Light gray - Dividers, borders, disabled state backgrounds
-  static const Color lightGray = Color(0xFFE5E5E5);
+  /// Tertiary text (50% opacity)
+  static Color get textTertiary => primaryBlack.withOpacity(0.5);
+
+  // ============================================================================
+  // ACCENT COLORS
+  // ============================================================================
+
+  /// Gold for ratings and special badges
+  static const Color primaryGold = Color(0xFFF4D06F);
+
+  /// Gold alias
+  static const Color accentGold = primaryGold;
+
+  // ============================================================================
+  // DEPRECATED COLORS - For backward compatibility
+  // ============================================================================
+
+  /// @deprecated Use primaryLight or warning instead
+  static const Color accentOrange = Color(0xFFE07A5F);
+
+  /// @deprecated Use offWhite or background instead
+  static const Color accentPeach = Color(0xFFF2CC8F);
+
+  /// @deprecated Use primaryBlack instead
+  static const Color primaryBase = Color(0xFF1B2A41);
+
+  // ============================================================================
+  // SEMANTIC COLORS
+  // ============================================================================
+
+  /// Success green
+  static const Color success = Color(0xFF27AE60);
+
+  /// Warning orange
+  static const Color warning = Color(0xFFF39C12);
+
+  /// Error red (uses primary red)
+  static const Color error = logoRed;
+
+  /// Info blue
+  static const Color info = Color(0xFF3498DB);
+
+  /// Tawseya badge color (authenticity marker)
+  static const Color tawseya = primaryGold;
+
+  // ============================================================================
+  // ADDITIONAL NEUTRALS
+  // ============================================================================
 
   /// Gray - Secondary text, placeholder text, subtle icons
   static const Color gray = Color(0xFF6C757D);
 
-  /// Dark gray - Primary body text on light backgrounds
+  /// Dark gray - For deeper shadows and borders
   static const Color darkGray = Color(0xFF343A40);
 
   /// Pure black - Maximum contrast text when needed
@@ -123,6 +157,50 @@ class AppColors {
 
   /// Subtle overlay for hover states (8% opacity)
   static Color get hoverOverlay => primaryBlack.withAlpha(20);
+
+  // ============================================================================
+  // CUISINE CATEGORY COLORS
+  // ============================================================================
+
+  /// Get color for a specific cuisine type
+  static Color getCuisineColor(String cuisine) {
+    switch (cuisine.toLowerCase()) {
+      case 'egyptian':
+      case 'مصري':
+        return const Color(0xFFE74C3C);
+      case 'street food':
+      case 'طعام الشارع':
+        return const Color(0xFFF39C12);
+      case 'grill':
+      case 'مشويات':
+        return const Color(0xFFD35400);
+      case 'seafood':
+      case 'مأكولات بحرية':
+        return const Color(0xFF3498DB);
+      case 'italian':
+      case 'إيطالي':
+        return const Color(0xFF27AE60);
+      case 'asian':
+      case 'آسيوي':
+        return const Color(0xFFE67E22);
+      case 'fast food':
+      case 'وجبات سريعة':
+        return const Color(0xFFC0392B);
+      case 'desserts':
+      case 'حلويات':
+        return const Color(0xFFEC407A);
+      default:
+        return gray;
+    }
+  }
+
+  /// Get color based on rating value
+  static Color getRatingColor(double rating) {
+    if (rating >= 4.5) return success;
+    if (rating >= 4.0) return primaryGold;
+    if (rating >= 3.5) return warning;
+    return gray;
+  }
 
   // ============================================================================
   // GRADIENTS - DEPRECATED (Use solid colors instead)

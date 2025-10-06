@@ -42,7 +42,12 @@ class _CartScreenState extends ConsumerState<CartScreen> {
         : cartState.isEmpty
         ? EmptyState.emptyCart(onAction: () => context.go('/home'))
         : ListView.builder(
-            padding: EdgeInsets.all(AppSpacing.screenPadding),
+            padding: EdgeInsets.only(
+              left: AppSpacing.screenPadding,
+              right: AppSpacing.screenPadding,
+              top: AppSpacing.screenPadding,
+              bottom: 250.h, // Reduced space for bottom summary section
+            ),
             itemCount: cartState.length,
             itemBuilder: (context, index) {
               final item = cartState[index];

@@ -2,7 +2,6 @@ import '../../domain/entities/restaurant.dart';
 import '../../domain/repositories/home_repository.dart';
 import '../../../../core/services/unsplash_service.dart';
 import '../../../../core/config/app_config.dart';
-import 'package:dio/dio.dart';
 
 class MockHomeRepository implements HomeRepository {
   final UnsplashService? _unsplashService;

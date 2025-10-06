@@ -1,6 +1,4 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:otlob_app/core/errors/failures.dart';
 import 'package:otlob_app/core/services/service_locator.dart';
 import 'package:otlob_app/core/utils/shared_prefs_helper.dart';
 import 'package:otlob_app/features/auth/data/repositories/firebase_auth_repository.dart';

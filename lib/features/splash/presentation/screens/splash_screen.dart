@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:shadcn_ui/shadcn_ui.dart';
-
-import '../../../../core/theme/app_colors.dart';
-import '../../../../core/theme/app_typography.dart';
-import '../../../../core/theme/shadcn_theme.dart';
-import '../../../../core/utils/shared_prefs_helper.dart';
 import 'package:lottie/lottie.dart';
+
+import '../../../../core/theme/app_typography.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -24,26 +20,22 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> _checkNavigation() async {
+    print('SplashScreen: Starting navigation check');
+
     // Simulate loading delay
     await Future.delayed(const Duration(seconds: 2));
 
-    final bool onboardingCompleted =
-        await SharedPrefsHelper.isOnboardingCompleted();
-    final bool authenticated = await SharedPrefsHelper.isAuthenticated();
+    print('SplashScreen: Navigation delay completed, navigating to onboarding');
 
     if (mounted) {
-      if (!onboardingCompleted) {
-        context.go('/onboarding');
-      } else if (!authenticated) {
-        context.go('/auth');
-      } else {
-        context.go('/home');
-      }
+      // For debugging, always go to onboarding first
+      context.go('/onboarding');
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    print('SplashScreen: Building splash screen widget');
     final theme = Theme.of(context);
 
     return Scaffold(
@@ -53,27 +45,34 @@ class _SplashScreenState extends State<SplashScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SizedBox(
-                height: 180.h,
-                width: 180.h,
-                child: Lottie.asset(
-                  'assets/animations/Otlob.json',
-                  repeat: true,
-                  fit: BoxFit.contain,
-                ),
+              // Animated Otlob logo
+              Lottie.asset(
+                'assets/animations/Otlob-white.json',
+                width: 280.w,
+                height: 280.h,
+                fit: BoxFit.contain,
+                repeat: true,
+                animate: true,
               ),
-              SizedBox(height: 16.h),
+              SizedBox(height: 24.h),
               Text(
                 'Discover Authentic Food',
                 style: AppTypography.bodyLarge.copyWith(
-                  color: theme.colorScheme.onPrimary.withOpacity(0.9),
+                  color: theme.colorScheme.onPrimary.withValues(alpha: 0.9),
                   letterSpacing: 0.5,
                 ),
               ),
               SizedBox(height: 48.h),
-              // Loading indicator using Shadcn UI
-              const ShadProgress(
-                value: null, // Indeterminate progress
+              // Loading indicator
+              SizedBox(
+                width: 40.w,
+                height: 40.h,
+                child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                    theme.colorScheme.onPrimary,
+                  ),
+                  strokeWidth: 3,
+                ),
               ),
             ],
           ),

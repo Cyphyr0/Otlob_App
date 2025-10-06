@@ -7,15 +7,15 @@ import 'package:otlob_app/core/theme/app_typography.dart';
 import 'package:otlob_app/core/theme/app_spacing.dart';
 import 'package:otlob_app/core/theme/app_shadows.dart';
 import 'package:otlob_app/core/theme/app_radius.dart';
-import 'package:otlob_app/core/theme/shadcn_theme.dart';
 import 'package:otlob_app/core/widgets/branding/otlob_logo.dart';
 import 'package:otlob_app/core/widgets/buttons/primary_button.dart';
 import 'package:otlob_app/core/widgets/buttons/secondary_button.dart';
-import 'package:otlob_app/core/widgets/buttons/icon_button_custom.dart';
 import 'package:otlob_app/core/widgets/inputs/search_bar_widget.dart';
 import 'package:otlob_app/core/widgets/cards/restaurant_card.dart';
 import 'package:otlob_app/core/providers.dart';
 import 'package:otlob_app/features/home/domain/entities/restaurant.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:geocoding/geocoding.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -25,6 +25,9 @@ class HomeScreen extends ConsumerStatefulWidget {
 }
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
+  String? _currentAddress;
+  bool _isLocating = false;
+  String? _locationError;
   String _selectedCuisine = 'All';
   double _minRating = 0.0;
   String _priceRange = 'All';
@@ -33,14 +36,66 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   bool _isLoadingMore = false;
   bool _hasMoreData = true;
 
+  Future<void> _fetchLocation() async {
+    setState(() {
+      _isLocating = true;
+      _locationError = null;
+    });
+    try {
+      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) {
+        setState(() {
+          _locationError = 'Location services are disabled.';
+        });
+        return;
+      }
+
+      LocationPermission permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+        if (permission == LocationPermission.denied) {
+          setState(() {
+            _locationError = 'Location permissions are denied.';
+            _isLocating = false;
+          });
+          return;
+        }
+      }
+      if (permission == LocationPermission.deniedForever) {
+        setState(() {
+          _locationError = 'Location permissions are permanently denied.';
+          _isLocating = false;
+        });
+        return;
+      }
+
+      final position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+      );
+      List<Placemark> placemarks = await placemarkFromCoordinates(
+        position.latitude,
+        position.longitude,
+      );
+      String address = placemarks.isNotEmpty
+          ? '${placemarks.first.street}, ${placemarks.first.subAdministrativeArea ?? placemarks.first.locality}, ${placemarks.first.country}'
+          : 'Unknown location';
+      setState(() {
+        _currentAddress = address;
+        _isLocating = false;
+      });
+    } catch (e) {
+      setState(() {
+        _locationError = 'Failed to get location: $e';
+        _isLocating = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final restaurantsAsync = ref.watch(filteredRestaurantsProvider);
     final hiddenGemsAsync = ref.watch(hiddenGemsProvider);
     final localHeroesAsync = ref.watch(localHeroesProvider);
-    final cartState = ref.watch(cartProvider);
-    final cartNotifier = ref.read(cartProvider.notifier);
-    final cartCount = cartNotifier.isLoading ? 0 : cartState.length;
 
     return restaurantsAsync.when(
       loading: () => _buildLoadingState(),
@@ -86,7 +141,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   body: CustomScrollView(
                     slivers: [
                       // App Bar
-                      _buildAppBar(cartCount),
+                      _buildAppBar(),
 
                       // Content
                       SliverToBoxAdapter(
@@ -190,7 +245,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     }
   }
 
-  Widget _buildAppBar(int cartCount) {
+  Widget _buildAppBar() {
     return SliverAppBar(
       backgroundColor: Theme.of(context).colorScheme.surface,
       elevation: 0,
@@ -218,7 +273,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 Expanded(
                   child: GestureDetector(
                     onTap: () {
-                      // TODO: Open location selector
+                      _fetchLocation();
                     },
                     child: Container(
                       padding: EdgeInsets.symmetric(
@@ -240,14 +295,53 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           ),
                           SizedBox(width: 4.w),
                           Flexible(
-                            child: Text(
-                              'Dokki, Cairo',
-                              style: AppTypography.bodyMedium.copyWith(
-                                color: Theme.of(context).colorScheme.onSurface,
-                                fontWeight: FontWeight.w600,
-                              ),
-                              overflow: TextOverflow.ellipsis,
-                            ),
+                            child: _isLocating
+                                ? Row(
+                                    children: [
+                                      SizedBox(
+                                        width: 14,
+                                        height: 14,
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 2,
+                                        ),
+                                      ),
+                                      SizedBox(width: 6),
+                                      Text(
+                                        'Locating...',
+                                        style: AppTypography.bodyMedium
+                                            .copyWith(
+                                              color: Theme.of(
+                                                context,
+                                              ).colorScheme.onSurface,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                      ),
+                                    ],
+                                  )
+                                : (_locationError != null
+                                      ? Text(
+                                          _locationError!,
+                                          style: AppTypography.bodyMedium
+                                              .copyWith(
+                                                color: Theme.of(
+                                                  context,
+                                                ).colorScheme.error,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                          overflow: TextOverflow.ellipsis,
+                                        )
+                                      : Text(
+                                          _currentAddress ??
+                                              'Tap to detect location',
+                                          style: AppTypography.bodyMedium
+                                              .copyWith(
+                                                color: Theme.of(
+                                                  context,
+                                                ).colorScheme.onSurface,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                          overflow: TextOverflow.ellipsis,
+                                        )),
                           ),
                           SizedBox(width: 2.w),
                           Icon(
@@ -262,15 +356,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     ),
                   ),
                 ),
-
-                SizedBox(width: AppSpacing.md),
-
-                // Cart Button
-                IconButtonCustom(
-                  icon: Icons.shopping_cart_outlined,
-                  badgeCount: cartCount,
-                  onPressed: () => context.go('/cart'),
-                ),
               ],
             ),
           ),
@@ -284,6 +369,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       padding: EdgeInsets.symmetric(horizontal: AppSpacing.screenPadding),
       child: SearchBarWidget(
         hintText: 'Search restaurants or dishes...',
+        debounceDuration: const Duration(milliseconds: 500),
         onSearch: (query) {
           ref.read(searchQueryProvider.notifier).state = query;
         },
@@ -728,7 +814,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   decoration: BoxDecoration(
                     color: isFavorite
                         ? Theme.of(context).colorScheme.error.withOpacity(0.1)
-                        : Theme.of(context).colorScheme.surfaceVariant,
+                        : Theme.of(context).colorScheme.surfaceContainerHighest,
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
@@ -773,7 +859,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         controller: _scrollController,
         slivers: [
           // App Bar
-          _buildAppBar(0),
+          _buildAppBar(),
 
           // Content
           SliverToBoxAdapter(
@@ -1052,7 +1138,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                         selectedColor: Theme.of(context).colorScheme.primary,
                         backgroundColor: Theme.of(
                           context,
-                        ).colorScheme.surfaceVariant,
+                        ).colorScheme.surfaceContainerHighest,
                         checkmarkColor: Theme.of(context).colorScheme.onPrimary,
                         onSelected: (selected) {
                           setState(() {
@@ -1085,7 +1171,9 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                   divisions: 10,
                   label: _minRating.toStringAsFixed(1),
                   activeColor: Theme.of(context).colorScheme.primary,
-                  inactiveColor: Theme.of(context).colorScheme.surfaceVariant,
+                  inactiveColor: Theme.of(
+                    context,
+                  ).colorScheme.surfaceContainerHighest,
                   onChanged: (value) => setState(() => _minRating = value),
                 ),
               ),
@@ -1138,7 +1226,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                     selectedColor: Theme.of(context).colorScheme.primary,
                     backgroundColor: Theme.of(
                       context,
-                    ).colorScheme.surfaceVariant,
+                    ).colorScheme.surfaceContainerHighest,
                     checkmarkColor: Theme.of(context).colorScheme.onPrimary,
                     onSelected: (selected) {
                       setState(() {

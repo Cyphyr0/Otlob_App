@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:dio/dio.dart';
 
 /// Service for fetching food images from Unsplash API

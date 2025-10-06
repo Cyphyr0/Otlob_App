@@ -72,4 +72,28 @@ lib/core/config/sensitive_config.dart
 
 # AI Assistant Rules (contains internal guidelines)
 .ai_rules.md
-node_modules
+AI_RULES.md
+
+# Node.js dependencies (if using Firebase Functions or tools)
+node_modules/
+package-lock.json
+
+# AI Assistant workspace folders
+.roo/
+.kilocode/
+QUICK_FIX_NOW.md
+QUICK_START.md
+docs/COMPREHENSIVE_FIX_GUIDE.md
+docs/CURRENT_STATUS.md
+docs/CURRENT_STATUS.md
+docs/DESIGN_IMPROVEMENTS_SUMMARY.md
+docs/CURRENT_STATUS.md
+docs/FIRESTORE_RULES_FIX.md
+docs/UI_IMPROVEMENTS_SUMMARY.md
+docs/SHADCN_MIGRATION_GUIDE.md
+docs/SESSION_SUMMARY.md
+docs/LOTTIE_IMPLEMENTATION.md
+docs/CURRENT_STATUS.md
+docs/CURRENT_STATUS.md
+docs/CURRENT_STATUS.md
+scripts/cleanup-git.ps1

@@ -8,15 +8,16 @@ import 'package:otlob_app/core/providers.dart';
 import 'package:otlob_app/core/services/service_locator.dart';
 import 'package:otlob_app/core/services/firebase/firebase_data_seeder.dart';
 import 'package:otlob_app/core/theme/shadcn_theme.dart';
-import 'package:otlob_app/core/utils/shared_prefs_helper.dart';
 import 'package:otlob_app/core/widgets/demo/component_showcase.dart';
 import 'package:otlob_app/features/auth/presentation/screens/auth_wrapper.dart';
 import 'package:otlob_app/features/auth/presentation/screens/phone_verification_screen.dart';
+import 'package:otlob_app/features/auth/presentation/screens/forgot_password_screen.dart';
 import 'package:otlob_app/features/cart/presentation/screens/cart_screen.dart';
 import 'package:otlob_app/features/cart/presentation/screens/order_confirmation_screen.dart';
 import 'package:otlob_app/features/onboarding/presentation/screens/onboarding_screen.dart';
 import 'package:otlob_app/features/splash/presentation/screens/splash_screen.dart';
 import 'package:otlob_app/features/home/presentation/screens/home_screen.dart';
+import 'package:otlob_app/core/widgets/buttons/floating_cart_button.dart';
 import 'package:otlob_app/features/favorites/presentation/screens/favorites_screen.dart';
 import 'package:otlob_app/features/home/presentation/screens/restaurant_detail_screen.dart';
 import 'package:otlob_app/features/profile/presentation/screens/profile_screen.dart';
@@ -24,25 +25,61 @@ import 'package:otlob_app/firebase_options.dart';
 /*  import removed for public commit */
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  try {
+    print('Main: Starting app initialization');
 
-  // Initialize Firebase
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+    WidgetsFlutterBinding.ensureInitialized();
+    print('Main: WidgetsFlutterBinding initialized');
 
-  // Initialize service locator with Firebase services
-  setupFirebaseServices();
+    // Initialize Firebase
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+    print('Main: Firebase initialized');
 
-  // Seed data in debug mode
-  if (const bool.fromEnvironment('dart.vm.product') == false) {
-    try {
-      final seeder = getIt<FirebaseDataSeeder>();
-      await seeder.seedSampleData();
-    } catch (e) {
-      print('Error seeding data: $e');
+    // Initialize service locator with Firebase services
+    setupFirebaseServices();
+    print('Main: Service locator initialized');
+
+    // Seed data in debug mode
+    if (const bool.fromEnvironment('dart.vm.product') == false) {
+      try {
+        print('Main: Starting data seeding...');
+        final seeder = getIt<FirebaseDataSeeder>();
+        await seeder.seedSampleData();
+        print('Main: Data seeding completed successfully');
+      } catch (e) {
+        print('Main: Error seeding data: $e');
+        // Continue app initialization even if seeding fails
+      }
     }
-  }
 
-  runApp(const ProviderScope(child: MyApp()));
+    print('Main: About to call runApp');
+    runApp(const ProviderScope(child: MyApp()));
+    print('Main: runApp called');
+  } catch (e, stackTrace) {
+    print('Main: CRITICAL ERROR during initialization: $e');
+    print('Main: Stack trace: $stackTrace');
+
+    // Fallback to simple app if complex app fails
+    runApp(
+      MaterialApp(
+        home: Scaffold(
+          appBar: AppBar(title: Text('ERROR')),
+          body: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('CRITICAL ERROR: $e', style: TextStyle(color: Colors.red)),
+                SizedBox(height: 20),
+                Text('Check console for details'),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 }
 
 class MyApp extends ConsumerWidget {
@@ -50,35 +87,23 @@ class MyApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    print('MyApp: Building MyApp widget');
+
     final GoRouter router = GoRouter(
       initialLocation: '/splash',
-      redirect: (context, state) async {
-        final isAuthenticated = await SharedPrefsHelper.isAuthenticated();
-        final isOnboardingCompleted =
-            await SharedPrefsHelper.isOnboardingCompleted();
-
+      debugLogDiagnostics: true, // Enable router logging
+      redirect: (context, state) {
         final location = state.matchedLocation;
+        print('Router: Current location: $location');
 
         // Don't redirect from splash - let the splash screen handle navigation
         if (location == '/splash') {
           return null;
         }
 
-        if (!isOnboardingCompleted && location != '/onboarding') {
-          return '/onboarding';
-        }
-
-        if (!isAuthenticated &&
-            (location.startsWith('/home') ||
-                location == '/cart' ||
-                location == '/profile' ||
-                location == '/favorites' ||
-                location.startsWith('/restaurant'))) {
-          return '/auth';
-        }
-
-        if (isAuthenticated && location == '/auth') {
-          return '/home';
+        // For debugging, always allow navigation to onboarding
+        if (location == '/onboarding') {
+          return null;
         }
 
         return null;
@@ -95,6 +120,10 @@ class MyApp extends ConsumerWidget {
         GoRoute(
           path: '/auth',
           builder: (context, state) => const AuthWrapper(),
+        ),
+        GoRoute(
+          path: '/forgot-password',
+          builder: (context, state) => const ForgotPasswordScreen(),
         ),
         GoRoute(
           path: '/phone-verification',
@@ -252,7 +281,19 @@ class ScaffoldWithNavBar extends ConsumerWidget {
         }
       },
       child: Scaffold(
-        body: child,
+        body: Stack(
+          children: [
+            // Main content
+            child,
+            // Floating cart button (only shows when cart has items)
+            Builder(
+              builder: (context) {
+                final currentRoute = GoRouterState.of(context).uri.toString();
+                return FloatingCartButton(currentRoute: currentRoute);
+              },
+            ),
+          ],
+        ),
         bottomNavigationBar: NavigationBar(
           destinations: const [
             NavigationDestination(

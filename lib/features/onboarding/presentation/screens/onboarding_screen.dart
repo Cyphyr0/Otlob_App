@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
-import 'package:otlob_app/core/theme/shadcn_theme.dart';
 import 'package:otlob_app/core/utils/shared_prefs_helper.dart';
 import 'package:otlob_app/features/onboarding/presentation/widgets/onboarding_page.dart';
 
@@ -38,59 +37,44 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   ];
 
   Widget _buildImageWidget(int index) {
-    // Placeholder image as Container with colored box and text
+    // Use contextual icons instead of Lottie animations
     return Container(
-      width: double.infinity,
-      height: double.infinity,
+      padding: EdgeInsets.all(40.w),
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(16.r),
+        color: _getBackgroundColor(index),
+        borderRadius: BorderRadius.circular(24.r),
       ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(_getIconForPage(index), size: 80.sp, color: Colors.white),
-          SizedBox(height: 16.h),
-          Text(
-            _getImageText(index),
-            style: TextStyle(
-              fontSize: 18.sp,
-              color: Colors.white,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ],
-      ),
+      child: Icon(_getIconForPage(index), size: 140.sp, color: Colors.white),
     );
   }
 
   IconData _getIconForPage(int index) {
     switch (index) {
-      case 0:
+      case 0: // Food Discovery
         return Icons.restaurant_menu;
-      case 1:
-        return Icons.flash_on;
-      case 2:
-        return Icons.security;
-      case 3:
+      case 1: // Fast Delivery
+        return Icons.electric_bolt;
+      case 2: // Security
+        return Icons.verified_user;
+      case 3: // Offers
         return Icons.local_offer;
       default:
         return Icons.restaurant;
     }
   }
 
-  String _getImageText(int index) {
+  Color _getBackgroundColor(int index) {
     switch (index) {
-      case 0:
-        return 'Food Discovery';
-      case 1:
-        return 'Fast Delivery';
-      case 2:
-        return 'Secure';
-      case 3:
-        return 'Offers';
+      case 0: // Food Discovery - Orange
+        return Colors.orange.withValues(alpha: 0.3);
+      case 1: // Fast Delivery - Blue
+        return Colors.blue.withValues(alpha: 0.3);
+      case 2: // Security - Green
+        return Colors.green.withValues(alpha: 0.3);
+      case 3: // Offers - Purple
+        return Colors.purple.withValues(alpha: 0.3);
       default:
-        return '';
+        return Colors.red.withValues(alpha: 0.3);
     }
   }
 
@@ -184,6 +168,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       child: Align(
                         alignment: Alignment.centerRight,
                         child: ShadButton(
+                          onPressed: _currentPage == _pages.length - 1
+                              ? _navigateToAuth
+                              : () => _pageController.nextPage(
+                                  duration: const Duration(milliseconds: 300),
+                                  curve: Curves.easeInOut,
+                                ),
                           child: Text(
                             _currentPage == _pages.length - 1
                                 ? 'Start'
@@ -193,12 +183,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          onPressed: _currentPage == _pages.length - 1
-                              ? _navigateToAuth
-                              : () => _pageController.nextPage(
-                                  duration: const Duration(milliseconds: 300),
-                                  curve: Curves.easeInOut,
-                                ),
                         ),
                       ),
                     ),
