@@ -11,6 +11,12 @@ import '../inputs/search_bar_widget.dart';
 import '../inputs/custom_text_field.dart';
 import '../states/loading_indicator.dart';
 import '../states/empty_state.dart';
+import 'ui_libraries/shadcn_auth_demo.dart';
+import 'ui_libraries/getwidget_auth_demo.dart';
+import 'ui_libraries/prime_flutter_auth_demo.dart';
+import 'ui_libraries/prokit_auth_demo.dart';
+import 'ui_libraries/prokit_home_demo.dart';
+import 'ui_libraries/modern_home_demo.dart';
 import '../../theme/app_colors.dart';
 import '../../theme/app_spacing.dart';
 import '../../theme/app_typography.dart';
@@ -142,9 +148,285 @@ class _ComponentShowcaseScreenState extends State<ComponentShowcaseScreen> {
       body: ListView(
         padding: EdgeInsets.only(top: AppSpacing.md, bottom: AppSpacing.xl),
         children: [
-          // 1. Logo Variants
+          // 0. UI Library Comparisons
           _buildSection(
-            title: '1. Logo Variants',
+            title: '20. Deployment',
+            children: [
+              _buildCard(
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Compare Auth Screen Implementations',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(height: AppSpacing.sm),
+                    const Text(
+                      'Explore how different UI libraries implement the same auth screens. Each demo shows login/signup forms with social authentication.',
+                      style: TextStyle(fontSize: 14, color: Colors.grey),
+                    ),
+                    SizedBox(height: AppSpacing.md),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: ElevatedButton.icon(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const ShadcnAuthDemo(),
+                                ),
+                              );
+                            },
+                            icon: const Icon(Icons.palette, size: 18),
+                            label: const Text('Shadcn UI'),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.logoRed,
+                              foregroundColor: Colors.white,
+                              padding: EdgeInsets.symmetric(
+                                vertical: AppSpacing.sm,
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: AppSpacing.sm),
+                        Expanded(
+                          child: ElevatedButton.icon(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      const GetWidgetAuthDemo(),
+                                ),
+                              );
+                            },
+                            icon: const Icon(Icons.widgets, size: 18),
+                            label: const Text('GetWidget'),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.primaryGold,
+                              foregroundColor: AppColors.primaryBlack,
+                              padding: EdgeInsets.symmetric(
+                                vertical: AppSpacing.sm,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: AppSpacing.sm),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: ElevatedButton.icon(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      const PrimeFlutterAuthDemo(),
+                                ),
+                              );
+                            },
+                            icon: const Icon(Icons.star, size: 18),
+                            label: const Text('Prime Flutter'),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.primaryBlack,
+                              foregroundColor: Colors.white,
+                              padding: EdgeInsets.symmetric(
+                                vertical: AppSpacing.sm,
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: AppSpacing.sm),
+                        Expanded(
+                          child: ElevatedButton.icon(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const ProKitAuthDemo(),
+                                ),
+                              );
+                            },
+                            icon: const Icon(Icons.apps, size: 18),
+                            label: const Text('ProKit'),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.primaryGold,
+                              foregroundColor: AppColors.primaryBlack,
+                              padding: EdgeInsets.symmetric(
+                                vertical: AppSpacing.sm,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: AppSpacing.md),
+                    Container(
+                      padding: EdgeInsets.all(AppSpacing.sm),
+                      decoration: BoxDecoration(
+                        color: AppColors.offWhite,
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(
+                          color: AppColors.lightGray.withOpacity(0.5),
+                        ),
+                      ),
+                      child: const Text(
+                        '💡 Tap any button above to see how each UI library implements auth screens with forms, buttons, and social login options.',
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontStyle: FontStyle.italic,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+
+          // ProKit Home Screen Demo
+          _buildSection(
+            title: 'ProKit Home Screen',
+            children: [
+              _buildCard(
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Complete Home Screen Implementation',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(height: AppSpacing.sm),
+                    const Text(
+                      'Experience ProKit\'s comprehensive UI capabilities in a full food delivery home screen with search, categories, promotions, and restaurant listings.',
+                      style: TextStyle(fontSize: 14, color: Colors.grey),
+                    ),
+                    SizedBox(height: AppSpacing.md),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton.icon(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const ProKitHomeDemo(),
+                            ),
+                          );
+                        },
+                        icon: const Icon(Icons.home, size: 18),
+                        label: const Text('View Home Screen Demo'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.primaryGold,
+                          foregroundColor: AppColors.primaryBlack,
+                          padding: EdgeInsets.symmetric(
+                            vertical: AppSpacing.md,
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: AppSpacing.md),
+                    Container(
+                      padding: EdgeInsets.all(AppSpacing.sm),
+                      decoration: BoxDecoration(
+                        color: AppColors.offWhite,
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(
+                          color: AppColors.lightGray.withOpacity(0.5),
+                        ),
+                      ),
+                      child: const Text(
+                        '🎨 Features: Custom AppBar, Search with filters, Promotional carousel, Category selection, Restaurant grid, Bottom navigation, Floating action button.',
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontStyle: FontStyle.italic,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+
+          // 21. Modern Home Demo
+          _buildSection(
+            title: '21. Modern Home Demo',
+            children: [
+              _buildCard(
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Modern Home Screen with Side Menu',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(height: AppSpacing.sm),
+                    const Text(
+                      'Experience a modern, Material Design 3 home screen implementation with side menu evaluation for the Otlob app. Features responsive design, accessibility, and modern navigation patterns.',
+                      style: TextStyle(fontSize: 14, color: Colors.grey),
+                    ),
+                    SizedBox(height: AppSpacing.md),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton.icon(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const ModernHomeDemo(),
+                            ),
+                          );
+                        },
+                        icon: const Icon(Icons.design_services, size: 18),
+                        label: const Text('View Modern Home Demo'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.primaryDark,
+                          foregroundColor: Colors.white,
+                          padding: EdgeInsets.symmetric(
+                            vertical: AppSpacing.md,
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: AppSpacing.md),
+                    Container(
+                      padding: EdgeInsets.all(AppSpacing.sm),
+                      decoration: BoxDecoration(
+                        color: AppColors.offWhite,
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(
+                          color: AppColors.lightGray.withOpacity(0.5),
+                        ),
+                      ),
+                      child: const Text(
+                        '🎨 Features: Material Design 3, Side menu (hamburger), Responsive layout, Modern app bar, Promotional carousel, Search integration, Category grid, Restaurant listings, Bottom navigation, Accessibility support.',
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontStyle: FontStyle.italic,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+
+          // 2. Logo Variants
+          _buildSection(
+            title: '2. Logo Variants',
             children: [
               _buildCard(
                 Column(
@@ -176,7 +458,7 @@ class _ComponentShowcaseScreenState extends State<ComponentShowcaseScreen> {
 
           // 2. Buttons
           _buildSection(
-            title: '2. Buttons',
+            title: '3. Buttons',
             children: [
               _buildCard(
                 Column(
@@ -251,7 +533,7 @@ class _ComponentShowcaseScreenState extends State<ComponentShowcaseScreen> {
 
           // 3. Cards
           _buildSection(
-            title: '3. Cards',
+            title: '9. Progress Indicators',
             children: [
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: AppSpacing.md),

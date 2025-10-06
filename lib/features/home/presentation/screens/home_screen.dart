@@ -772,12 +772,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           color: AppColors.gray,
                         ),
                         SizedBox(width: 2.w),
-                        Text(
-                          '${restaurant.distance.toStringAsFixed(1)} km',
-                          style: AppTypography.bodySmall.copyWith(
-                            color: Theme.of(
-                              context,
-                            ).colorScheme.onSurfaceVariant,
+                        Expanded(
+                          child: Text(
+                            '${restaurant.distance.toStringAsFixed(1)} km',
+                            style: AppTypography.bodySmall.copyWith(
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.onSurfaceVariant,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
                           ),
                         ),
                         if (restaurant.tawseyaCount > 0) ...[

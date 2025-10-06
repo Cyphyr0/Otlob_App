@@ -35,51 +35,61 @@ class OnboardingPage extends StatelessWidget {
       child: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 24.w),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // Image/Placeholder
-              ShadcnTheme.shadcnCard(
-                padding: EdgeInsets.all(24.w),
-                child: SizedBox(height: 200.h, child: imageWidget),
+          child: SingleChildScrollView(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                minHeight:
+                    MediaQuery.of(context).size.height -
+                    MediaQuery.of(context).padding.top -
+                    MediaQuery.of(context).padding.bottom,
               ),
-              SizedBox(height: 40.h),
-              // Title
-              Text(
-                title,
-                style: TextStyle(
-                  fontSize: 32.sp,
-                  fontWeight: FontWeight.bold,
-                  color: theme.colorScheme.onPrimary,
-                  fontFamily: 'TutanoCCV2',
-                ),
-                textAlign: TextAlign.center,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // Image/Placeholder
+                  ShadcnTheme.shadcnCard(
+                    padding: EdgeInsets.all(24.w),
+                    child: SizedBox(height: 200.h, child: imageWidget),
+                  ),
+                  SizedBox(height: 40.h),
+                  // Title
+                  Text(
+                    title,
+                    style: TextStyle(
+                      fontSize: 32.sp,
+                      fontWeight: FontWeight.bold,
+                      color: theme.colorScheme.onPrimary,
+                      fontFamily: 'TutanoCCV2',
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 16.h),
+                  // Subtitle
+                  Text(
+                    subtitle,
+                    style: GoogleFonts.cairo(
+                      fontSize: 16.sp,
+                      color: theme.colorScheme.onPrimary.withOpacity(0.9),
+                      height: 1.4,
+                    ),
+                    textAlign: TextAlign.center,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  SizedBox(height: 40.h),
+                  // Subtle animation placeholder (e.g., fade-in icon)
+                  AnimatedOpacity(
+                    opacity: 0.7,
+                    duration: const Duration(milliseconds: 1500),
+                    child: Icon(
+                      Icons.arrow_forward_ios,
+                      color: theme.colorScheme.onPrimary,
+                      size: 24.sp,
+                    ),
+                  ),
+                ],
               ),
-              SizedBox(height: 16.h),
-              // Subtitle
-              Text(
-                subtitle,
-                style: GoogleFonts.cairo(
-                  fontSize: 16.sp,
-                  color: theme.colorScheme.onPrimary.withOpacity(0.9),
-                  height: 1.4,
-                ),
-                textAlign: TextAlign.center,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-              SizedBox(height: 40.h),
-              // Subtle animation placeholder (e.g., fade-in icon)
-              AnimatedOpacity(
-                opacity: 0.7,
-                duration: const Duration(milliseconds: 1500),
-                child: Icon(
-                  Icons.arrow_forward_ios,
-                  color: theme.colorScheme.onPrimary,
-                  size: 24.sp,
-                ),
-              ),
-            ],
+            ),
           ),
         ),
       ),
