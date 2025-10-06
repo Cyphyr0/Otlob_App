@@ -18,9 +18,7 @@ migrate_working_dir/
 *.iws
 .idea/
 
-# The .vscode folder contains launch configuration and tasks you configure in
-# VS Code which you may wish to be included in version control, so this line
-# is commented out by default.
+# VS Code settings (uncomment if you want to ignore)
 #.vscode/
 
 # Flutter/Dart/Pub related
@@ -50,6 +48,7 @@ android/app/google-services.json
 ios/Runner/GoogleService-Info.plist
 firebase.json
 .firebaserc
+firebase-debug.log
 
 # AI Assistant Rules (contains internal guidelines)
 .ai_rules.md
@@ -61,7 +60,7 @@ AI_RULES.md
 .env.production
 .env.development
 
-# Secret keys
+# Secret keys and certificates
 *.key
 *.pem
 secrets/
@@ -70,30 +69,37 @@ secrets/
 lib/core/config/firebase_keys.dart
 lib/core/config/sensitive_config.dart
 
-# AI Assistant Rules (contains internal guidelines)
-.ai_rules.md
-AI_RULES.md
-
 # Node.js dependencies (if using Firebase Functions or tools)
 node_modules/
 package-lock.json
+package.json
 
-# AI Assistant workspace folders
+# AI Assistant workspace folders (local development only)
 .roo/
 .kilocode/
+
+# Local databases and caches
+chroma_db/
+
+# Windows-specific files
+nuget.exe
+
+# Temporary documentation files (local development)
 QUICK_FIX_NOW.md
 QUICK_START.md
 docs/COMPREHENSIVE_FIX_GUIDE.md
 docs/CURRENT_STATUS.md
-docs/CURRENT_STATUS.md
 docs/DESIGN_IMPROVEMENTS_SUMMARY.md
-docs/CURRENT_STATUS.md
 docs/FIRESTORE_RULES_FIX.md
 docs/UI_IMPROVEMENTS_SUMMARY.md
 docs/SHADCN_MIGRATION_GUIDE.md
 docs/SESSION_SUMMARY.md
 docs/LOTTIE_IMPLEMENTATION.md
-docs/CURRENT_STATUS.md
-docs/CURRENT_STATUS.md
-docs/CURRENT_STATUS.md
+
+# Local scripts
 scripts/cleanup-git.ps1
+
+# Project-specific rules and guidelines
+.flutter-rules.md
+.ai_rules.md
+.otlob-rules.md
