@@ -54,6 +54,9 @@ firebase-debug.log
 .ai_rules.md
 AI_RULES.md
 
+# Security documentation (internal use only)
+docs/.security-rules.md
+
 # Environment variables
 .env
 .env.local
@@ -103,3 +106,47 @@ scripts/cleanup-git.ps1
 .otlob-rules.md
 docs/.flutter-rules.md
 docs/mcp.md
+
+# Additional Flutter/Dart ignores
+packages
+.flutter-plugins
+.atom/
+.vscode/settings.json
+.vscode/launch.json
+.atom/
+
+# Dispose-specific ignores (*.iml files are already ignored)
+flutter_application_1.iml
+
+# Log files and debug output
+*.log
+firebase-debug.log
+firebase-debug.log.*
+
+# Dependency lock files (keep package.json if needed for project)
+package-lock.json
+pubspec.lock
+Pipfile.lock
+poetry.lock
+
+# Temporary files and caches
+.DS_Store
+Thumbs.db
+ehthumbs.db
+desktop.ini
+
+# Editor-specific files (expand .vscode comment)
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS-specific temporary files
+**/.DS_Store
+**/Thumbs.db
+
+# Additional AI assistant directories that might appear
+.cursor/
+.windsurf/
+.cline/
