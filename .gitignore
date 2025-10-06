@@ -53,6 +53,8 @@ firebase-debug.log
 # AI Assistant Rules (contains internal guidelines)
 .ai_rules.md
 AI_RULES.md
+docs/AI_AGENT_BRIEFING.md
+docs/AI_COMPREHENSIVE_MISSION.md
 
 # Security documentation (internal use only)
 docs/.security-rules.md
