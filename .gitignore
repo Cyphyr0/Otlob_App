@@ -74,8 +74,6 @@ lib/core/config/sensitive_config.dart
 
 # Node.js dependencies (if using Firebase Functions or tools)
 node_modules/
-package-lock.json
-package.json
 
 # AI Assistant workspace folders (local development only)
 .roo/
@@ -124,7 +122,6 @@ firebase-debug.log
 firebase-debug.log.*
 
 # Dependency lock files (keep package.json if needed for project)
-package-lock.json
 pubspec.lock
 Pipfile.lock
 poetry.lock
