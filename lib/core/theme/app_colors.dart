@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import "package:flutter/material.dart";
 
 /// Otlob App Color System
 ///
@@ -165,29 +165,29 @@ class AppColors {
   /// Get color for a specific cuisine type
   static Color getCuisineColor(String cuisine) {
     switch (cuisine.toLowerCase()) {
-      case 'egyptian':
-      case 'مصري':
+      case "egyptian":
+      case "مصري":
         return const Color(0xFFE74C3C);
-      case 'street food':
-      case 'طعام الشارع':
+      case "street food":
+      case "طعام الشارع":
         return const Color(0xFFF39C12);
-      case 'grill':
-      case 'مشويات':
+      case "grill":
+      case "مشويات":
         return const Color(0xFFD35400);
-      case 'seafood':
-      case 'مأكولات بحرية':
+      case "seafood":
+      case "مأكولات بحرية":
         return const Color(0xFF3498DB);
-      case 'italian':
-      case 'إيطالي':
+      case "italian":
+      case "إيطالي":
         return const Color(0xFF27AE60);
-      case 'asian':
-      case 'آسيوي':
+      case "asian":
+      case "آسيوي":
         return const Color(0xFFE67E22);
-      case 'fast food':
-      case 'وجبات سريعة':
+      case "fast food":
+      case "وجبات سريعة":
         return const Color(0xFFC0392B);
-      case 'desserts':
-      case 'حلويات':
+      case "desserts":
+      case "حلويات":
         return const Color(0xFFEC407A);
       default:
         return gray;

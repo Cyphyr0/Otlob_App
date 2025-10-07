@@ -1,10 +1,11 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../theme/app_colors.dart';
-import '../../theme/app_typography.dart';
-import '../../theme/app_radius.dart';
-import '../../theme/app_spacing.dart';
-import '../../theme/app_animations.dart';
+import "package:flutter/material.dart";
+import "package:flutter/foundation.dart";
+import "package:flutter_screenutil/flutter_screenutil.dart";
+import "../../theme/app_colors.dart";
+import "../../theme/app_typography.dart";
+import "../../theme/app_radius.dart";
+import "../../theme/app_spacing.dart";
+import "../../theme/app_animations.dart";
 
 /// Secondary Button Component
 ///
@@ -50,6 +51,18 @@ import '../../theme/app_animations.dart';
 /// )
 /// ```
 class SecondaryButton extends StatefulWidget {
+
+  const SecondaryButton({
+    super.key,
+    required this.text,
+    required this.onPressed,
+    this.icon,
+    this.isLoading = false,
+    this.fullWidth = false,
+    this.height,
+    this.textStyle,
+    this.borderColor,
+  });
   /// Button text label
   final String text;
 
@@ -74,20 +87,21 @@ class SecondaryButton extends StatefulWidget {
   /// Border color (defaults to primaryGold)
   final Color? borderColor;
 
-  const SecondaryButton({
-    super.key,
-    required this.text,
-    required this.onPressed,
-    this.icon,
-    this.isLoading = false,
-    this.fullWidth = false,
-    this.height,
-    this.textStyle,
-    this.borderColor,
-  });
-
   @override
   State<SecondaryButton> createState() => _SecondaryButtonState();
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(StringProperty('text', text));
+    properties.add(ObjectFlagProperty<VoidCallback?>.has('onPressed', onPressed));
+    properties.add(DiagnosticsProperty<IconData?>('icon', icon));
+    properties.add(DiagnosticsProperty<bool>('isLoading', isLoading));
+    properties.add(DiagnosticsProperty<bool>('fullWidth', fullWidth));
+    properties.add(DoubleProperty('height', height));
+    properties.add(DiagnosticsProperty<TextStyle?>('textStyle', textStyle));
+    properties.add(ColorProperty('borderColor', borderColor));
+  }
 }
 
 class _SecondaryButtonState extends State<SecondaryButton>
@@ -96,6 +110,7 @@ class _SecondaryButtonState extends State<SecondaryButton>
   late Animation<double> _scaleAnimation;
   bool _isPressed = false;
   bool _isHovered = false;
+  late bool isDisabled;
 
   @override
   void initState() {
@@ -105,7 +120,7 @@ class _SecondaryButtonState extends State<SecondaryButton>
       vsync: this,
     );
 
-    _scaleAnimation = Tween<double>(begin: 1.0, end: 0.95).animate(
+    _scaleAnimation = Tween<double>(begin: 1, end: 0.95).animate(
       CurvedAnimation(parent: _controller, curve: AppAnimations.buttonCurve),
     );
   }
@@ -139,8 +154,8 @@ class _SecondaryButtonState extends State<SecondaryButton>
 
   @override
   Widget build(BuildContext context) {
-    final bool isDisabled = widget.onPressed == null || widget.isLoading;
-    final buttonHeight = widget.height ?? 48.h;
+    isDisabled = widget.onPressed == null || widget.isLoading;
+    var buttonHeight = widget.height ?? 48.h;
 
     return GestureDetector(
       onTapDown: _handleTapDown,
@@ -152,9 +167,7 @@ class _SecondaryButtonState extends State<SecondaryButton>
         onExit: (_) => setState(() => _isHovered = false),
         child: AnimatedBuilder(
           animation: _scaleAnimation,
-          builder: (context, child) {
-            return Transform.scale(scale: _scaleAnimation.value, child: child);
-          },
+          builder: (context, child) => Transform.scale(scale: _scaleAnimation.value, child: child),
           child: AnimatedContainer(
             duration: AppAnimations.fast,
             height: buttonHeight,

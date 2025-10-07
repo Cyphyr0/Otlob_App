@@ -1,8 +1,9 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../theme/app_colors.dart';
-import '../../theme/app_shadows.dart';
-import '../../theme/app_animations.dart';
+import "package:flutter/material.dart";
+import "package:flutter/foundation.dart";
+import "package:flutter_screenutil/flutter_screenutil.dart";
+import "../../theme/app_colors.dart";
+import "../../theme/app_shadows.dart";
+import "../../theme/app_animations.dart";
 
 /// Custom Icon Button Component
 ///
@@ -54,6 +55,17 @@ import '../../theme/app_animations.dart';
 /// )
 /// ```
 class IconButtonCustom extends StatefulWidget {
+
+  const IconButtonCustom({
+    super.key,
+    required this.icon,
+    required this.onPressed,
+    this.variant = IconButtonVariant.filled,
+    this.size = IconButtonSize.medium,
+    this.badgeCount,
+    this.iconColor,
+    this.backgroundColor,
+  });
   /// The icon to display
   final IconData icon;
 
@@ -75,19 +87,20 @@ class IconButtonCustom extends StatefulWidget {
   /// Custom background color (overrides variant default)
   final Color? backgroundColor;
 
-  const IconButtonCustom({
-    super.key,
-    required this.icon,
-    required this.onPressed,
-    this.variant = IconButtonVariant.filled,
-    this.size = IconButtonSize.medium,
-    this.badgeCount,
-    this.iconColor,
-    this.backgroundColor,
-  });
-
   @override
   State<IconButtonCustom> createState() => _IconButtonCustomState();
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<IconData>('icon', icon));
+    properties.add(ObjectFlagProperty<VoidCallback?>.has('onPressed', onPressed));
+    properties.add(EnumProperty<IconButtonVariant>('variant', variant));
+    properties.add(EnumProperty<IconButtonSize>('size', size));
+    properties.add(IntProperty('badgeCount', badgeCount));
+    properties.add(ColorProperty('iconColor', iconColor));
+    properties.add(ColorProperty('backgroundColor', backgroundColor));
+  }
 }
 
 class _IconButtonCustomState extends State<IconButtonCustom>
@@ -95,6 +108,7 @@ class _IconButtonCustomState extends State<IconButtonCustom>
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
   bool _isPressed = false;
+  late bool isDisabled;
 
   @override
   void initState() {
@@ -104,7 +118,7 @@ class _IconButtonCustomState extends State<IconButtonCustom>
       vsync: this,
     );
 
-    _scaleAnimation = Tween<double>(begin: 1.0, end: 0.9).animate(
+    _scaleAnimation = Tween<double>(begin: 1, end: 0.9).animate(
       CurvedAnimation(parent: _controller, curve: AppAnimations.buttonCurve),
     );
   }
@@ -185,7 +199,7 @@ class _IconButtonCustomState extends State<IconButtonCustom>
 
   @override
   Widget build(BuildContext context) {
-    final bool isDisabled = widget.onPressed == null;
+    isDisabled = widget.onPressed == null;
 
     Widget button = GestureDetector(
       onTapDown: _handleTapDown,
@@ -194,9 +208,7 @@ class _IconButtonCustomState extends State<IconButtonCustom>
       onTap: widget.onPressed,
       child: AnimatedBuilder(
         animation: _scaleAnimation,
-        builder: (context, child) {
-          return Transform.scale(scale: _scaleAnimation.value, child: child);
-        },
+        builder: (context, child) => Transform.scale(scale: _scaleAnimation.value, child: child),
         child: Container(
           width: _buttonSize,
           height: _buttonSize,
@@ -246,7 +258,7 @@ class _IconButtonCustomState extends State<IconButtonCustom>
               constraints: BoxConstraints(minWidth: 18.r, minHeight: 18.r),
               child: Center(
                 child: Text(
-                  widget.badgeCount! > 99 ? '99+' : '${widget.badgeCount}',
+                  widget.badgeCount! > 99 ? "99+" : "${widget.badgeCount}",
                   style: TextStyle(
                     color: AppColors.white,
                     fontSize: 10.sp,

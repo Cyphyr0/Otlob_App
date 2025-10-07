@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../theme/app_colors.dart';
-import '../../../theme/app_spacing.dart';
-import '../../../theme/app_typography.dart';
+import "package:flutter/material.dart";
+import "package:flutter_screenutil/flutter_screenutil.dart";
+import "../../../theme/app_colors.dart";
+import "../../../theme/app_spacing.dart";
+import "../../../theme/app_typography.dart";
 
 class ShadcnAuthDemo extends StatefulWidget {
   const ShadcnAuthDemo({super.key});
@@ -39,7 +39,7 @@ class _ShadcnAuthDemoState extends State<ShadcnAuthDemo> {
         setState(() => _isLoading = false);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(_isLogin ? 'Login Successful' : 'Account Created'),
+            content: Text(_isLogin ? "Login Successful" : "Account Created"),
             backgroundColor: AppColors.logoRed,
           ),
         );
@@ -48,8 +48,7 @@ class _ShadcnAuthDemoState extends State<ShadcnAuthDemo> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  Widget build(BuildContext context) => Scaffold(
       backgroundColor: AppColors.offWhite,
       appBar: AppBar(
         title: Text(
@@ -262,5 +261,4 @@ class _ShadcnAuthDemoState extends State<ShadcnAuthDemo> {
         ),
       ),
     );
-  }
 }

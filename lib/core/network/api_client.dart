@@ -1,8 +1,7 @@
-import 'package:dio/dio.dart';
-import 'package:otlob_app/core/config/app_config.dart';
+import "package:dio/dio.dart";
+import "../config/app_config.dart";
 
 class ApiClient {
-  final Dio _dio;
 
   ApiClient() : _dio = Dio() {
     _dio.options.baseUrl = AppConfig.baseUrl;
@@ -42,6 +41,7 @@ class ApiClient {
       ),
     );
   }
+  final Dio _dio;
 
   Future<Response<T>> get<T>(
     String path, {
@@ -49,15 +49,13 @@ class ApiClient {
     Options? options,
     CancelToken? cancelToken,
     ProgressCallback? onReceiveProgress,
-  }) {
-    return _dio.get<T>(
+  }) => _dio.get<T>(
       path,
       queryParameters: queryParameters,
       options: options,
       cancelToken: cancelToken,
       onReceiveProgress: onReceiveProgress,
     );
-  }
 
   Future<Response<T>> post<T>(
     String path, {
@@ -67,8 +65,7 @@ class ApiClient {
     CancelToken? cancelToken,
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
-  }) {
-    return _dio.post<T>(
+  }) => _dio.post<T>(
       path,
       data: data,
       queryParameters: queryParameters,
@@ -77,7 +74,6 @@ class ApiClient {
       onSendProgress: onSendProgress,
       onReceiveProgress: onReceiveProgress,
     );
-  }
 
   Future<Response<T>> put<T>(
     String path, {
@@ -87,8 +83,7 @@ class ApiClient {
     CancelToken? cancelToken,
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
-  }) {
-    return _dio.put<T>(
+  }) => _dio.put<T>(
       path,
       data: data,
       queryParameters: queryParameters,
@@ -97,7 +92,6 @@ class ApiClient {
       onSendProgress: onSendProgress,
       onReceiveProgress: onReceiveProgress,
     );
-  }
 
   Future<Response<T>> delete<T>(
     String path, {
@@ -105,15 +99,13 @@ class ApiClient {
     Map<String, dynamic>? queryParameters,
     Options? options,
     CancelToken? cancelToken,
-  }) {
-    return _dio.delete<T>(
+  }) => _dio.delete<T>(
       path,
       data: data,
       queryParameters: queryParameters,
       options: options,
       cancelToken: cancelToken,
     );
-  }
 
   Future<Response<T>> patch<T>(
     String path, {
@@ -123,8 +115,7 @@ class ApiClient {
     CancelToken? cancelToken,
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
-  }) {
-    return _dio.patch<T>(
+  }) => _dio.patch<T>(
       path,
       data: data,
       queryParameters: queryParameters,
@@ -133,5 +124,4 @@ class ApiClient {
       onSendProgress: onSendProgress,
       onReceiveProgress: onReceiveProgress,
     );
-  }
 }

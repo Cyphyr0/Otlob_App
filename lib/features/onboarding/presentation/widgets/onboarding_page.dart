@@ -1,13 +1,10 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_fonts/google_fonts.dart';
+import "package:flutter/material.dart";
+import "package:flutter_screenutil/flutter_screenutil.dart";
+import "package:google_fonts/google_fonts.dart";
 
-import '../../../../core/theme/shadcn_theme.dart';
+import "../../../../core/theme/shadcn_theme.dart";
 
 class OnboardingPage extends StatelessWidget {
-  final String title;
-  final String subtitle;
-  final Widget imageWidget;
 
   const OnboardingPage({
     super.key,
@@ -15,10 +12,13 @@ class OnboardingPage extends StatelessWidget {
     required this.subtitle,
     required this.imageWidget,
   });
+  final String title;
+  final String subtitle;
+  final Widget imageWidget;
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    var theme = Theme.of(context);
 
     return Container(
       width: double.infinity,
@@ -59,7 +59,7 @@ class OnboardingPage extends StatelessWidget {
                       fontSize: 32.sp,
                       fontWeight: FontWeight.bold,
                       color: theme.colorScheme.onPrimary,
-                      fontFamily: 'TutanoCCV2',
+                      fontFamily: "TutanoCCV2",
                     ),
                     textAlign: TextAlign.center,
                   ),
@@ -94,5 +94,12 @@ class OnboardingPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(StringProperty('title', title));
+    properties.add(StringProperty('subtitle', subtitle));
   }
 }

@@ -26,6 +26,10 @@ mixin _$CartItem {
   double get price => throw _privateConstructorUsedError;
   int get quantity => throw _privateConstructorUsedError;
   String get imageUrl => throw _privateConstructorUsedError;
+  String? get specialInstructions => throw _privateConstructorUsedError;
+  String? get restaurantId => throw _privateConstructorUsedError;
+  String? get restaurantName => throw _privateConstructorUsedError;
+  DateTime get addedAt => throw _privateConstructorUsedError;
 
   /// Serializes this CartItem to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -48,6 +52,10 @@ abstract class $CartItemCopyWith<$Res> {
     double price,
     int quantity,
     String imageUrl,
+    String? specialInstructions,
+    String? restaurantId,
+    String? restaurantName,
+    DateTime addedAt,
   });
 }
 
@@ -71,6 +79,10 @@ class _$CartItemCopyWithImpl<$Res, $Val extends CartItem>
     Object? price = null,
     Object? quantity = null,
     Object? imageUrl = null,
+    Object? specialInstructions = freezed,
+    Object? restaurantId = freezed,
+    Object? restaurantName = freezed,
+    Object? addedAt = null,
   }) {
     return _then(
       _value.copyWith(
@@ -94,6 +106,22 @@ class _$CartItemCopyWithImpl<$Res, $Val extends CartItem>
                 ? _value.imageUrl
                 : imageUrl // ignore: cast_nullable_to_non_nullable
                       as String,
+            specialInstructions: freezed == specialInstructions
+                ? _value.specialInstructions
+                : specialInstructions // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            restaurantId: freezed == restaurantId
+                ? _value.restaurantId
+                : restaurantId // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            restaurantName: freezed == restaurantName
+                ? _value.restaurantName
+                : restaurantName // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            addedAt: null == addedAt
+                ? _value.addedAt
+                : addedAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
           )
           as $Val,
     );
@@ -115,6 +143,10 @@ abstract class _$$CartItemImplCopyWith<$Res>
     double price,
     int quantity,
     String imageUrl,
+    String? specialInstructions,
+    String? restaurantId,
+    String? restaurantName,
+    DateTime addedAt,
   });
 }
 
@@ -137,6 +169,10 @@ class __$$CartItemImplCopyWithImpl<$Res>
     Object? price = null,
     Object? quantity = null,
     Object? imageUrl = null,
+    Object? specialInstructions = freezed,
+    Object? restaurantId = freezed,
+    Object? restaurantName = freezed,
+    Object? addedAt = null,
   }) {
     return _then(
       _$CartItemImpl(
@@ -160,6 +196,22 @@ class __$$CartItemImplCopyWithImpl<$Res>
             ? _value.imageUrl
             : imageUrl // ignore: cast_nullable_to_non_nullable
                   as String,
+        specialInstructions: freezed == specialInstructions
+            ? _value.specialInstructions
+            : specialInstructions // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        restaurantId: freezed == restaurantId
+            ? _value.restaurantId
+            : restaurantId // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        restaurantName: freezed == restaurantName
+            ? _value.restaurantName
+            : restaurantName // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        addedAt: null == addedAt
+            ? _value.addedAt
+            : addedAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
       ),
     );
   }
@@ -174,6 +226,10 @@ class _$CartItemImpl implements _CartItem {
     required this.price,
     required this.quantity,
     required this.imageUrl,
+    this.specialInstructions,
+    this.restaurantId,
+    this.restaurantName,
+    required this.addedAt,
   });
 
   factory _$CartItemImpl.fromJson(Map<String, dynamic> json) =>
@@ -189,10 +245,18 @@ class _$CartItemImpl implements _CartItem {
   final int quantity;
   @override
   final String imageUrl;
+  @override
+  final String? specialInstructions;
+  @override
+  final String? restaurantId;
+  @override
+  final String? restaurantName;
+  @override
+  final DateTime addedAt;
 
   @override
   String toString() {
-    return 'CartItem(id: $id, name: $name, price: $price, quantity: $quantity, imageUrl: $imageUrl)';
+    return 'CartItem(id: $id, name: $name, price: $price, quantity: $quantity, imageUrl: $imageUrl, specialInstructions: $specialInstructions, restaurantId: $restaurantId, restaurantName: $restaurantName, addedAt: $addedAt)';
   }
 
   @override
@@ -206,13 +270,30 @@ class _$CartItemImpl implements _CartItem {
             (identical(other.quantity, quantity) ||
                 other.quantity == quantity) &&
             (identical(other.imageUrl, imageUrl) ||
-                other.imageUrl == imageUrl));
+                other.imageUrl == imageUrl) &&
+            (identical(other.specialInstructions, specialInstructions) ||
+                other.specialInstructions == specialInstructions) &&
+            (identical(other.restaurantId, restaurantId) ||
+                other.restaurantId == restaurantId) &&
+            (identical(other.restaurantName, restaurantName) ||
+                other.restaurantName == restaurantName) &&
+            (identical(other.addedAt, addedAt) || other.addedAt == addedAt));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, id, name, price, quantity, imageUrl);
+  int get hashCode => Object.hash(
+    runtimeType,
+    id,
+    name,
+    price,
+    quantity,
+    imageUrl,
+    specialInstructions,
+    restaurantId,
+    restaurantName,
+    addedAt,
+  );
 
   /// Create a copy of CartItem
   /// with the given fields replaced by the non-null parameter values.
@@ -235,6 +316,10 @@ abstract class _CartItem implements CartItem {
     required final double price,
     required final int quantity,
     required final String imageUrl,
+    final String? specialInstructions,
+    final String? restaurantId,
+    final String? restaurantName,
+    required final DateTime addedAt,
   }) = _$CartItemImpl;
 
   factory _CartItem.fromJson(Map<String, dynamic> json) =
@@ -250,6 +335,14 @@ abstract class _CartItem implements CartItem {
   int get quantity;
   @override
   String get imageUrl;
+  @override
+  String? get specialInstructions;
+  @override
+  String? get restaurantId;
+  @override
+  String? get restaurantName;
+  @override
+  DateTime get addedAt;
 
   /// Create a copy of CartItem
   /// with the given fields replaced by the non-null parameter values.

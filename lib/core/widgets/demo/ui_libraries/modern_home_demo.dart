@@ -1,22 +1,22 @@
-﻿import 'package:flutter/material.dart';
-import '../../../theme/app_spacing.dart';
-import '../../../theme/app_typography.dart';
+﻿import "package:flutter/material.dart";
+import "../../../theme/app_spacing.dart";
+import "../../../theme/app_typography.dart";
 
 // Sample image URLs (using Unsplash for demo purposes)
 const String _sampleRestaurantImage =
-    'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400&h=250&fit=crop';
+    "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400&h=250&fit=crop";
 const String _sampleFoodImage =
-    'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=200&h=150&fit=crop';
+    "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=200&h=150&fit=crop";
 const String _promoBannerImage =
-    'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=800&h=300&fit=crop';
+    "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=800&h=300&fit=crop";
 const String _userAvatar =
-    'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=50&h=50&fit=crop&crop=face';
+    "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=50&h=50&fit=crop&crop=face";
 const String _burgerImage =
-    'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=200&h=150&fit=crop';
+    "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=200&h=150&fit=crop";
 const String _pizzaImage =
-    'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=200&h=150&fit=crop';
+    "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=200&h=150&fit=crop";
 const String _sushiImage =
-    'https://images.unsplash.com/photo-1579871494447-9811cf80d66c?w=200&h=150&fit=crop';
+    "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?w=200&h=150&fit=crop";
 
 class ModernHomeDemo extends StatefulWidget {
   const ModernHomeDemo({super.key});
@@ -34,151 +34,151 @@ class _ModernHomeDemoState extends State<ModernHomeDemo>
 
   final TextEditingController _searchController = TextEditingController();
   int _selectedCategoryIndex = 0;
-  final String _userName = 'Hisham';
+  final String _userName = "Hisham";
   int _bottomNavIndex = 0;
 
   final List<Map<String, dynamic>> _categories = [
     {
-      'icon': Icons.local_pizza,
-      'name': 'Pizza',
-      'color': Colors.red,
-      'trending': true,
-      'image': _pizzaImage,
+      "icon": Icons.local_pizza,
+      "name": "Pizza",
+      "color": Colors.red,
+      "trending": true,
+      "image": _pizzaImage,
     },
     {
-      'icon': Icons.restaurant,
-      'name': 'Burgers',
-      'color': Colors.orange,
-      'trending': true,
-      'image': _burgerImage,
+      "icon": Icons.restaurant,
+      "name": "Burgers",
+      "color": Colors.orange,
+      "trending": true,
+      "image": _burgerImage,
     },
     {
-      'icon': Icons.set_meal,
-      'name': 'Sushi',
-      'color': Colors.blue,
-      'trending': false,
-      'image': _sushiImage,
+      "icon": Icons.set_meal,
+      "name": "Sushi",
+      "color": Colors.blue,
+      "trending": false,
+      "image": _sushiImage,
     },
     {
-      'icon': Icons.local_dining,
-      'name': 'Italian',
-      'color': Colors.green,
-      'trending': false,
-      'image': _sampleFoodImage,
+      "icon": Icons.local_dining,
+      "name": "Italian",
+      "color": Colors.green,
+      "trending": false,
+      "image": _sampleFoodImage,
     },
     {
-      'icon': Icons.fastfood,
-      'name': 'Fast Food',
-      'color': Colors.purple,
-      'trending': true,
-      'image': _sampleFoodImage,
+      "icon": Icons.fastfood,
+      "name": "Fast Food",
+      "color": Colors.purple,
+      "trending": true,
+      "image": _sampleFoodImage,
     },
     {
-      'icon': Icons.local_cafe,
-      'name': 'Desserts',
-      'color': Colors.pink,
-      'trending': false,
-      'image': _sampleFoodImage,
+      "icon": Icons.local_cafe,
+      "name": "Desserts",
+      "color": Colors.pink,
+      "trending": false,
+      "image": _sampleFoodImage,
     },
     {
-      'icon': Icons.local_bar,
-      'name': 'Drinks',
-      'color': Colors.teal,
-      'trending': false,
-      'image': _sampleFoodImage,
+      "icon": Icons.local_bar,
+      "name": "Drinks",
+      "color": Colors.teal,
+      "trending": false,
+      "image": _sampleFoodImage,
     },
     {
-      'icon': Icons.restaurant_menu,
-      'name': 'Healthy',
-      'color': Colors.lightGreen,
-      'trending': true,
-      'image': _sampleFoodImage,
+      "icon": Icons.restaurant_menu,
+      "name": "Healthy",
+      "color": Colors.lightGreen,
+      "trending": true,
+      "image": _sampleFoodImage,
     },
   ];
 
   final List<Map<String, dynamic>> _restaurants = [
     {
-      'name': 'Pizza Palace',
-      'cuisine': 'Italian • Pizza',
-      'rating': 4.5,
-      'deliveryTime': '25-35 min',
-      'priceRange': '\$\$\$',
-      'image': _sampleRestaurantImage,
-      'isOpen': true,
+      "name": "Pizza Palace",
+      "cuisine": "Italian • Pizza",
+      "rating": 4.5,
+      "deliveryTime": "25-35 min",
+      "priceRange": "\$\$\$",
+      "image": _sampleRestaurantImage,
+      "isOpen": true,
     },
     {
-      'name': 'Burger Barn',
-      'cuisine': 'American • Burgers',
-      'rating': 4.2,
-      'deliveryTime': '20-30 min',
-      'priceRange': '\$\$',
-      'image': _sampleRestaurantImage,
-      'isOpen': true,
+      "name": "Burger Barn",
+      "cuisine": "American • Burgers",
+      "rating": 4.2,
+      "deliveryTime": "20-30 min",
+      "priceRange": "\$\$",
+      "image": _sampleRestaurantImage,
+      "isOpen": true,
     },
     {
-      'name': 'Sushi Spot',
-      'cuisine': 'Japanese • Sushi',
-      'rating': 4.7,
-      'deliveryTime': '30-40 min',
-      'priceRange': '\$\$\$\$',
-      'image': _sampleRestaurantImage,
-      'isOpen': false,
+      "name": "Sushi Spot",
+      "cuisine": "Japanese • Sushi",
+      "rating": 4.7,
+      "deliveryTime": "30-40 min",
+      "priceRange": "\$\$\$\$",
+      "image": _sampleRestaurantImage,
+      "isOpen": false,
     },
     {
-      'name': 'Taco Town',
-      'cuisine': 'Mexican • Tacos',
-      'rating': 4.3,
-      'deliveryTime': '15-25 min',
-      'priceRange': '\$\$',
-      'image': _sampleRestaurantImage,
-      'isOpen': true,
+      "name": "Taco Town",
+      "cuisine": "Mexican • Tacos",
+      "rating": 4.3,
+      "deliveryTime": "15-25 min",
+      "priceRange": "\$\$",
+      "image": _sampleRestaurantImage,
+      "isOpen": true,
     },
   ];
 
   final List<Map<String, dynamic>> _promotions = [
     {
-      'title': 'Free Delivery',
-      'subtitle': 'On orders over \$25',
-      'timeLeft': '2 days left',
-      'cta': 'Order Now',
-      'gradient': [Colors.orange, Colors.red],
-      'image': _promoBannerImage,
+      "title": "Free Delivery",
+      "subtitle": "On orders over \$25",
+      "timeLeft": "2 days left",
+      "cta": "Order Now",
+      "gradient": [Colors.orange, Colors.red],
+      "image": _promoBannerImage,
     },
     {
-      'title': '50% Off',
-      'subtitle': 'Selected restaurants',
-      'timeLeft': '1 day left',
-      'cta': 'View Deals',
-      'gradient': [Colors.purple, Colors.pink],
-      'image': _promoBannerImage,
+      "title": "50% Off",
+      "subtitle": "Selected restaurants",
+      "timeLeft": "1 day left",
+      "cta": "View Deals",
+      "gradient": [Colors.purple, Colors.pink],
+      "image": _promoBannerImage,
     },
   ];
 
   final List<Map<String, dynamic>> _quickActions = [
     {
-      'icon': Icons.restaurant_menu,
-      'label': 'Restaurants',
-      'color': Colors.red,
+      "icon": Icons.restaurant_menu,
+      "label": "Restaurants",
+      "color": Colors.red,
     },
-    {'icon': Icons.local_shipping, 'label': 'Orders', 'color': Colors.blue},
-    {'icon': Icons.favorite, 'label': 'Favorites', 'color': Colors.pink},
-    {'icon': Icons.person, 'label': 'Profile', 'color': Colors.green},
+    {"icon": Icons.local_shipping, "label": "Orders", "color": Colors.blue},
+    {"icon": Icons.favorite, "label": "Favorites", "color": Colors.pink},
+    {"icon": Icons.person, "label": "Profile", "color": Colors.green},
   ];
 
   final List<Map<String, dynamic>> _orderAgainItems = [
     {
-      'name': 'Pizza Palace',
-      'lastOrdered': '2 days ago',
-      'price': '\$24.99',
-      'rating': 4.5,
-      'image': _sampleRestaurantImage,
+      "name": "Pizza Palace",
+      "lastOrdered": "2 days ago",
+      "price": "\$24.99",
+      "rating": 4.5,
+      "image": _sampleRestaurantImage,
     },
     {
-      'name': 'Burger Barn',
-      'lastOrdered': '1 week ago',
-      'price': '\$18.50',
-      'rating': 4.2,
-      'image': _sampleRestaurantImage,
+      "name": "Burger Barn",
+      "lastOrdered": "1 week ago",
+      "price": r"$18.50",
+      "rating": 4.2,
+      "image": _sampleRestaurantImage,
     },
   ];
 
@@ -189,7 +189,7 @@ class _ModernHomeDemoState extends State<ModernHomeDemo>
       duration: const Duration(milliseconds: 200),
       vsync: this,
     );
-    _fabAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+    _fabAnimation = Tween<double>(begin: 0, end: 1).animate(
       CurvedAnimation(parent: _fabAnimationController, curve: Curves.easeInOut),
     );
     _fabAnimationController.forward();
@@ -204,8 +204,7 @@ class _ModernHomeDemoState extends State<ModernHomeDemo>
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  Widget build(BuildContext context) => Scaffold(
       key: _scaffoldKey,
       drawer: _buildSideMenu(context),
       body: CustomScrollView(
@@ -232,10 +231,8 @@ class _ModernHomeDemoState extends State<ModernHomeDemo>
       floatingActionButton: _buildFloatingActionButton(context),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
-  }
 
-  Widget _buildAppBar(BuildContext context) {
-    return SliverAppBar(
+  Widget _buildAppBar(BuildContext context) => SliverAppBar(
       floating: true,
       snap: true,
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -255,10 +252,8 @@ class _ModernHomeDemoState extends State<ModernHomeDemo>
         ),
       ],
     );
-  }
 
-  Widget _buildLocationSearchSection(BuildContext context) {
-    return Container(
+  Widget _buildLocationSearchSection(BuildContext context) => Container(
       padding: EdgeInsets.all(AppSpacing.md),
       decoration: BoxDecoration(
         color: Theme.of(context).cardColor,
@@ -362,10 +357,8 @@ class _ModernHomeDemoState extends State<ModernHomeDemo>
         ],
       ),
     );
-  }
 
-  Widget _buildGreeting(BuildContext context) {
-    return Padding(
+  Widget _buildGreeting(BuildContext context) => Padding(
       padding: EdgeInsets.all(AppSpacing.md),
       child: Text(
         'Good , ',
@@ -375,10 +368,8 @@ class _ModernHomeDemoState extends State<ModernHomeDemo>
         ),
       ),
     );
-  }
 
-  Widget _buildTrendingNow(BuildContext context) {
-    return Container(
+  Widget _buildTrendingNow(BuildContext context) => Container(
       margin: EdgeInsets.symmetric(horizontal: AppSpacing.md),
       padding: EdgeInsets.all(AppSpacing.md),
       decoration: BoxDecoration(
@@ -458,10 +449,8 @@ class _ModernHomeDemoState extends State<ModernHomeDemo>
         ],
       ),
     );
-  }
 
-  Widget _buildPromotionalCarousel(BuildContext context) {
-    return Container(
+  Widget _buildPromotionalCarousel(BuildContext context) => Container(
       margin: EdgeInsets.symmetric(
         horizontal: AppSpacing.md,
         vertical: AppSpacing.sm,
@@ -557,10 +546,8 @@ class _ModernHomeDemoState extends State<ModernHomeDemo>
         },
       ),
     );
-  }
 
-  Widget _buildQuickActions(BuildContext context) {
-    return Container(
+  Widget _buildQuickActions(BuildContext context) => Container(
       margin: EdgeInsets.symmetric(
         horizontal: AppSpacing.md,
         vertical: AppSpacing.sm,
@@ -637,10 +624,8 @@ class _ModernHomeDemoState extends State<ModernHomeDemo>
         ],
       ),
     );
-  }
 
-  Widget _buildOrderAgain(BuildContext context) {
-    return Container(
+  Widget _buildOrderAgain(BuildContext context) => Container(
       margin: EdgeInsets.symmetric(
         horizontal: AppSpacing.md,
         vertical: AppSpacing.sm,
@@ -742,10 +727,8 @@ class _ModernHomeDemoState extends State<ModernHomeDemo>
         ],
       ),
     );
-  }
 
-  Widget _buildCategoriesSection(BuildContext context) {
-    return Container(
+  Widget _buildCategoriesSection(BuildContext context) => Container(
       margin: EdgeInsets.symmetric(
         horizontal: AppSpacing.md,
         vertical: AppSpacing.sm,
@@ -833,10 +816,8 @@ class _ModernHomeDemoState extends State<ModernHomeDemo>
         ],
       ),
     );
-  }
 
-  Widget _buildFeaturedRestaurants(BuildContext context) {
-    return Container(
+  Widget _buildFeaturedRestaurants(BuildContext context) => Container(
       margin: EdgeInsets.symmetric(
         horizontal: AppSpacing.md,
         vertical: AppSpacing.sm,
@@ -962,10 +943,8 @@ class _ModernHomeDemoState extends State<ModernHomeDemo>
         ],
       ),
     );
-  }
 
-  Widget _buildBottomNavigation(BuildContext context) {
-    return BottomNavigationBar(
+  Widget _buildBottomNavigation(BuildContext context) => BottomNavigationBar(
       currentIndex: _bottomNavIndex,
       onTap: (index) {
         setState(() {
@@ -995,10 +974,8 @@ class _ModernHomeDemoState extends State<ModernHomeDemo>
         ),
       ],
     );
-  }
 
-  Widget _buildFloatingActionButton(BuildContext context) {
-    return ScaleTransition(
+  Widget _buildFloatingActionButton(BuildContext context) => ScaleTransition(
       scale: _fabAnimation,
       child: FloatingActionButton(
         onPressed: () {
@@ -1007,10 +984,8 @@ class _ModernHomeDemoState extends State<ModernHomeDemo>
         child: Icon(Icons.add),
       ),
     );
-  }
 
-  Widget _buildSideMenu(BuildContext context) {
-    return Drawer(
+  Widget _buildSideMenu(BuildContext context) => Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
         children: [
@@ -1122,5 +1097,4 @@ class _ModernHomeDemoState extends State<ModernHomeDemo>
         ],
       ),
     );
-  }
 }

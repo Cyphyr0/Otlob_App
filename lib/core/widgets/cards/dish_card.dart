@@ -1,12 +1,13 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:shimmer/shimmer.dart';
-import '../../theme/app_colors.dart';
-import '../../theme/app_typography.dart';
-import '../../theme/app_radius.dart';
-import '../../theme/app_spacing.dart';
-import '../../theme/app_shadows.dart';
-import '../../theme/app_animations.dart';
+import "package:flutter/foundation.dart";
+import "package:flutter/material.dart";
+import "package:flutter_screenutil/flutter_screenutil.dart";
+import "package:shimmer/shimmer.dart";
+import "../../theme/app_colors.dart";
+import "../../theme/app_typography.dart";
+import "../../theme/app_radius.dart";
+import "../../theme/app_spacing.dart";
+import "../../theme/app_shadows.dart";
+import "../../theme/app_animations.dart";
 
 /// Dish Card Component
 ///
@@ -43,26 +44,6 @@ import '../../theme/app_animations.dart';
 /// DishCard.loading()
 /// ```
 class DishCard extends StatefulWidget {
-  /// Dish image URL
-  final String? imageUrl;
-
-  /// Dish name
-  final String name;
-
-  /// Dish price in EGP
-  final double price;
-
-  /// Optional special tag (e.g., "Popular", "New", "Chef's Special")
-  final String? specialTag;
-
-  /// Callback when card is tapped
-  final VoidCallback? onTap;
-
-  /// Callback when add to cart button is pressed
-  final VoidCallback? onAddToCart;
-
-  /// Show loading shimmer state
-  final bool isLoading;
 
   const DishCard({
     super.key,
@@ -84,9 +65,41 @@ class DishCard extends StatefulWidget {
       onTap = null,
       onAddToCart = null,
       isLoading = true;
+  /// Dish image URL
+  final String? imageUrl;
+
+  /// Dish name
+  final String name;
+
+  /// Dish price in EGP
+  final double price;
+
+  /// Optional special tag (e.g., "Popular", "New", "Chef's Special")
+  final String? specialTag;
+
+  /// Callback when card is tapped
+  final VoidCallback? onTap;
+
+  /// Callback when add to cart button is pressed
+  final VoidCallback? onAddToCart;
+
+  /// Show loading shimmer state
+  final bool isLoading;
 
   @override
   State<DishCard> createState() => _DishCardState();
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(StringProperty('imageUrl', imageUrl));
+    properties.add(StringProperty('name', name));
+    properties.add(DoubleProperty('price', price));
+    properties.add(StringProperty('specialTag', specialTag));
+    properties.add(ObjectFlagProperty<VoidCallback?>.has('onTap', onTap));
+    properties.add(ObjectFlagProperty<VoidCallback?>.has('onAddToCart', onAddToCart));
+    properties.add(DiagnosticsProperty<bool>('isLoading', isLoading));
+  }
 }
 
 class _DishCardState extends State<DishCard>
@@ -103,7 +116,7 @@ class _DishCardState extends State<DishCard>
       vsync: this,
     );
 
-    _scaleAnimation = Tween<double>(begin: 1.0, end: 0.98).animate(
+    _scaleAnimation = Tween<double>(begin: 1, end: 0.98).animate(
       CurvedAnimation(parent: _controller, curve: AppAnimations.cardCurve),
     );
   }
@@ -148,9 +161,7 @@ class _DishCardState extends State<DishCard>
       onTap: widget.onTap,
       child: AnimatedBuilder(
         animation: _scaleAnimation,
-        builder: (context, child) {
-          return Transform.scale(scale: _scaleAnimation.value, child: child);
-        },
+        builder: (context, child) => Transform.scale(scale: _scaleAnimation.value, child: child),
         child: Container(
           width: 160.w,
           decoration: BoxDecoration(
@@ -168,8 +179,7 @@ class _DishCardState extends State<DishCard>
     );
   }
 
-  Widget _buildImage() {
-    return Stack(
+  Widget _buildImage() => Stack(
       children: [
         // Dish image
         ClipRRect(
@@ -224,10 +234,8 @@ class _DishCardState extends State<DishCard>
           ),
       ],
     );
-  }
 
-  Widget _buildDetails() {
-    return Padding(
+  Widget _buildDetails() => Padding(
       padding: EdgeInsets.all(AppSpacing.sm),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -273,10 +281,8 @@ class _DishCardState extends State<DishCard>
         ],
       ),
     );
-  }
 
-  Widget _buildLoadingState() {
-    return Shimmer.fromColors(
+  Widget _buildLoadingState() => Shimmer.fromColors(
       baseColor: AppColors.lightGray,
       highlightColor: AppColors.white,
       child: Container(
@@ -322,5 +328,4 @@ class _DishCardState extends State<DishCard>
         ),
       ),
     );
-  }
 }

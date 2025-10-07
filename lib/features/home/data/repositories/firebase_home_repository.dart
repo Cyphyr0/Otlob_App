@@ -1,37 +1,35 @@
-import 'package:otlob_app/core/services/firebase/firebase_firestore_service.dart';
-import 'package:otlob_app/features/home/domain/entities/restaurant.dart';
-import 'package:otlob_app/features/home/domain/repositories/home_repository.dart';
+import "../../../../core/services/firebase/firebase_firestore_service.dart";
+import "../../domain/entities/restaurant.dart";
+import "../../domain/repositories/home_repository.dart";
 
 class FirebaseHomeRepository implements HomeRepository {
-  final FirebaseFirestoreService _firestoreService;
 
   FirebaseHomeRepository(this._firestoreService);
+  final FirebaseFirestoreService _firestoreService;
 
   @override
-  Future<List<Restaurant>> getRestaurants() async {
-    return await _firestoreService.getRestaurants();
-  }
+  Future<List<Restaurant>> getRestaurants() async => await _firestoreService.getRestaurants();
 
   @override
   Future<List<Restaurant>> searchRestaurants(String query) async {
     if (query.isEmpty) {
-      return await getRestaurants();
+      return getRestaurants();
     }
-    return await _firestoreService.searchRestaurants(query);
+    return _firestoreService.searchRestaurants(query);
   }
 
   @override
   Future<List<Restaurant>> getHiddenGems() async {
     // Restaurants with high rating but lower tawseya count (less discovered)
-    return await _firestoreService.getRestaurants(minRating: 4.5, limit: 10);
+    return _firestoreService.getRestaurants(minRating: 4.5, limit: 10);
   }
 
   @override
   Future<List<Restaurant>> getLocalHeroes() async {
     // Restaurants with high tawseya count (community favorites)
-    return await _firestoreService.getRestaurants(
+    return _firestoreService.getRestaurants(
       limit: 10,
-      sortBy: 'tawseyaCount',
+      sortBy: "tawseyaCount",
     );
   }
 
@@ -40,10 +38,10 @@ class FirebaseHomeRepository implements HomeRepository {
     int page = 1,
     int limit = 20,
   }) async {
-    final startAfter = page > 1
+    var startAfter = page > 1
         ? null
         : null; // Would need to track last document
-    return await _firestoreService.getRestaurants(
+    return _firestoreService.getRestaurants(
       limit: limit,
       startAfter: startAfter,
     );
@@ -56,13 +54,13 @@ class FirebaseHomeRepository implements HomeRepository {
     int limit = 20,
   }) async {
     if (query.isEmpty) {
-      return await getRestaurantsPaginated(page: page, limit: limit);
+      return getRestaurantsPaginated(page: page, limit: limit);
     }
 
-    final startAfter = page > 1
+    var startAfter = page > 1
         ? null
         : null; // Would need to track last document
-    return await _firestoreService.searchRestaurants(
+    return _firestoreService.searchRestaurants(
       query,
       limit: limit,
       startAfter: startAfter,

@@ -1,11 +1,12 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../theme/app_colors.dart';
-import '../../theme/app_typography.dart';
-import '../../theme/app_radius.dart';
-import '../../theme/app_spacing.dart';
-import '../../theme/app_shadows.dart';
-import '../../theme/app_animations.dart';
+import "package:flutter/material.dart";
+import "package:flutter/foundation.dart";
+import "package:flutter_screenutil/flutter_screenutil.dart";
+import "../../theme/app_colors.dart";
+import "../../theme/app_typography.dart";
+import "../../theme/app_radius.dart";
+import "../../theme/app_spacing.dart";
+import "../../theme/app_shadows.dart";
+import "../../theme/app_animations.dart";
 
 /// Primary Button Component
 ///
@@ -56,6 +57,18 @@ import '../../theme/app_animations.dart';
 /// )
 /// ```
 class PrimaryButton extends StatefulWidget {
+
+  const PrimaryButton({
+    super.key,
+    required this.text,
+    required this.onPressed,
+    this.icon,
+    this.isLoading = false,
+    this.fullWidth = false,
+    this.height,
+    this.textStyle,
+    this.backgroundColor,
+  });
   /// Button text label
   final String text;
 
@@ -80,20 +93,21 @@ class PrimaryButton extends StatefulWidget {
   /// Background color (defaults to logoRed, can be changed to primaryGold for success actions)
   final Color? backgroundColor;
 
-  const PrimaryButton({
-    super.key,
-    required this.text,
-    required this.onPressed,
-    this.icon,
-    this.isLoading = false,
-    this.fullWidth = false,
-    this.height,
-    this.textStyle,
-    this.backgroundColor,
-  });
-
   @override
   State<PrimaryButton> createState() => _PrimaryButtonState();
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(StringProperty('text', text));
+    properties.add(ObjectFlagProperty<VoidCallback?>.has('onPressed', onPressed));
+    properties.add(DiagnosticsProperty<IconData?>('icon', icon));
+    properties.add(DiagnosticsProperty<bool>('isLoading', isLoading));
+    properties.add(DiagnosticsProperty<bool>('fullWidth', fullWidth));
+    properties.add(DoubleProperty('height', height));
+    properties.add(DiagnosticsProperty<TextStyle?>('textStyle', textStyle));
+    properties.add(ColorProperty('backgroundColor', backgroundColor));
+  }
 }
 
 class _PrimaryButtonState extends State<PrimaryButton>
@@ -101,6 +115,7 @@ class _PrimaryButtonState extends State<PrimaryButton>
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
   bool _isPressed = false;
+  late bool isDisabled;
 
   @override
   void initState() {
@@ -110,7 +125,7 @@ class _PrimaryButtonState extends State<PrimaryButton>
       vsync: this,
     );
 
-    _scaleAnimation = Tween<double>(begin: 1.0, end: 0.95).animate(
+    _scaleAnimation = Tween<double>(begin: 1, end: 0.95).animate(
       CurvedAnimation(parent: _controller, curve: AppAnimations.buttonCurve),
     );
   }
@@ -144,8 +159,8 @@ class _PrimaryButtonState extends State<PrimaryButton>
 
   @override
   Widget build(BuildContext context) {
-    final bool isDisabled = widget.onPressed == null || widget.isLoading;
-    final buttonHeight = widget.height ?? 48.h;
+    isDisabled = widget.onPressed == null || widget.isLoading;
+    var buttonHeight = widget.height ?? 48.h;
 
     return GestureDetector(
       onTapDown: _handleTapDown,
@@ -154,9 +169,7 @@ class _PrimaryButtonState extends State<PrimaryButton>
       onTap: widget.isLoading ? null : widget.onPressed,
       child: AnimatedBuilder(
         animation: _scaleAnimation,
-        builder: (context, child) {
-          return Transform.scale(scale: _scaleAnimation.value, child: child);
-        },
+        builder: (context, child) => Transform.scale(scale: _scaleAnimation.value, child: child),
         child: AnimatedOpacity(
           opacity: isDisabled ? 0.6 : 1.0,
           duration: AppAnimations.fast,

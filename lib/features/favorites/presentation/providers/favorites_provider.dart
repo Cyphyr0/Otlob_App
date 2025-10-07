@@ -1,37 +1,180 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:collection/collection.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import '../../domain/entities/favorite.dart';
+import '../../../../core/services/firebase/firebase_firestore_service.dart';
+import '../../../auth/presentation/providers/auth_provider.dart';
 
-import '../../../home/domain/entities/restaurant.dart';
+class FavoritesNotifier extends StateNotifier<AsyncValue<List<Favorite>>> {
+  final FirebaseFirestoreService _firestoreService;
+  final FirebaseAuth _auth;
 
-class FavoritesNotifier extends StateNotifier<List<Restaurant>> {
-  FavoritesNotifier() : super([]);
+  FavoritesNotifier(this._firestoreService, this._auth)
+      : super(const AsyncValue.loading()) {
+    _initializeFavorites();
+  }
 
-  void addFavorite(Restaurant restaurant) {
-    if (!state.any((r) => r.id == restaurant.id)) {
-      state = [...state, restaurant];
+  String get _userId => _auth.currentUser?.uid ?? '';
+
+  Future<void> _initializeFavorites() async {
+    if (_userId.isEmpty) {
+      state = const AsyncValue.data([]);
+      return;
+    }
+
+    state = const AsyncValue.loading();
+    try {
+      final favoriteIds = await _firestoreService.getFavoriteIds(_userId);
+      final favorites = <Favorite>[];
+
+      for (final restaurantId in favoriteIds) {
+        final restaurant = await _firestoreService.getRestaurant(restaurantId);
+        if (restaurant != null) {
+          favorites.add(Favorite(
+            id: '${_userId}_$restaurantId',
+            userId: _userId,
+            restaurantId: restaurantId,
+            restaurantName: restaurant.name,
+            restaurantImageUrl: restaurant.imageUrl,
+            createdAt: DateTime.now(), // We don't have the actual creation date in current schema
+          ));
+        }
+      }
+
+      state = AsyncValue.data(favorites);
+    } catch (error, stackTrace) {
+      state = AsyncValue.error(error, stackTrace);
     }
   }
 
-  void removeFavorite(String id) {
-    state = state.where((r) => r.id != id).toList();
+  Future<void> refreshFavorites() async {
+    await _initializeFavorites();
   }
 
-  void toggleFavorite(Restaurant restaurant) {
-    final isFavorite = state.any((r) => r.id == restaurant.id);
-    if (isFavorite) {
-      removeFavorite(restaurant.id);
-    } else {
-      addFavorite(restaurant);
+  Future<bool> toggleFavorite(String restaurantId, String restaurantName, String? restaurantImageUrl) async {
+    if (_userId.isEmpty) return false;
+
+    state = const AsyncValue.loading();
+
+    try {
+      final isCurrentlyFavorite = await _firestoreService.isFavorite(_userId, restaurantId);
+
+      if (isCurrentlyFavorite) {
+        await _firestoreService.removeFromFavorites(_userId, restaurantId);
+      } else {
+        await _firestoreService.addToFavorites(_userId, restaurantId);
+      }
+
+      // Refresh favorites after toggle
+      await _initializeFavorites();
+
+      return !isCurrentlyFavorite;
+    } catch (error, stackTrace) {
+      state = AsyncValue.error(error, stackTrace);
+      return false;
     }
   }
 
-  bool isFavorite(String id) {
-    return state.any((r) => r.id == id);
+  Future<void> removeFavorite(String restaurantId) async {
+    if (_userId.isEmpty) return;
+
+    state = const AsyncValue.loading();
+
+    try {
+      await _firestoreService.removeFromFavorites(_userId, restaurantId);
+      await _initializeFavorites();
+    } catch (error, stackTrace) {
+      state = AsyncValue.error(error, stackTrace);
+    }
   }
 
-  List<Restaurant> get favorites => state;
+  Future<void> clearFavorites() async {
+    if (_userId.isEmpty) return;
+
+    state = const AsyncValue.loading();
+
+    try {
+      final favoriteIds = await _firestoreService.getFavoriteIds(_userId);
+      for (final restaurantId in favoriteIds) {
+        await _firestoreService.removeFromFavorites(_userId, restaurantId);
+      }
+      state = const AsyncValue.data([]);
+    } catch (error, stackTrace) {
+      state = AsyncValue.error(error, stackTrace);
+    }
+  }
+
+  bool isFavorite(String restaurantId) {
+    return state.maybeWhen(
+      data: (favorites) => favorites.any((fav) => fav.restaurantId == restaurantId),
+      orElse: () => false,
+    );
+  }
+
+  Favorite? getFavorite(String restaurantId) {
+    return state.maybeWhen(
+      data: (favorites) => favorites.firstWhereOrNull((fav) => fav.restaurantId == restaurantId),
+      orElse: () => null,
+    );
+  }
+
+  List<Favorite> get favorites => state.maybeWhen(
+        data: (favorites) => favorites,
+        orElse: () => [],
+      );
+
+  bool get isLoading => state.isLoading;
+  bool get hasError => state.hasError;
+  Object? get error => state.error;
 }
 
-final favoritesProvider =
-    StateNotifierProvider<FavoritesNotifier, List<Restaurant>>(
-      (ref) => FavoritesNotifier(),
-    );
+final favoritesProvider = StateNotifierProvider<FavoritesNotifier, AsyncValue<List<Favorite>>>((ref) {
+  final firestoreService = ref.watch(firestoreServiceProvider);
+  final auth = FirebaseAuth.instance;
+
+  return FavoritesNotifier(firestoreService, auth);
+});
+
+// Convenience providers for common operations
+final isFavoriteProvider = Provider.family<bool, String>((ref, restaurantId) {
+  return ref.watch(favoritesProvider).maybeWhen(
+    data: (favorites) => favorites.any((fav) => fav.restaurantId == restaurantId),
+    orElse: () => false,
+  );
+});
+
+final favoriteByIdProvider = Provider.family<Favorite?, String>((ref, restaurantId) {
+  return ref.watch(favoritesProvider).maybeWhen(
+    data: (favorites) => favorites.firstWhereOrNull((fav) => fav.restaurantId == restaurantId),
+    orElse: () => null,
+  );
+});
+
+// Stream provider for real-time updates
+final favoritesStreamProvider = StreamProvider<List<Favorite>>((ref) {
+  final firestoreService = ref.watch(firestoreServiceProvider);
+  final auth = FirebaseAuth.instance;
+  final userId = auth.currentUser?.uid ?? '';
+
+  if (userId.isEmpty) return Stream.value([]);
+
+  return firestoreService.getFavoritesStream(userId).asyncMap((favoriteIds) async {
+    final favorites = <Favorite>[];
+
+    for (final restaurantId in favoriteIds) {
+      final restaurant = await firestoreService.getRestaurant(restaurantId);
+      if (restaurant != null) {
+        favorites.add(Favorite(
+          id: '${userId}_$restaurantId',
+          userId: userId,
+          restaurantId: restaurantId,
+          restaurantName: restaurant.name,
+          restaurantImageUrl: restaurant.imageUrl,
+          createdAt: DateTime.now(), // We don't have the actual creation date in current schema
+        ));
+      }
+    }
+
+    return favorites;
+  });
+});

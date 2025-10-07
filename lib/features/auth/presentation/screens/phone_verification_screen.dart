@@ -1,19 +1,25 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
-import 'package:otlob_app/core/errors/failures.dart';
-import 'package:otlob_app/core/theme/app_theme.dart';
-import 'package:otlob_app/features/auth/presentation/providers/auth_provider.dart';
-import 'package:otlob_app/features/auth/presentation/widgets/why_otlob_section.dart';
+import "package:flutter/material.dart";
+import "package:flutter_riverpod/flutter_riverpod.dart";
+import "package:flutter_screenutil/flutter_screenutil.dart";
+import "package:go_router/go_router.dart";
+import "../../../../core/errors/failures.dart";
+import "../../../../core/theme/app_theme.dart";
+import "../providers/auth_provider.dart";
+import "../widgets/why_otlob_section.dart";
 
 class PhoneVerificationScreen extends ConsumerStatefulWidget {
-  final String phoneNumber;
   const PhoneVerificationScreen({super.key, required this.phoneNumber});
+  final String phoneNumber;
 
   @override
   ConsumerState<PhoneVerificationScreen> createState() =>
       _PhoneVerificationScreenState();
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(StringProperty('phoneNumber', phoneNumber));
+  }
 }
 
 class _PhoneVerificationScreenState
@@ -27,7 +33,7 @@ class _PhoneVerificationScreenState
   final TextEditingController _otpController4 = TextEditingController();
   final TextEditingController _otpController5 = TextEditingController();
   final TextEditingController _otpController6 = TextEditingController();
-  String otp = '';
+  String otp = "";
   int resendTime = 60;
   bool canResend = false;
 
@@ -84,9 +90,7 @@ class _PhoneVerificationScreenState
       }
       _updateOtp();
     });
-    _otpController6.addListener(() {
-      _updateOtp();
-    });
+    _otpController6.addListener(_updateOtp);
   }
 
   void _updateOtp() {
@@ -104,14 +108,14 @@ class _PhoneVerificationScreenState
   }
 
   Future<void> _verifyOtp() async {
-    final authNotifier = ref.read(authProvider.notifier);
+    var authNotifier = ref.read(authProvider.notifier);
     try {
       await authNotifier.verifyOTP(otp, widget.phoneNumber);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Verification successful!')),
+          const SnackBar(content: Text("Verification successful!")),
         );
-        context.go('/address');
+        context.go("/address");
       }
     } on AuthFailure catch (e) {
       if (mounted) {
@@ -125,7 +129,7 @@ class _PhoneVerificationScreenState
       if (mounted) {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(const SnackBar(content: Text('An error occurred')));
+        ).showSnackBar(const SnackBar(content: Text("An error occurred")));
       }
     }
   }
@@ -137,7 +141,7 @@ class _PhoneVerificationScreenState
     _otpController4.clear();
     _otpController5.clear();
     _otpController6.clear();
-    otp = '';
+    otp = "";
     FocusScope.of(context).requestFocus(FocusNode());
   }
 
@@ -154,7 +158,7 @@ class _PhoneVerificationScreenState
     if (mounted) {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(const SnackBar(content: Text('OTP resent!')));
+      ).showSnackBar(const SnackBar(content: Text("OTP resent!")));
     }
   }
 
@@ -173,9 +177,9 @@ class _PhoneVerificationScreenState
 
   @override
   Widget build(BuildContext context) {
-    final authAsyncValue = ref.watch(authProvider);
+    var authAsyncValue = ref.watch(authProvider);
     return Scaffold(
-      body: Container(
+      body: DecoratedBox(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
@@ -190,17 +194,17 @@ class _PhoneVerificationScreenState
               children: [
                 SizedBox(height: 50.h),
                 Text(
-                  'Verify your phone',
+                  "Verify your phone",
                   style: TextStyle(
                     fontSize: 32.sp,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
-                    fontFamily: 'TutanoCCV2',
+                    fontFamily: "TutanoCCV2",
                   ),
                 ),
                 SizedBox(height: 8.h),
                 Text(
-                  'Enter the 6-digit code sent to +20 ${widget.phoneNumber}',
+                  "Enter the 6-digit code sent to +20 ${widget.phoneNumber}",
                   style: TextStyle(
                     fontSize: 16.sp,
                     color: Colors.white.withValues(alpha: 0.8),
@@ -224,7 +228,7 @@ class _PhoneVerificationScreenState
                   width: double.infinity,
                   height: 56.h,
                   child: ElevatedButton(
-                    onPressed: otp.length == 6 ? null : () => _verifyOtp(),
+                    onPressed: otp.length == 6 ? null : _verifyOtp,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppTheme.secondaryColor,
                       shape: RoundedRectangleBorder(
@@ -241,7 +245,7 @@ class _PhoneVerificationScreenState
                             ),
                           )
                         : Text(
-                            'Verify',
+                            "Verify",
                             style: TextStyle(
                               fontSize: 18.sp,
                               fontWeight: FontWeight.bold,
@@ -256,8 +260,7 @@ class _PhoneVerificationScreenState
                   children: [
                     AnimatedBuilder(
                       animation: _timerController,
-                      builder: (context, child) {
-                        return Text(
+                      builder: (context, child) => Text(
                           canResend
                               ? 'Resend OTP'
                               : 'Resend in ${resendTime - _timerController.value.toInt()}s',
@@ -265,14 +268,13 @@ class _PhoneVerificationScreenState
                             fontSize: 16.sp,
                             color: Colors.white.withValues(alpha: 0.8),
                           ),
-                        );
-                      },
+                        ),
                     ),
                     const SizedBox(width: 8),
                     GestureDetector(
                       onTap: canResend ? _resendOtp : null,
                       child: Text(
-                        'Resend',
+                        "Resend",
                         style: TextStyle(
                           fontSize: 16.sp,
                           color: canResend
@@ -294,8 +296,7 @@ class _PhoneVerificationScreenState
     );
   }
 
-  Widget _buildOtpField(TextEditingController controller) {
-    return SizedBox(
+  Widget _buildOtpField(TextEditingController controller) => SizedBox(
       width: 50.w,
       height: 60.h,
       child: TextField(
@@ -322,5 +323,12 @@ class _PhoneVerificationScreenState
         style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
       ),
     );
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(StringProperty('otp', otp));
+    properties.add(IntProperty('resendTime', resendTime));
+    properties.add(DiagnosticsProperty<bool>('canResend', canResend));
   }
 }

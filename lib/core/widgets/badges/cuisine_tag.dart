@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../theme/app_colors.dart';
-import '../../theme/app_typography.dart';
-import '../../theme/app_radius.dart';
-import '../../theme/app_spacing.dart';
+import "package:flutter/material.dart";
+import "package:flutter_screenutil/flutter_screenutil.dart";
+import "../../theme/app_colors.dart";
+import "../../theme/app_typography.dart";
+import "../../theme/app_radius.dart";
+import "../../theme/app_spacing.dart";
 
 /// Cuisine Tag Component
 ///
@@ -37,6 +37,13 @@ import '../../theme/app_spacing.dart';
 /// )
 /// ```
 class CuisineTag extends StatelessWidget {
+
+  const CuisineTag({
+    super.key,
+    required this.name,
+    this.backgroundColor,
+    this.textColor,
+  });
   /// Cuisine name (e.g., "Egyptian", "Italian", "Fast Food")
   final String name;
 
@@ -46,17 +53,10 @@ class CuisineTag extends StatelessWidget {
   /// Custom text color (overrides default dark)
   final Color? textColor;
 
-  const CuisineTag({
-    super.key,
-    required this.name,
-    this.backgroundColor,
-    this.textColor,
-  });
-
   @override
   Widget build(BuildContext context) {
     // Get dynamic color based on cuisine type
-    final cuisineColor = AppColors.getCuisineColor(name);
+    var cuisineColor = AppColors.getCuisineColor(name);
 
     return Container(
       padding: EdgeInsets.symmetric(
@@ -77,5 +77,13 @@ class CuisineTag extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(StringProperty('name', name));
+    properties.add(ColorProperty('backgroundColor', backgroundColor));
+    properties.add(ColorProperty('textColor', textColor));
   }
 }

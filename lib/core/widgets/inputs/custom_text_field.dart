@@ -1,10 +1,10 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../theme/app_colors.dart';
-import '../../theme/app_typography.dart';
-import '../../theme/app_radius.dart';
-import '../../theme/app_spacing.dart';
+import "package:flutter/material.dart";
+import "package:flutter/services.dart";
+import "package:flutter_screenutil/flutter_screenutil.dart";
+import "../../theme/app_colors.dart";
+import "../../theme/app_typography.dart";
+import "../../theme/app_radius.dart";
+import "../../theme/app_spacing.dart";
 
 /// Custom Text Field Component
 ///
@@ -52,6 +52,28 @@ import '../../theme/app_spacing.dart';
 /// )
 /// ```
 class CustomTextField extends StatefulWidget {
+
+  const CustomTextField({
+    super.key,
+    this.controller,
+    this.label,
+    this.hint,
+    this.errorText,
+    this.prefixIcon,
+    this.suffixIcon,
+    this.suffixText,
+    this.onSuffixIconPressed,
+    this.obscureText = false,
+    this.keyboardType,
+    this.textInputAction,
+    this.onChanged,
+    this.onSubmitted,
+    this.maxLength,
+    this.maxLines = 1,
+    this.inputFormatters,
+    this.enabled = true,
+    this.autofocus = false,
+  });
   /// Text editing controller
   final TextEditingController? controller;
 
@@ -106,30 +128,31 @@ class CustomTextField extends StatefulWidget {
   /// Auto focus
   final bool autofocus;
 
-  const CustomTextField({
-    super.key,
-    this.controller,
-    this.label,
-    this.hint,
-    this.errorText,
-    this.prefixIcon,
-    this.suffixIcon,
-    this.suffixText,
-    this.onSuffixIconPressed,
-    this.obscureText = false,
-    this.keyboardType,
-    this.textInputAction,
-    this.onChanged,
-    this.onSubmitted,
-    this.maxLength,
-    this.maxLines = 1,
-    this.inputFormatters,
-    this.enabled = true,
-    this.autofocus = false,
-  });
-
   @override
   State<CustomTextField> createState() => _CustomTextFieldState();
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<TextEditingController?>('controller', controller));
+    properties.add(StringProperty('label', label));
+    properties.add(StringProperty('hint', hint));
+    properties.add(StringProperty('errorText', errorText));
+    properties.add(DiagnosticsProperty<IconData?>('prefixIcon', prefixIcon));
+    properties.add(DiagnosticsProperty<IconData?>('suffixIcon', suffixIcon));
+    properties.add(StringProperty('suffixText', suffixText));
+    properties.add(ObjectFlagProperty<VoidCallback?>.has('onSuffixIconPressed', onSuffixIconPressed));
+    properties.add(DiagnosticsProperty<bool>('obscureText', obscureText));
+    properties.add(DiagnosticsProperty<TextInputType?>('keyboardType', keyboardType));
+    properties.add(EnumProperty<TextInputAction?>('textInputAction', textInputAction));
+    properties.add(ObjectFlagProperty<ValueChanged<String>?>.has('onChanged', onChanged));
+    properties.add(ObjectFlagProperty<ValueChanged<String>?>.has('onSubmitted', onSubmitted));
+    properties.add(IntProperty('maxLength', maxLength));
+    properties.add(IntProperty('maxLines', maxLines));
+    properties.add(IterableProperty<TextInputFormatter>('inputFormatters', inputFormatters));
+    properties.add(DiagnosticsProperty<bool>('enabled', enabled));
+    properties.add(DiagnosticsProperty<bool>('autofocus', autofocus));
+  }
 }
 
 class _CustomTextFieldState extends State<CustomTextField> {
@@ -165,7 +188,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
 
   @override
   Widget build(BuildContext context) {
-    final bool hasError = widget.errorText != null;
+    hasError = widget.errorText != null;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -251,7 +274,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
               borderRadius: AppRadius.inputRadius,
               borderSide: const BorderSide(color: AppColors.error, width: 2),
             ),
-            counterText: '',
+            counterText: "",
           ),
           onChanged: widget.onChanged,
           onSubmitted: widget.onSubmitted,

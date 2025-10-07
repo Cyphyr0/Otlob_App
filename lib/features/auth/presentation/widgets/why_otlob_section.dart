@@ -1,14 +1,13 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:otlob_app/core/theme/app_theme.dart';
+import "package:flutter/material.dart";
+import "package:flutter_screenutil/flutter_screenutil.dart";
+import "package:google_fonts/google_fonts.dart";
+import "../../../../core/theme/app_theme.dart";
 
 class WhyOtlobSection extends StatelessWidget {
   const WhyOtlobSection({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
+  Widget build(BuildContext context) => Container(
       width: double.infinity,
       margin: EdgeInsets.symmetric(vertical: 20.h),
       padding: EdgeInsets.all(16.w),
@@ -69,15 +68,13 @@ class WhyOtlobSection extends StatelessWidget {
         ],
       ),
     );
-  }
 
   Widget _buildWhyCard({
     required IconData icon,
     required String title,
     required String description,
     required Color color,
-  }) {
-    return Container(
+  }) => Container(
       width: 80.w,
       padding: EdgeInsets.all(12.w),
       decoration: BoxDecoration(
@@ -121,5 +118,4 @@ class WhyOtlobSection extends StatelessWidget {
         ],
       ),
     );
-  }
 }

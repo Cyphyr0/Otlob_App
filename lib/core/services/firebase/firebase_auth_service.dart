@@ -1,10 +1,12 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import '../../../features/auth/domain/entities/user.dart' as app_user;
+import "package:firebase_auth/firebase_auth.dart";
+import "package:google_sign_in/google_sign_in.dart";
+import "../../../features/auth/domain/entities/user.dart" as app_user;
 
 class FirebaseAuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   GoogleSignIn? _googleSignIn;
+  GoogleSignInAccount? googleUser;
+  GoogleSignInAuthentication? googleAuth;
 
   // Stream of authentication state changes
   Stream<User?> get authStateChanges => _auth.authStateChanges();
@@ -16,49 +18,44 @@ class FirebaseAuthService {
   Future<UserCredential> signInWithEmailAndPassword(
     String email,
     String password,
-  ) async {
-    return await _auth.signInWithEmailAndPassword(
+  ) async => await _auth.signInWithEmailAndPassword(
       email: email,
       password: password,
     );
-  }
 
   // Create user with email and password
   Future<UserCredential> createUserWithEmailAndPassword(
     String email,
     String password,
-  ) async {
-    return await _auth.createUserWithEmailAndPassword(
+  ) async => await _auth.createUserWithEmailAndPassword(
       email: email,
       password: password,
     );
-  }
 
   // Sign in with Google
   Future<UserCredential?> signInWithGoogle() async {
     try {
       _googleSignIn ??= GoogleSignIn();
-      final GoogleSignInAccount? googleUser = await _googleSignIn!.signIn();
+      googleUser = await _googleSignIn!.signIn();
       if (googleUser == null) return null;
 
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
+      googleAuth = await googleUser!.authentication;
 
-      final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
+      if (googleAuth == null) return null;
+
+      var credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth!.accessToken,
+        idToken: googleAuth!.idToken,
       );
 
       return await _auth.signInWithCredential(credential);
     } catch (e) {
-      throw Exception('Google sign in failed: $e');
+      throw Exception("Google sign in failed: $e");
     }
   }
 
   // Sign in anonymously
-  Future<UserCredential> signInAnonymously() async {
-    return await _auth.signInAnonymously();
-  }
+  Future<UserCredential> signInAnonymously() async => await _auth.signInAnonymously();
 
   // Send password reset email
   Future<void> sendPasswordResetEmail(String email) async {
@@ -112,11 +109,11 @@ class FirebaseAuthService {
 
     return app_user.User(
       id: firebaseUser.uid,
-      email: firebaseUser.email ?? '',
+      email: firebaseUser.email ?? "",
       name:
           firebaseUser.displayName ??
-          firebaseUser.email?.split('@')[0] ??
-          'User',
+          firebaseUser.email?.split("@")[0] ??
+          "User",
       phone: firebaseUser.phoneNumber,
       createdAt: firebaseUser.metadata.creationTime ?? DateTime.now(),
       isVerified: firebaseUser.emailVerified,
@@ -128,9 +125,7 @@ class FirebaseAuthService {
   bool get isSignedIn => _auth.currentUser != null;
 
   // Get user ID token
-  Future<String?> getIdToken() async {
-    return await _auth.currentUser?.getIdToken();
-  }
+  Future<String?> getIdToken() async => await _auth.currentUser?.getIdToken();
 
   // Verify phone number (for future implementation)
   Future<void> verifyPhoneNumber(
@@ -143,10 +138,10 @@ class FirebaseAuthService {
       phoneNumber: phoneNumber,
       verificationCompleted: (PhoneAuthCredential credential) async {
         await _auth.signInWithCredential(credential);
-        onVerificationCompleted('Verification completed');
+        onVerificationCompleted("Verification completed");
       },
       verificationFailed: (FirebaseAuthException e) {
-        onVerificationFailed(e.message ?? 'Verification failed');
+        onVerificationFailed(e.message ?? "Verification failed");
       },
       codeSent: (String verificationId, int? resendToken) {
         onCodeSent(verificationId);
@@ -160,10 +155,10 @@ class FirebaseAuthService {
     String verificationId,
     String smsCode,
   ) async {
-    final credential = PhoneAuthProvider.credential(
+    var credential = PhoneAuthProvider.credential(
       verificationId: verificationId,
       smsCode: smsCode,
     );
-    return await _auth.signInWithCredential(credential);
+    return _auth.signInWithCredential(credential);
   }
 }

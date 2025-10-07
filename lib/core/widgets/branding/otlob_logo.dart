@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
-import '../../theme/app_colors.dart';
-import '../../theme/app_typography.dart';
-import '../../theme/app_animations.dart';
+import "package:flutter/material.dart";
+import "../../theme/app_colors.dart";
+import "../../theme/app_typography.dart";
+import "../../theme/app_animations.dart";
 
 /// Otlob Logo Widget
 ///
@@ -39,6 +39,15 @@ import '../../theme/app_animations.dart';
 /// )
 /// ```
 class OtlobLogo extends StatefulWidget {
+
+  const OtlobLogo({
+    super.key,
+    this.size = LogoSize.medium,
+    this.color,
+    this.animated = false,
+    this.isArabic = false,
+    this.animationDuration,
+  });
   /// Size of the logo (small: 24sp, medium: 32sp, large: 48sp, hero: 64sp)
   final LogoSize size;
 
@@ -54,17 +63,18 @@ class OtlobLogo extends StatefulWidget {
   /// Animation duration for pulse effect
   final Duration? animationDuration;
 
-  const OtlobLogo({
-    super.key,
-    this.size = LogoSize.medium,
-    this.color,
-    this.animated = false,
-    this.isArabic = false,
-    this.animationDuration,
-  });
-
   @override
   State<OtlobLogo> createState() => _OtlobLogoState();
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(EnumProperty<LogoSize>('size', size));
+    properties.add(ColorProperty('color', color));
+    properties.add(DiagnosticsProperty<bool>('animated', animated));
+    properties.add(DiagnosticsProperty<bool>('isArabic', isArabic));
+    properties.add(DiagnosticsProperty<Duration?>('animationDuration', animationDuration));
+  }
 }
 
 class _OtlobLogoState extends State<OtlobLogo>
@@ -82,7 +92,7 @@ class _OtlobLogoState extends State<OtlobLogo>
         vsync: this,
       );
 
-      _scaleAnimation = Tween<double>(begin: 1.0, end: 1.1).animate(
+      _scaleAnimation = Tween<double>(begin: 1, end: 1.1).animate(
         CurvedAnimation(parent: _controller, curve: AppAnimations.easeInOut),
       );
 
@@ -101,8 +111,8 @@ class _OtlobLogoState extends State<OtlobLogo>
 
   @override
   Widget build(BuildContext context) {
-    final logoText = widget.isArabic ? 'أطلب' : 'Otlob';
-    final logoColor = widget.color ?? AppColors.logoRed;
+    var logoText = widget.isArabic ? "أطلب" : "Otlob";
+    var logoColor = widget.color ?? AppColors.logoRed;
 
     Widget logo = Text(
       logoText,
@@ -114,9 +124,7 @@ class _OtlobLogoState extends State<OtlobLogo>
     if (widget.animated) {
       logo = AnimatedBuilder(
         animation: _scaleAnimation,
-        builder: (context, child) {
-          return Transform.scale(scale: _scaleAnimation.value, child: child);
-        },
+        builder: (context, child) => Transform.scale(scale: _scaleAnimation.value, child: child),
         child: logo,
       );
     }
@@ -140,10 +148,6 @@ class _OtlobLogoState extends State<OtlobLogo>
 /// )
 /// ```
 class OtlobLogoWithEntrance extends StatefulWidget {
-  final LogoSize size;
-  final Color? color;
-  final bool isArabic;
-  final VoidCallback? onAnimationComplete;
 
   const OtlobLogoWithEntrance({
     super.key,
@@ -152,9 +156,22 @@ class OtlobLogoWithEntrance extends StatefulWidget {
     this.isArabic = false,
     this.onAnimationComplete,
   });
+  final LogoSize size;
+  final Color? color;
+  final bool isArabic;
+  final VoidCallback? onAnimationComplete;
 
   @override
   State<OtlobLogoWithEntrance> createState() => _OtlobLogoWithEntranceState();
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(EnumProperty<LogoSize>('size', size));
+    properties.add(ColorProperty('color', color));
+    properties.add(DiagnosticsProperty<bool>('isArabic', isArabic));
+    properties.add(ObjectFlagProperty<VoidCallback?>.has('onAnimationComplete', onAnimationComplete));
+  }
 }
 
 class _OtlobLogoWithEntranceState extends State<OtlobLogoWithEntrance>
@@ -172,17 +189,17 @@ class _OtlobLogoWithEntranceState extends State<OtlobLogoWithEntrance>
       vsync: this,
     );
 
-    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+    _fadeAnimation = Tween<double>(begin: 0, end: 1).animate(
       CurvedAnimation(
         parent: _controller,
-        curve: const Interval(0.0, 0.6, curve: Curves.easeInOutCubic),
+        curve: const Interval(0, 0.6, curve: Curves.easeInOutCubic),
       ),
     );
 
-    _scaleAnimation = Tween<double>(begin: 0.8, end: 1.0).animate(
+    _scaleAnimation = Tween<double>(begin: 0.8, end: 1).animate(
       CurvedAnimation(
         parent: _controller,
-        curve: const Interval(0.0, 0.8, curve: Curves.easeInOutCubic),
+        curve: const Interval(0, 0.8, curve: Curves.easeInOutCubic),
       ),
     );
 
@@ -201,8 +218,7 @@ class _OtlobLogoWithEntranceState extends State<OtlobLogoWithEntrance>
   }
 
   @override
-  Widget build(BuildContext context) {
-    return AnimatedBuilder(
+  Widget build(BuildContext context) => AnimatedBuilder(
       animation: _controller,
       builder: (context, child) {
         return Opacity(
@@ -216,5 +232,4 @@ class _OtlobLogoWithEntranceState extends State<OtlobLogoWithEntrance>
         isArabic: widget.isArabic,
       ),
     );
-  }
 }

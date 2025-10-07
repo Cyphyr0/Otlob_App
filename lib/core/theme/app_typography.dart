@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'app_colors.dart';
+import "package:flutter/material.dart";
+import "package:flutter_screenutil/flutter_screenutil.dart";
+import "package:google_fonts/google_fonts.dart";
+import "app_colors.dart";
 
 /// Typography System
 ///
@@ -188,10 +188,10 @@ class AppTypography {
   );
 
   // ============================================================================
-  // ARABIC TYPOGRAPHY - Cairo Font (for future localization)
+  // ARABIC TYPOGRAPHY - Cairo Font (RTL Support)
   // ============================================================================
 
-  /// Arabic Display Large - 32sp, Bold
+  /// Arabic Display Large - 32sp, Bold (RTL)
   static TextStyle displayLargeArabic = GoogleFonts.cairo(
     fontSize: 32.sp,
     fontWeight: FontWeight.w700,
@@ -199,7 +199,71 @@ class AppTypography {
     color: AppColors.primaryDark,
   );
 
-  /// Arabic Body Large - 16sp, Regular
+  /// Arabic Display Medium - 28sp, Bold (RTL)
+  static TextStyle displayMediumArabic = GoogleFonts.cairo(
+    fontSize: 28.sp,
+    fontWeight: FontWeight.w700,
+    height: 1.3,
+    color: AppColors.primaryDark,
+  );
+
+  /// Arabic Display Small - 24sp, SemiBold (RTL)
+  static TextStyle displaySmallArabic = GoogleFonts.cairo(
+    fontSize: 24.sp,
+    fontWeight: FontWeight.w600,
+    height: 1.3,
+    color: AppColors.primaryDark,
+  );
+
+  /// Arabic Headline Large - 24sp, SemiBold (RTL)
+  static TextStyle headlineLargeArabic = GoogleFonts.cairo(
+    fontSize: 24.sp,
+    fontWeight: FontWeight.w600,
+    height: 1.4,
+    color: AppColors.primaryDark,
+  );
+
+  /// Arabic Headline Medium - 20sp, SemiBold (RTL)
+  static TextStyle headlineMediumArabic = GoogleFonts.cairo(
+    fontSize: 20.sp,
+    fontWeight: FontWeight.w600,
+    height: 1.4,
+    color: AppColors.primaryDark,
+  );
+
+  /// Arabic Headline Small - 18sp, Medium (RTL)
+  static TextStyle headlineSmallArabic = GoogleFonts.cairo(
+    fontSize: 18.sp,
+    fontWeight: FontWeight.w500,
+    height: 1.4,
+    color: AppColors.primaryDark,
+  );
+
+  /// Arabic Title Large - 18sp, Medium (RTL)
+  static TextStyle titleLargeArabic = GoogleFonts.cairo(
+    fontSize: 18.sp,
+    fontWeight: FontWeight.w500,
+    height: 1.5,
+    color: AppColors.darkGray,
+  );
+
+  /// Arabic Title Medium - 16sp, Medium (RTL)
+  static TextStyle titleMediumArabic = GoogleFonts.cairo(
+    fontSize: 16.sp,
+    fontWeight: FontWeight.w500,
+    height: 1.5,
+    color: AppColors.darkGray,
+  );
+
+  /// Arabic Title Small - 14sp, Medium (RTL)
+  static TextStyle titleSmallArabic = GoogleFonts.cairo(
+    fontSize: 14.sp,
+    fontWeight: FontWeight.w500,
+    height: 1.5,
+    color: AppColors.darkGray,
+  );
+
+  /// Arabic Body Large - 16sp, Regular (RTL)
   static TextStyle bodyLargeArabic = GoogleFonts.cairo(
     fontSize: 16.sp,
     fontWeight: FontWeight.w400,
@@ -207,12 +271,79 @@ class AppTypography {
     color: AppColors.darkGray,
   );
 
-  /// Arabic Body Medium - 14sp, Regular
+  /// Arabic Body Medium - 14sp, Regular (RTL)
   static TextStyle bodyMediumArabic = GoogleFonts.cairo(
     fontSize: 14.sp,
     fontWeight: FontWeight.w400,
     height: 1.6,
     color: AppColors.gray,
+  );
+
+  /// Arabic Body Small - 12sp, Regular (RTL)
+  static TextStyle bodySmallArabic = GoogleFonts.cairo(
+    fontSize: 12.sp,
+    fontWeight: FontWeight.w400,
+    height: 1.6,
+    color: AppColors.gray,
+  );
+
+  /// Arabic Label Large - 14sp, Medium (RTL)
+  static TextStyle labelLargeArabic = GoogleFonts.cairo(
+    fontSize: 14.sp,
+    fontWeight: FontWeight.w500,
+    height: 1.4,
+    color: AppColors.white,
+  );
+
+  /// Arabic Label Medium - 12sp, Medium (RTL)
+  static TextStyle labelMediumArabic = GoogleFonts.cairo(
+    fontSize: 12.sp,
+    fontWeight: FontWeight.w500,
+    height: 1.4,
+    color: AppColors.white,
+  );
+
+  /// Arabic Label Small - 11sp, Medium (RTL)
+  static TextStyle labelSmallArabic = GoogleFonts.cairo(
+    fontSize: 11.sp,
+    fontWeight: FontWeight.w500,
+    height: 1.4,
+    color: AppColors.gray,
+  );
+
+  // ============================================================================
+  // RTL-AWARE TEXT THEME - Dynamic font selection based on locale
+  // ============================================================================
+
+  /// Get appropriate text style based on current locale
+  static TextStyle getResponsiveTextStyle(TextStyle englishStyle, TextStyle arabicStyle, BuildContext context) {
+    var locale = Localizations.localeOf(context);
+    return locale.languageCode == 'ar' ? arabicStyle : englishStyle;
+  }
+
+  /// Get RTL-aware text theme for Material 3
+  static TextTheme getResponsiveTextTheme(BuildContext context) {
+    var locale = Localizations.localeOf(context);
+    return locale.languageCode == 'ar' ? arabicTextTheme : textTheme;
+  }
+
+  /// Arabic Material 3 TextTheme for RTL support
+  static TextTheme get arabicTextTheme => TextTheme(
+    displayLarge: displayLargeArabic,
+    displayMedium: displayMediumArabic,
+    displaySmall: displaySmallArabic,
+    headlineLarge: headlineLargeArabic,
+    headlineMedium: headlineMediumArabic,
+    headlineSmall: headlineSmallArabic,
+    titleLarge: titleLargeArabic,
+    titleMedium: titleMediumArabic,
+    titleSmall: titleSmallArabic,
+    bodyLarge: bodyLargeArabic,
+    bodyMedium: bodyMediumArabic,
+    bodySmall: bodySmallArabic,
+    labelLarge: labelLargeArabic,
+    labelMedium: labelMediumArabic,
+    labelSmall: labelSmallArabic,
   );
 
   // ============================================================================
@@ -230,7 +361,7 @@ class AppTypography {
     required LogoSize size,
     Color color = AppColors.logoRed,
   }) {
-    final double fontSize = switch (size) {
+    fontSize = switch (size) {
       LogoSize.small => 24.0,
       LogoSize.medium => 32.0,
       LogoSize.large => 48.0,
@@ -238,7 +369,7 @@ class AppTypography {
     };
 
     return TextStyle(
-      fontFamily: 'TutanoCCV2',
+      fontFamily: "TutanoCCV2",
       fontSize: fontSize.sp,
       fontWeight: FontWeight.w700,
       height: 1.2,
@@ -252,29 +383,19 @@ class AppTypography {
   // ============================================================================
 
   /// Apply color to any text style
-  static TextStyle withColor(TextStyle style, Color color) {
-    return style.copyWith(color: color);
-  }
+  static TextStyle withColor(TextStyle style, Color color) => style.copyWith(color: color);
 
   /// Make text style bold
-  static TextStyle bold(TextStyle style) {
-    return style.copyWith(fontWeight: FontWeight.w700);
-  }
+  static TextStyle bold(TextStyle style) => style.copyWith(fontWeight: FontWeight.w700);
 
   /// Make text style italic
-  static TextStyle italic(TextStyle style) {
-    return style.copyWith(fontStyle: FontStyle.italic);
-  }
+  static TextStyle italic(TextStyle style) => style.copyWith(fontStyle: FontStyle.italic);
 
   /// Apply underline to text style
-  static TextStyle underline(TextStyle style) {
-    return style.copyWith(decoration: TextDecoration.underline);
-  }
+  static TextStyle underline(TextStyle style) => style.copyWith(decoration: TextDecoration.underline);
 
   /// Apply line-through to text style
-  static TextStyle lineThrough(TextStyle style) {
-    return style.copyWith(decoration: TextDecoration.lineThrough);
-  }
+  static TextStyle lineThrough(TextStyle style) => style.copyWith(decoration: TextDecoration.lineThrough);
 
   // ============================================================================
   // MATERIAL 3 TEXT THEME - For ThemeData

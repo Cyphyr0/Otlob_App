@@ -1,24 +1,11 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/material.dart';
-import 'package:otlob_app/core/theme/otlob_design_system.dart';
+import "package:cached_network_image/cached_network_image.dart";
+import "package:flutter/foundation.dart";
+import "package:flutter/material.dart";
+import "../../theme/otlob_design_system.dart";
 
 /// Modern Restaurant Card Component
 /// Uses Shadcn UI inspired design with clean, modern aesthetics
 class RestaurantCard extends StatefulWidget {
-  final String restaurantId;
-  final String name;
-  final String? cuisine;
-  final double rating;
-  final int? deliveryTime;
-  final int? reviewCount;
-  final String imageUrl;
-  final int? tawseyaCount;
-  final bool isFavorite;
-  final VoidCallback? onTap;
-  final VoidCallback? onFavoriteTap;
-
-  // Backward compatibility: accept cuisines parameter as alternative to cuisine
-  final List<String>? cuisines;
 
   const RestaurantCard({
     super.key,
@@ -52,9 +39,40 @@ class RestaurantCard extends StatefulWidget {
         onTap = null,
         onFavoriteTap = null,
         cuisines = null;
+  final String restaurantId;
+  final String name;
+  final String? cuisine;
+  final double rating;
+  final int? deliveryTime;
+  final int? reviewCount;
+  final String imageUrl;
+  final int? tawseyaCount;
+  final bool isFavorite;
+  final VoidCallback? onTap;
+  final VoidCallback? onFavoriteTap;
+
+  // Backward compatibility: accept cuisines parameter as alternative to cuisine
+  final List<String>? cuisines;
 
   @override
   State<RestaurantCard> createState() => _RestaurantCardState();
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(StringProperty('restaurantId', restaurantId));
+    properties.add(StringProperty('name', name));
+    properties.add(StringProperty('cuisine', cuisine));
+    properties.add(DoubleProperty('rating', rating));
+    properties.add(IntProperty('deliveryTime', deliveryTime));
+    properties.add(IntProperty('reviewCount', reviewCount));
+    properties.add(StringProperty('imageUrl', imageUrl));
+    properties.add(IntProperty('tawseyaCount', tawseyaCount));
+    properties.add(DiagnosticsProperty<bool>('isFavorite', isFavorite));
+    properties.add(ObjectFlagProperty<VoidCallback?>.has('onTap', onTap));
+    properties.add(ObjectFlagProperty<VoidCallback?>.has('onFavoriteTap', onFavoriteTap));
+    properties.add(IterableProperty<String>('cuisines', cuisines));
+  }
 }
 
 class _RestaurantCardState extends State<RestaurantCard>
@@ -69,7 +87,7 @@ class _RestaurantCardState extends State<RestaurantCard>
       vsync: this,
       duration: const Duration(milliseconds: 150),
     );
-    _scaleAnimation = Tween<double>(begin: 1.0, end: 0.98).animate(
+    _scaleAnimation = Tween<double>(begin: 1, end: 0.98).animate(
       CurvedAnimation(
         parent: _animationController,
         curve: Curves.easeInOut,
@@ -93,8 +111,7 @@ class _RestaurantCardState extends State<RestaurantCard>
   }
 
   @override
-  Widget build(BuildContext context) {
-    return AnimatedBuilder(
+  Widget build(BuildContext context) => AnimatedBuilder(
       animation: _scaleAnimation,
       builder: (context, child) {
         return Transform.scale(
@@ -131,15 +148,10 @@ class _RestaurantCardState extends State<RestaurantCard>
         );
       },
     );
-  }
 }
 
 /// Image section with overlays
 class _ImageSection extends StatelessWidget {
-  final String imageUrl;
-  final bool isFavorite;
-  final int? tawseyaCount;
-  final VoidCallback? onFavoriteTap;
 
   const _ImageSection({
     required this.imageUrl,
@@ -147,10 +159,13 @@ class _ImageSection extends StatelessWidget {
     this.tawseyaCount,
     this.onFavoriteTap,
   });
+  final String imageUrl;
+  final bool isFavorite;
+  final int? tawseyaCount;
+  final VoidCallback? onFavoriteTap;
 
   @override
-  Widget build(BuildContext context) {
-    return Stack(
+  Widget build(BuildContext context) => Stack(
       children: [
         // Hero Image
         SizedBox(
@@ -206,18 +221,33 @@ class _ImageSection extends StatelessWidget {
           ),
       ],
     );
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(StringProperty('imageUrl', imageUrl));
+    properties.add(DiagnosticsProperty<bool>('isFavorite', isFavorite));
+    properties.add(IntProperty('tawseyaCount', tawseyaCount));
+    properties.add(ObjectFlagProperty<VoidCallback?>.has('onFavoriteTap', onFavoriteTap));
   }
 }
 
 /// Animated favorite heart button
 class _FavoriteButton extends StatefulWidget {
+
+  const _FavoriteButton({required this.isFavorite, this.onTap});
   final bool isFavorite;
   final VoidCallback? onTap;
 
-  const _FavoriteButton({required this.isFavorite, this.onTap});
-
   @override
   State<_FavoriteButton> createState() => _FavoriteButtonState();
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<bool>('isFavorite', isFavorite));
+    properties.add(ObjectFlagProperty<VoidCallback?>.has('onTap', onTap));
+  }
 }
 
 class _FavoriteButtonState extends State<_FavoriteButton>
@@ -232,7 +262,7 @@ class _FavoriteButtonState extends State<_FavoriteButton>
       vsync: this,
       duration: const Duration(milliseconds: 200),
     );
-    _scaleAnimation = Tween<double>(begin: 1.0, end: 1.2).animate(
+    _scaleAnimation = Tween<double>(begin: 1, end: 1.2).animate(
       CurvedAnimation(parent: _animationController, curve: Curves.elasticOut),
     );
   }
@@ -244,8 +274,7 @@ class _FavoriteButtonState extends State<_FavoriteButton>
   }
 
   @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
+  Widget build(BuildContext context) => GestureDetector(
       onTap: () {
         _animationController.forward().then((_) => _animationController.reverse());
         widget.onTap?.call();
@@ -270,18 +299,16 @@ class _FavoriteButtonState extends State<_FavoriteButton>
         ),
       ),
     );
-  }
 }
 
 /// Tawseya badge with golden theme
 class _TawseyaBadge extends StatelessWidget {
-  final int count;
 
   const _TawseyaBadge({required this.count});
+  final int count;
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
+  Widget build(BuildContext context) => Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
         color: OtlobDesignSystem.accent,
@@ -307,16 +334,16 @@ class _TawseyaBadge extends StatelessWidget {
         ],
       ),
     );
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(IntProperty('count', count));
   }
 }
 
 /// Content section with restaurant details
 class ContentSection extends StatelessWidget {
-  final String name;
-  final String? cuisine;
-  final double rating;
-  final int? deliveryTime;
-  final int? reviewCount;
 
   const ContentSection({
     super.key,
@@ -326,10 +353,14 @@ class ContentSection extends StatelessWidget {
     this.deliveryTime,
     this.reviewCount,
   });
+  final String name;
+  final String? cuisine;
+  final double rating;
+  final int? deliveryTime;
+  final int? reviewCount;
 
   @override
-  Widget build(BuildContext context) {
-    return Padding(
+  Widget build(BuildContext context) => Padding(
       padding: const EdgeInsets.all(OtlobDesignSystem.md),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -418,6 +449,15 @@ class ContentSection extends StatelessWidget {
         ],
       ),
     );
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(StringProperty('name', name));
+    properties.add(StringProperty('cuisine', cuisine));
+    properties.add(DoubleProperty('rating', rating));
+    properties.add(IntProperty('deliveryTime', deliveryTime));
+    properties.add(IntProperty('reviewCount', reviewCount));
   }
 }
 
@@ -426,8 +466,7 @@ class RestaurantCardLoading extends StatelessWidget {
   const RestaurantCardLoading({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
+  Widget build(BuildContext context) => Container(
       width: 280,
       height: 200,
       decoration: BoxDecoration(
@@ -494,5 +533,4 @@ class RestaurantCardLoading extends StatelessWidget {
         ],
       ),
     );
-  }
 }

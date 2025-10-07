@@ -7,7 +7,7 @@ part of 'persistent_provider.dart';
 // **************************************************************************
 
 String _$persistentNotifierHash() =>
-    r'6afee15fe49d48808b5ab89af05da78a88c76fe0';
+    r'd3837e55a6065cb928a055f6b1aa95bb26c5cf66';
 
 /// See also [PersistentNotifier].
 @ProviderFor(PersistentNotifier)

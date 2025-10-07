@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "mcp-fetch-server": "^1.0.2"
+  }
+}

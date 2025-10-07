@@ -1,10 +1,10 @@
-import 'package:image_picker/image_picker.dart';
+import "package:image_picker/image_picker.dart";
 
 class ProfileImagePicker {
   final ImagePicker _picker = ImagePicker();
 
   Future<String?> pickImage() async {
-    final XFile? image = await _picker.pickImage(
+    image = await _picker.pickImage(
       source: ImageSource.gallery,
       imageQuality: 70,
     );

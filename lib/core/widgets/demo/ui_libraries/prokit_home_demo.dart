@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
-import '../../../theme/app_colors.dart';
-import '../../../theme/app_spacing.dart';
-import '../../../theme/app_typography.dart';
+import "package:flutter/material.dart";
+import "../../../theme/app_colors.dart";
+import "../../../theme/app_spacing.dart";
+import "../../../theme/app_typography.dart";
 
 class ProKitHomeDemo extends StatefulWidget {
   const ProKitHomeDemo({super.key});
@@ -17,106 +17,106 @@ class _ProKitHomeDemoState extends State<ProKitHomeDemo> {
   bool _isSearchFocused = false;
 
   final List<Map<String, dynamic>> _categories = [
-    {'icon': Icons.local_pizza, 'name': 'Pizza', 'color': Colors.red},
-    {'icon': Icons.fastfood, 'name': 'Burgers', 'color': Colors.orange},
-    {'icon': Icons.restaurant, 'name': 'Sushi', 'color': Colors.pink},
-    {'icon': Icons.local_dining, 'name': 'Italian', 'color': Colors.green},
-    {'icon': Icons.rice_bowl, 'name': 'Asian', 'color': Colors.blue},
-    {'icon': Icons.local_cafe, 'name': 'Desserts', 'color': Colors.purple},
-    {'icon': Icons.local_bar, 'name': 'Drinks', 'color': Colors.teal},
-    {'icon': Icons.more_horiz, 'name': 'More', 'color': Colors.grey},
+    {"icon": Icons.local_pizza, "name": "Pizza", "color": Colors.red},
+    {"icon": Icons.fastfood, "name": "Burgers", "color": Colors.orange},
+    {"icon": Icons.restaurant, "name": "Sushi", "color": Colors.pink},
+    {"icon": Icons.local_dining, "name": "Italian", "color": Colors.green},
+    {"icon": Icons.rice_bowl, "name": "Asian", "color": Colors.blue},
+    {"icon": Icons.local_cafe, "name": "Desserts", "color": Colors.purple},
+    {"icon": Icons.local_bar, "name": "Drinks", "color": Colors.teal},
+    {"icon": Icons.more_horiz, "name": "More", "color": Colors.grey},
   ];
 
   final List<Map<String, dynamic>> _restaurants = [
     {
-      'name': 'Pizza Palace',
-      'image': '🍕',
-      'rating': 4.8,
-      'deliveryTime': '25-35 min',
-      'deliveryFee': 'Free',
-      'cuisine': 'Italian',
-      'distance': '1.2 km',
-      'isPromoted': true,
-      'discount': '20% OFF',
+      "name": "Pizza Palace",
+      "image": "🍕",
+      "rating": 4.8,
+      "deliveryTime": "25-35 min",
+      "deliveryFee": "Free",
+      "cuisine": "Italian",
+      "distance": "1.2 km",
+      "isPromoted": true,
+      "discount": "20% OFF",
     },
     {
-      'name': 'Burger Barn',
-      'image': '🍔',
-      'rating': 4.6,
-      'deliveryTime': '20-30 min',
-      'deliveryFee': '\$2.99',
-      'cuisine': 'American',
-      'distance': '0.8 km',
-      'isPromoted': false,
-      'discount': null,
+      "name": "Burger Barn",
+      "image": "🍔",
+      "rating": 4.6,
+      "deliveryTime": "20-30 min",
+      "deliveryFee": "\$2.99",
+      "cuisine": "American",
+      "distance": "0.8 km",
+      "isPromoted": false,
+      "discount": null,
     },
     {
-      'name': 'Sushi Master',
-      'image': '🍱',
-      'rating': 4.9,
-      'deliveryTime': '30-40 min',
-      'deliveryFee': '\$3.99',
-      'cuisine': 'Japanese',
-      'distance': '2.1 km',
-      'isPromoted': true,
-      'discount': '15% OFF',
+      "name": "Sushi Master",
+      "image": "🍱",
+      "rating": 4.9,
+      "deliveryTime": "30-40 min",
+      "deliveryFee": r"$3.99",
+      "cuisine": "Japanese",
+      "distance": "2.1 km",
+      "isPromoted": true,
+      "discount": "15% OFF",
     },
     {
-      'name': 'Taco Town',
-      'image': '🌮',
-      'rating': 4.4,
-      'deliveryTime': '15-25 min',
-      'deliveryFee': 'Free',
-      'cuisine': 'Mexican',
-      'distance': '1.5 km',
-      'isPromoted': false,
-      'discount': null,
+      "name": "Taco Town",
+      "image": "🌮",
+      "rating": 4.4,
+      "deliveryTime": "15-25 min",
+      "deliveryFee": "Free",
+      "cuisine": "Mexican",
+      "distance": "1.5 km",
+      "isPromoted": false,
+      "discount": null,
     },
     {
-      'name': 'Pasta Paradise',
-      'image': '🍝',
-      'rating': 4.7,
-      'deliveryTime': '25-35 min',
-      'deliveryFee': '\$1.99',
-      'cuisine': 'Italian',
-      'distance': '1.8 km',
-      'isPromoted': true,
-      'discount': '10% OFF',
+      "name": "Pasta Paradise",
+      "image": "🍝",
+      "rating": 4.7,
+      "deliveryTime": "25-35 min",
+      "deliveryFee": "\$1.99",
+      "cuisine": "Italian",
+      "distance": "1.8 km",
+      "isPromoted": true,
+      "discount": "10% OFF",
     },
     {
-      'name': 'Sweet Treats',
-      'image': '🍰',
-      'rating': 4.5,
-      'deliveryTime': '20-30 min',
-      'deliveryFee': '\$2.49',
-      'cuisine': 'Desserts',
-      'distance': '0.9 km',
-      'isPromoted': false,
-      'discount': null,
+      "name": "Sweet Treats",
+      "image": "🍰",
+      "rating": 4.5,
+      "deliveryTime": "20-30 min",
+      "deliveryFee": "\$2.49",
+      "cuisine": "Desserts",
+      "distance": "0.9 km",
+      "isPromoted": false,
+      "discount": null,
     },
   ];
 
   final List<Map<String, dynamic>> _promotions = [
     {
-      'title': 'Weekend Special',
-      'subtitle': '50% OFF on all pizzas',
-      'image': '🎉',
-      'gradient': [Colors.purple, Colors.pink],
-      'cta': 'Order Now',
+      "title": "Weekend Special",
+      "subtitle": "50% OFF on all pizzas",
+      "image": "🎉",
+      "gradient": [Colors.purple, Colors.pink],
+      "cta": "Order Now",
     },
     {
-      'title': 'Free Delivery',
-      'subtitle': 'On orders over \$25',
-      'image': '🚚',
-      'gradient': [Colors.blue, Colors.cyan],
-      'cta': 'Shop Now',
+      "title": "Free Delivery",
+      "subtitle": "On orders over \$25",
+      "image": "🚚",
+      "gradient": [Colors.blue, Colors.cyan],
+      "cta": "Shop Now",
     },
     {
-      'title': 'New Restaurants',
-      'subtitle': 'Discover amazing cuisines',
-      'image': '⭐',
-      'gradient': [Colors.orange, Colors.red],
-      'cta': 'Explore',
+      "title": "New Restaurants",
+      "subtitle": "Discover amazing cuisines",
+      "image": "⭐",
+      "gradient": [Colors.orange, Colors.red],
+      "cta": "Explore",
     },
   ];
 
@@ -127,8 +127,7 @@ class _ProKitHomeDemoState extends State<ProKitHomeDemo> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  Widget build(BuildContext context) => Scaffold(
       backgroundColor: AppColors.offWhite,
       appBar: _buildAppBar(),
       body: SafeArea(
@@ -162,10 +161,8 @@ class _ProKitHomeDemoState extends State<ProKitHomeDemo> {
       bottomNavigationBar: _buildBottomNavigation(),
       floatingActionButton: _buildFloatingActionButton(),
     );
-  }
 
-  PreferredSizeWidget _buildAppBar() {
-    return AppBar(
+  PreferredSizeWidget _buildAppBar() => AppBar(
       backgroundColor: Colors.white,
       elevation: 0,
       title: Row(
@@ -225,10 +222,8 @@ class _ProKitHomeDemoState extends State<ProKitHomeDemo> {
         ),
       ],
     );
-  }
 
-  Widget _buildLocationSearchSection() {
-    return Container(
+  Widget _buildLocationSearchSection() => Container(
       padding: EdgeInsets.all(AppSpacing.lg),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -341,10 +336,8 @@ class _ProKitHomeDemoState extends State<ProKitHomeDemo> {
         ],
       ),
     );
-  }
 
-  Widget _buildFilterChip(String label, IconData icon, bool isSelected) {
-    return FilterChip(
+  Widget _buildFilterChip(String label, IconData icon, bool isSelected) => FilterChip(
       label: Row(
         children: [
           Icon(
@@ -376,10 +369,8 @@ class _ProKitHomeDemoState extends State<ProKitHomeDemo> {
         ),
       ),
     );
-  }
 
-  Widget _buildPromotionalCarousel() {
-    return Column(
+  Widget _buildPromotionalCarousel() => Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
@@ -480,10 +471,8 @@ class _ProKitHomeDemoState extends State<ProKitHomeDemo> {
         ),
       ],
     );
-  }
 
-  Widget _buildCategoriesSection() {
-    return Column(
+  Widget _buildCategoriesSection() => Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
@@ -587,10 +576,8 @@ class _ProKitHomeDemoState extends State<ProKitHomeDemo> {
         ),
       ],
     );
-  }
 
-  Widget _buildFeaturedRestaurants() {
-    return Column(
+  Widget _buildFeaturedRestaurants() => Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
@@ -637,10 +624,8 @@ class _ProKitHomeDemoState extends State<ProKitHomeDemo> {
         ),
       ],
     );
-  }
 
-  Widget _buildRestaurantCard(Map<String, dynamic> restaurant) {
-    return GestureDetector(
+  Widget _buildRestaurantCard(Map<String, dynamic> restaurant) => GestureDetector(
       onTap: () {},
       child: Container(
         decoration: BoxDecoration(
@@ -811,10 +796,8 @@ class _ProKitHomeDemoState extends State<ProKitHomeDemo> {
         ),
       ),
     );
-  }
 
-  Widget _buildBottomNavigation() {
-    return Container(
+  Widget _buildBottomNavigation() => Container(
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: const BorderRadius.only(
@@ -852,15 +835,12 @@ class _ProKitHomeDemoState extends State<ProKitHomeDemo> {
         ],
       ),
     );
-  }
 
-  Widget _buildFloatingActionButton() {
-    return FloatingActionButton(
+  Widget _buildFloatingActionButton() => FloatingActionButton(
       onPressed: () {},
       backgroundColor: AppColors.primaryGold,
       foregroundColor: AppColors.primaryBlack,
       elevation: 6,
       child: const Icon(Icons.add),
     );
-  }
 }

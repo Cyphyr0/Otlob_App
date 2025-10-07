@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
-import 'package:otlob_app/core/theme/otlob_design_system.dart';
+import "package:flutter/material.dart";
+import "../../theme/otlob_design_system.dart";
 
 /// Shadcn UI inspired Button Component
 /// Provides consistent button styling with various variants and states
@@ -19,16 +19,6 @@ enum ShadcnButtonSize {
 
 /// Modern Button widget inspired by Shadcn UI
 class ShadcnButton extends StatefulWidget {
-  final Widget? child;
-  final String? text;
-  final IconData? icon;
-  final ShadcnButtonVariant variant;
-  final ShadcnButtonSize size;
-  final bool enabled;
-  final bool loading;
-  final VoidCallback? onPressed;
-  final Color? backgroundColor;
-  final Color? foregroundColor;
 
   const ShadcnButton({
     super.key,
@@ -43,9 +33,33 @@ class ShadcnButton extends StatefulWidget {
     this.backgroundColor,
     this.foregroundColor,
   }) : assert(child != null || text != null, 'Either child or text must be provided');
+  final Widget? child;
+  final String? text;
+  final IconData? icon;
+  final ShadcnButtonVariant variant;
+  final ShadcnButtonSize size;
+  final bool enabled;
+  final bool loading;
+  final VoidCallback? onPressed;
+  final Color? backgroundColor;
+  final Color? foregroundColor;
 
   @override
   State<ShadcnButton> createState() => _ShadcnButtonState();
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(StringProperty('text', text));
+    properties.add(DiagnosticsProperty<IconData?>('icon', icon));
+    properties.add(EnumProperty<ShadcnButtonVariant>('variant', variant));
+    properties.add(EnumProperty<ShadcnButtonSize>('size', size));
+    properties.add(DiagnosticsProperty<bool>('enabled', enabled));
+    properties.add(DiagnosticsProperty<bool>('loading', loading));
+    properties.add(ObjectFlagProperty<VoidCallback?>.has('onPressed', onPressed));
+    properties.add(ColorProperty('backgroundColor', backgroundColor));
+    properties.add(ColorProperty('foregroundColor', foregroundColor));
+  }
 }
 
 class _ShadcnButtonState extends State<ShadcnButton>
@@ -60,7 +74,7 @@ class _ShadcnButtonState extends State<ShadcnButton>
       vsync: this,
       duration: const Duration(milliseconds: 100),
     );
-    _scaleAnimation = Tween<double>(begin: 1.0, end: 0.98).animate(
+    _scaleAnimation = Tween<double>(begin: 1, end: 0.98).animate(
       CurvedAnimation(
         parent: _animationController,
         curve: Curves.easeInOut,
@@ -83,13 +97,12 @@ class _ShadcnButtonState extends State<ShadcnButton>
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final buttonStyle = _getButtonStyle(colorScheme);
+    var colorScheme = Theme.of(context).colorScheme;
+    var buttonStyle = _getButtonStyle(colorScheme);
 
     return AnimatedBuilder(
       animation: _scaleAnimation,
-      builder: (context, child) {
-        return Transform.scale(
+      builder: (context, child) => Transform.scale(
           scale: _scaleAnimation.value,
           child: GestureDetector(
             onTap: _handleTap,
@@ -130,14 +143,13 @@ class _ShadcnButtonState extends State<ShadcnButton>
               ),
             ),
           ),
-        );
-      },
+        ),
     );
   }
 
   _ButtonStyleData _getButtonStyle(ColorScheme colorScheme) {
-    final baseColors = _getVariantColors(colorScheme);
-    final sizeData = _getSizeData();
+    var baseColors = _getVariantColors(colorScheme);
+    var sizeData = _getSizeData();
 
     return _ButtonStyleData(
       decoration: BoxDecoration(
@@ -158,7 +170,7 @@ class _ShadcnButtonState extends State<ShadcnButton>
   }
 
   _ButtonColors _getVariantColors(ColorScheme colorScheme) {
-    final disabledOpacity = widget.enabled ? 1.0 : 0.6;
+    var disabledOpacity = widget.enabled ? 1.0 : 0.6;
 
     switch (widget.variant) {
       case ShadcnButtonVariant.primary:
@@ -228,11 +240,6 @@ class _ShadcnButtonState extends State<ShadcnButton>
 
 /// Helper classes for button styling
 class _ButtonStyleData {
-  final BoxDecoration decoration;
-  final Color foregroundColor;
-  final TextStyle textStyle;
-  final EdgeInsets padding;
-  final double iconSize;
 
   const _ButtonStyleData({
     required this.decoration,
@@ -241,28 +248,33 @@ class _ButtonStyleData {
     required this.padding,
     required this.iconSize,
   });
+  final BoxDecoration decoration;
+  final Color foregroundColor;
+  final TextStyle textStyle;
+  final EdgeInsets padding;
+  final double iconSize;
 }
 
 class _ButtonColors {
-  final Color backgroundColor;
-  final Color foregroundColor;
-  final Color? borderColor;
 
   const _ButtonColors({
     required this.backgroundColor,
     required this.foregroundColor,
     this.borderColor,
   });
+  final Color backgroundColor;
+  final Color foregroundColor;
+  final Color? borderColor;
 }
 
 class _ButtonSizeData {
-  final EdgeInsets padding;
-  final TextStyle textStyle;
-  final double iconSize;
 
   const _ButtonSizeData({
     required this.padding,
     required this.textStyle,
     required this.iconSize,
   });
+  final EdgeInsets padding;
+  final TextStyle textStyle;
+  final double iconSize;
 }

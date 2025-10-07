@@ -1,8 +1,8 @@
 abstract class Failure {
-  final String message;
-  final dynamic error;
 
   const Failure({required this.message, this.error});
+  final String message;
+  final dynamic error;
 }
 
 class NetworkFailure extends Failure {
@@ -10,9 +10,9 @@ class NetworkFailure extends Failure {
 }
 
 class ServerFailure extends Failure {
-  final int? statusCode;
 
   const ServerFailure({required super.message, this.statusCode, super.error});
+  final int? statusCode;
 }
 
 class CacheFailure extends Failure {
@@ -25,7 +25,7 @@ class ValidationFailure extends Failure {
 
 class UnauthorizedFailure extends Failure {
   const UnauthorizedFailure({
-    super.message = 'Unauthorized access',
+    super.message = "Unauthorized access",
     super.error,
   });
 }

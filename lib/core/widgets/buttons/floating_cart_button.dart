@@ -1,11 +1,12 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
-import '../../theme/app_colors.dart';
-import '../../theme/app_typography.dart';
-import '../../theme/app_shadows.dart';
-import '../../../features/cart/presentation/providers/cart_provider.dart';
+import "package:flutter/material.dart";
+import "package:flutter/foundation.dart";
+import "package:flutter_riverpod/flutter_riverpod.dart";
+import "package:flutter_screenutil/flutter_screenutil.dart";
+import "package:go_router/go_router.dart";
+import "../../theme/app_colors.dart";
+import "../../theme/app_typography.dart";
+import "../../theme/app_shadows.dart";
+import "../../../features/cart/presentation/providers/cart_provider.dart";
 
 /// Floating Cart Button
 ///
@@ -20,22 +21,22 @@ import '../../../features/cart/presentation/providers/cart_provider.dart';
 /// - Tappable to navigate to cart
 
 class FloatingCartButton extends ConsumerWidget {
-  final String? currentRoute;
   const FloatingCartButton({super.key, this.currentRoute});
+  final String? currentRoute;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final cartState = ref.watch(cartProvider);
-    final cartNotifier = ref.read(cartProvider.notifier);
+    var cartState = ref.watch(cartProvider);
+    var cartNotifier = ref.read(cartProvider.notifier);
 
     // Hide on cart screen
-    if (currentRoute == '/cart' ||
+    if (currentRoute == "/cart" ||
         cartState.isEmpty ||
         cartNotifier.isLoading) {
       return const SizedBox.shrink();
     }
 
-    final totalItems = cartState.fold<int>(
+    var totalItems = cartState.fold<int>(
       0,
       (sum, item) => sum + item.quantity,
     );
@@ -50,7 +51,7 @@ class FloatingCartButton extends ConsumerWidget {
         duration: const Duration(milliseconds: 250),
         opacity: cartState.isEmpty ? 0.0 : 1.0,
         child: GestureDetector(
-          onTap: () => context.go('/cart'),
+          onTap: () => context.go("/cart"),
           child: Material(
             elevation: 8,
             shape: const CircleBorder(),
@@ -74,7 +75,7 @@ class FloatingCartButton extends ConsumerWidget {
                     top: -6,
                     child: Container(
                       padding: EdgeInsets.all(4.w),
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         color: Colors.white,
                         shape: BoxShape.circle,
                       ),
@@ -83,7 +84,7 @@ class FloatingCartButton extends ConsumerWidget {
                         minHeight: 16.h,
                       ),
                       child: Text(
-                        '$totalItems',
+                        "$totalItems",
                         style: AppTypography.labelSmall.copyWith(
                           color: AppColors.logoRed,
                           fontWeight: FontWeight.w800,
@@ -100,5 +101,11 @@ class FloatingCartButton extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(StringProperty('currentRoute', currentRoute));
   }
 }

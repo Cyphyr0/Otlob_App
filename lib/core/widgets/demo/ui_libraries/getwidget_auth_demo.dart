@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../theme/app_colors.dart';
-import '../../../theme/app_spacing.dart';
-import '../../../theme/app_typography.dart';
+import "package:flutter/material.dart";
+import "package:flutter_screenutil/flutter_screenutil.dart";
+import "../../../theme/app_colors.dart";
+import "../../../theme/app_spacing.dart";
+import "../../../theme/app_typography.dart";
 
 class GetWidgetAuthDemo extends StatefulWidget {
   const GetWidgetAuthDemo({super.key});
@@ -41,8 +41,8 @@ class _GetWidgetAuthDemoState extends State<GetWidgetAuthDemo> {
           SnackBar(
             content: Text(
               _isLogin
-                  ? 'GetWidget Login Successful'
-                  : 'GetWidget Account Created',
+                  ? "GetWidget Login Successful"
+                  : "GetWidget Account Created",
             ),
             backgroundColor: AppColors.logoRed,
           ),
@@ -52,8 +52,7 @@ class _GetWidgetAuthDemoState extends State<GetWidgetAuthDemo> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  Widget build(BuildContext context) => Scaffold(
       backgroundColor: AppColors.offWhite,
       appBar: AppBar(
         title: Text(
@@ -326,5 +325,4 @@ class _GetWidgetAuthDemoState extends State<GetWidgetAuthDemo> {
         ),
       ),
     );
-  }
 }

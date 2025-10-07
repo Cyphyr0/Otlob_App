@@ -1,11 +1,11 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../theme/app_colors.dart';
-import '../../theme/app_typography.dart';
-import '../../theme/app_radius.dart';
-import '../../theme/app_spacing.dart';
-import '../../theme/app_shadows.dart';
-import '../../theme/app_animations.dart';
+import "package:flutter/material.dart";
+import "package:flutter_screenutil/flutter_screenutil.dart";
+import "../../theme/app_colors.dart";
+import "../../theme/app_typography.dart";
+import "../../theme/app_radius.dart";
+import "../../theme/app_spacing.dart";
+import "../../theme/app_shadows.dart";
+import "../../theme/app_animations.dart";
 
 /// Tawseya Badge Component
 ///
@@ -40,6 +40,13 @@ import '../../theme/app_animations.dart';
 /// )
 /// ```
 class TawseyaBadge extends StatefulWidget {
+
+  const TawseyaBadge({
+    super.key,
+    this.count,
+    this.size = BadgeSize.medium,
+    this.animated = false,
+  });
   /// Number of Tawseya recommendations (optional)
   final int? count;
 
@@ -49,15 +56,16 @@ class TawseyaBadge extends StatefulWidget {
   /// Show pulse animation
   final bool animated;
 
-  const TawseyaBadge({
-    super.key,
-    this.count,
-    this.size = BadgeSize.medium,
-    this.animated = false,
-  });
-
   @override
   State<TawseyaBadge> createState() => _TawseyaBadgeState();
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(IntProperty('count', count));
+    properties.add(EnumProperty<BadgeSize>('size', size));
+    properties.add(DiagnosticsProperty<bool>('animated', animated));
+  }
 }
 
 class _TawseyaBadgeState extends State<TawseyaBadge>
@@ -75,7 +83,7 @@ class _TawseyaBadgeState extends State<TawseyaBadge>
         vsync: this,
       );
 
-      _scaleAnimation = Tween<double>(begin: 1.0, end: 1.05).animate(
+      _scaleAnimation = Tween<double>(begin: 1, end: 1.05).animate(
         CurvedAnimation(parent: _controller, curve: AppAnimations.easeInOut),
       );
 
@@ -157,9 +165,7 @@ class _TawseyaBadgeState extends State<TawseyaBadge>
     if (widget.animated) {
       badge = AnimatedBuilder(
         animation: _scaleAnimation,
-        builder: (context, child) {
-          return Transform.scale(scale: _scaleAnimation.value, child: child);
-        },
+        builder: (context, child) => Transform.scale(scale: _scaleAnimation.value, child: child),
         child: badge,
       );
     }
@@ -169,7 +175,7 @@ class _TawseyaBadgeState extends State<TawseyaBadge>
 
   String _formatCount(int count) {
     if (count >= 1000) {
-      return '${(count / 1000).toStringAsFixed(1)}k';
+      return "${(count / 1000).toStringAsFixed(1)}k";
     }
     return count.toString();
   }

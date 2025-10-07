@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import "package:flutter/material.dart";
 
 /// Otlob App Color Palette
 /// Based on the curated color scheme for modern food delivery UI
@@ -172,20 +172,20 @@ class OtlobColors {
   /// Get color for cuisine type
   static Color getCuisineColor(String cuisine) {
     switch (cuisine.toLowerCase()) {
-      case 'egyptian':
+      case "egyptian":
         return egyptian;
-      case 'street food':
+      case "street food":
         return streetFood;
-      case 'grill':
-      case 'bbq':
+      case "grill":
+      case "bbq":
         return grill;
-      case 'seafood':
+      case "seafood":
         return seafood;
-      case 'vegetarian':
-      case 'vegan':
+      case "vegetarian":
+      case "vegan":
         return vegetarian;
-      case 'desserts':
-      case 'bakery':
+      case "desserts":
+      case "bakery":
         return desserts;
       default:
         return primary;
@@ -201,9 +201,7 @@ class OtlobColors {
   }
 
   /// Get color with opacity
-  static Color withOpacity(Color color, double opacity) {
-    return color.withOpacity(opacity);
-  }
+  static Color withOpacity(Color color, double opacity) => color.withOpacity(opacity);
 }
 
 // ============================================================================
@@ -211,7 +209,7 @@ class OtlobColors {
 // ============================================================================
 
 /// Light Theme ColorScheme
-ColorScheme otlobLightColorScheme = ColorScheme.light(
+ColorScheme otlobLightColorScheme = const ColorScheme.light(
   primary: OtlobColors.primary,
   onPrimary: OtlobColors.textOnPrimary,
   secondary: OtlobColors.primaryLight,
@@ -224,7 +222,7 @@ ColorScheme otlobLightColorScheme = ColorScheme.light(
 );
 
 /// Dark Theme ColorScheme (optional)
-ColorScheme otlobDarkColorScheme = ColorScheme.dark(
+ColorScheme otlobDarkColorScheme = const ColorScheme.dark(
   primary: OtlobColors.primary,
   onPrimary: OtlobColors.textOnPrimary,
   secondary: OtlobColors.primaryLight,
@@ -233,5 +231,5 @@ ColorScheme otlobDarkColorScheme = ColorScheme.dark(
   onError: Colors.white,
   surface: OtlobColors.jet,
   onSurface: Colors.white,
-  surfaceContainerHighest: const Color(0xFF424242),
+  surfaceContainerHighest: Color(0xFF424242),
 );

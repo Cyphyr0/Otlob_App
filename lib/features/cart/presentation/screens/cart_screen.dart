@@ -1,19 +1,20 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
-import 'package:otlob_app/core/theme/app_colors.dart';
-import 'package:otlob_app/core/theme/app_typography.dart';
-import 'package:otlob_app/core/theme/app_spacing.dart';
-import 'package:otlob_app/core/theme/app_radius.dart';
-import 'package:otlob_app/core/theme/app_shadows.dart';
-import 'package:otlob_app/core/widgets/branding/otlob_logo.dart';
-import 'package:otlob_app/core/widgets/buttons/primary_button.dart';
-import 'package:otlob_app/core/widgets/buttons/secondary_button.dart';
-import 'package:otlob_app/core/widgets/states/empty_state.dart';
-import 'package:otlob_app/core/utils/shared_prefs_helper.dart';
-import 'package:otlob_app/features/cart/presentation/providers/cart_provider.dart';
-import 'package:otlob_app/features/cart/domain/entities/cart_item.dart';
+import "package:flutter/material.dart";
+import "package:flutter/foundation.dart";
+import "package:flutter_riverpod/flutter_riverpod.dart";
+import "package:flutter_screenutil/flutter_screenutil.dart";
+import "package:go_router/go_router.dart";
+import "../../../../core/theme/app_colors.dart";
+import "../../../../core/theme/app_typography.dart";
+import "../../../../core/theme/app_spacing.dart";
+import "../../../../core/theme/app_radius.dart";
+import "../../../../core/theme/app_shadows.dart";
+import "../../../../core/widgets/branding/otlob_logo.dart";
+import "../../../../core/widgets/buttons/primary_button.dart";
+import "../../../../core/widgets/buttons/secondary_button.dart";
+import "../../../../core/widgets/states/empty_state.dart";
+import "../../../../core/utils/shared_prefs_helper.dart";
+import "../providers/cart_provider.dart";
+import "../../domain/entities/cart_item.dart";
 
 class CartScreen extends ConsumerStatefulWidget {
   const CartScreen({super.key});
@@ -23,7 +24,7 @@ class CartScreen extends ConsumerStatefulWidget {
 }
 
 class _CartScreenState extends ConsumerState<CartScreen> {
-  String? selectedPayment = 'cash';
+  String? selectedPayment = "cash";
   final TextEditingController promoController = TextEditingController();
 
   @override
@@ -34,13 +35,13 @@ class _CartScreenState extends ConsumerState<CartScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final cartState = ref.watch(cartProvider);
-    final cartNotifier = ref.read(cartProvider.notifier);
+    var cartState = ref.watch(cartProvider);
+    var cartNotifier = ref.read(cartProvider.notifier);
 
-    final body = cartNotifier.isLoading
+    var body = cartNotifier.isLoading
         ? const Center(child: CircularProgressIndicator())
         : cartState.isEmpty
-        ? EmptyState.emptyCart(onAction: () => context.go('/home'))
+        ? EmptyState.emptyCart(onAction: () => context.go("/home"))
         : ListView.builder(
             padding: EdgeInsets.only(
               left: AppSpacing.screenPadding,
@@ -50,7 +51,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
             ),
             itemCount: cartState.length,
             itemBuilder: (context, index) {
-              final item = cartState[index];
+              var item = cartState[index];
               return Padding(
                 padding: EdgeInsets.only(
                   bottom: index < cartState.length - 1 ? AppSpacing.md : 0,
@@ -70,8 +71,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
     );
   }
 
-  PreferredSizeWidget _buildAppBar() {
-    return AppBar(
+  PreferredSizeWidget _buildAppBar() => AppBar(
       backgroundColor: AppColors.offWhite,
       elevation: 0,
       title: Row(
@@ -88,10 +88,8 @@ class _CartScreenState extends ConsumerState<CartScreen> {
         ],
       ),
     );
-  }
 
-  Widget _buildCartItem(CartItem item, dynamic cartNotifier) {
-    return Container(
+  Widget _buildCartItem(CartItem item, dynamic cartNotifier) => Container(
       decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: AppRadius.cardRadius,
@@ -219,15 +217,14 @@ class _CartScreenState extends ConsumerState<CartScreen> {
         ),
       ),
     );
-  }
 
   Widget _buildBottomSection(dynamic cartNotifier) {
     // Ensure the bottom section is above any persistent bottom navigation
     // and reacts to the keyboard by adding viewInsets and a scrollable
     // wrapper for its content.
-    final bottomNavHeight = kBottomNavigationBarHeight;
-    final systemBottomPadding = MediaQuery.of(context).padding.bottom;
-    final keyboardInset = MediaQuery.of(context).viewInsets.bottom;
+    const bottomNavHeight = kBottomNavigationBarHeight;
+    var systemBottomPadding = MediaQuery.of(context).padding.bottom;
+    var keyboardInset = MediaQuery.of(context).viewInsets.bottom;
 
     return Container(
       // keep symmetric horizontal padding, but increase bottom padding to
@@ -256,9 +253,9 @@ class _CartScreenState extends ConsumerState<CartScreen> {
             mainAxisSize: MainAxisSize.min,
             children: [
               // Order Summary
-              _buildSummaryRow('Subtotal', cartNotifier.subtotal),
+              _buildSummaryRow("Subtotal", cartNotifier.subtotal),
               SizedBox(height: AppSpacing.sm),
-              _buildSummaryRow('Delivery Fee', cartNotifier.deliveryFee),
+              _buildSummaryRow("Delivery Fee", cartNotifier.deliveryFee),
 
               if (cartNotifier.hasValidPromo) ...[
                 SizedBox(height: AppSpacing.sm),
@@ -267,7 +264,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
 
               Padding(
                 padding: EdgeInsets.symmetric(vertical: AppSpacing.md),
-                child: Divider(color: AppColors.lightGray, thickness: 1),
+                child: const Divider(color: AppColors.lightGray, thickness: 1),
               ),
 
               // Total
@@ -275,13 +272,13 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Total',
+                    "Total",
                     style: AppTypography.headlineSmall.copyWith(
                       fontWeight: FontWeight.w700,
                     ),
                   ),
                   Text(
-                    '\$${cartNotifier.total.toStringAsFixed(2)}',
+                    "\$${cartNotifier.total.toStringAsFixed(2)}",
                     style: AppTypography.headlineSmall.copyWith(
                       color: AppColors.logoRed,
                       fontWeight: FontWeight.w700,
@@ -299,18 +296,18 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                     child: TextField(
                       controller: promoController,
                       decoration: InputDecoration(
-                        labelText: 'Promo Code',
+                        labelText: "Promo Code",
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(AppRadius.md),
-                          borderSide: BorderSide(color: AppColors.lightGray),
+                          borderSide: const BorderSide(color: AppColors.lightGray),
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(AppRadius.md),
-                          borderSide: BorderSide(color: AppColors.lightGray),
+                          borderSide: const BorderSide(color: AppColors.lightGray),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(AppRadius.md),
-                          borderSide: BorderSide(color: AppColors.logoRed),
+                          borderSide: const BorderSide(color: AppColors.logoRed),
                         ),
                       ),
                     ),
@@ -319,10 +316,10 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                   SizedBox(
                     height: 56.h,
                     child: PrimaryButton(
-                      text: 'Apply',
+                      text: "Apply",
                       backgroundColor: AppColors.primaryGold,
                       onPressed: () {
-                        final code = promoController.text.trim();
+                        var code = promoController.text.trim();
                         if (code.isNotEmpty) {
                           cartNotifier.applyPromo(code);
                           if (cartNotifier.promoError != null) {
@@ -331,7 +328,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                               isError: true,
                             );
                           } else {
-                            _showSnackBar('Promo applied!', isSuccess: true);
+                            _showSnackBar("Promo applied!", isSuccess: true);
                           }
                         }
                       },
@@ -357,7 +354,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                       ),
                       SizedBox(width: AppSpacing.xs),
                       Text(
-                        '10% discount applied!',
+                        "10% discount applied!",
                         style: AppTypography.bodyMedium.copyWith(
                           color: AppColors.primaryBlack,
                           fontWeight: FontWeight.w600,
@@ -381,7 +378,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Payment Method',
+                      "Payment Method",
                       style: AppTypography.titleMedium.copyWith(
                         fontWeight: FontWeight.w600,
                       ),
@@ -389,41 +386,41 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                     Column(
                       children: [
                         InkWell(
-                          onTap: () => setState(() => selectedPayment = 'cash'),
+                          onTap: () => setState(() => selectedPayment = "cash"),
                           child: Row(
                             children: [
                               Icon(
-                                selectedPayment == 'cash'
+                                selectedPayment == "cash"
                                     ? Icons.radio_button_checked
                                     : Icons.radio_button_unchecked,
-                                color: selectedPayment == 'cash'
+                                color: selectedPayment == "cash"
                                     ? AppColors.logoRed
                                     : AppColors.gray,
                                 size: 20.sp,
                               ),
                               SizedBox(width: AppSpacing.sm),
                               Text(
-                                'Cash on Delivery',
+                                "Cash on Delivery",
                                 style: AppTypography.bodyMedium,
                               ),
                             ],
                           ),
                         ),
                         InkWell(
-                          onTap: () => setState(() => selectedPayment = 'card'),
+                          onTap: () => setState(() => selectedPayment = "card"),
                           child: Row(
                             children: [
                               Icon(
-                                selectedPayment == 'card'
+                                selectedPayment == "card"
                                     ? Icons.radio_button_checked
                                     : Icons.radio_button_unchecked,
-                                color: selectedPayment == 'card'
+                                color: selectedPayment == "card"
                                     ? AppColors.logoRed
                                     : AppColors.gray,
                                 size: 20.sp,
                               ),
                               SizedBox(width: AppSpacing.sm),
-                              Text('Card', style: AppTypography.bodyMedium),
+                              Text("Card", style: AppTypography.bodyMedium),
                             ],
                           ),
                         ),
@@ -437,17 +434,17 @@ class _CartScreenState extends ConsumerState<CartScreen> {
 
               // Checkout Button
               PrimaryButton(
-                text: 'Checkout',
+                text: "Checkout",
                 fullWidth: true,
                 onPressed: () async {
-                  final isAuthenticated =
+                  var isAuthenticated =
                       await SharedPrefsHelper.isAuthenticated();
                   if (!mounted) return;
                   if (!isAuthenticated) {
                     _showSignInDialog();
                     return;
                   }
-                  context.go('/order-confirmation');
+                  context.go("/order-confirmation");
                 },
               ),
             ],
@@ -457,8 +454,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
     );
   }
 
-  Widget _buildSummaryRow(String label, double amount) {
-    return Row(
+  Widget _buildSummaryRow(String label, double amount) => Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
@@ -471,10 +467,8 @@ class _CartScreenState extends ConsumerState<CartScreen> {
         ),
       ],
     );
-  }
 
-  Widget _buildDiscountRow(double amount) {
-    return Row(
+  Widget _buildDiscountRow(double amount) => Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
@@ -490,7 +484,6 @@ class _CartScreenState extends ConsumerState<CartScreen> {
         ),
       ],
     );
-  }
 
   void _showSnackBar(
     String message, {
@@ -517,29 +510,36 @@ class _CartScreenState extends ConsumerState<CartScreen> {
           borderRadius: BorderRadius.circular(AppRadius.lg),
         ),
         title: Text(
-          'Sign In Required',
+          "Sign In Required",
           style: AppTypography.headlineMedium.copyWith(
             fontWeight: FontWeight.w700,
           ),
         ),
         content: Text(
-          'Please sign in to place your order and complete checkout.',
+          "Please sign in to place your order and complete checkout.",
           style: AppTypography.bodyLarge,
         ),
         actions: [
           SecondaryButton(
-            text: 'Cancel',
+            text: "Cancel",
             onPressed: () => Navigator.pop(context),
           ),
           PrimaryButton(
-            text: 'Sign In',
+            text: "Sign In",
             onPressed: () {
               Navigator.pop(context);
-              context.go('/auth');
+              context.go("/auth");
             },
           ),
         ],
       ),
     );
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(StringProperty('selectedPayment', selectedPayment));
+    properties.add(DiagnosticsProperty<TextEditingController>('promoController', promoController));
   }
 }

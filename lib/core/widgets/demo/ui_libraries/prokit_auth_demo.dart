@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
-import '../../../theme/app_colors.dart';
-import '../../../theme/app_spacing.dart';
-import '../../../theme/app_typography.dart';
+import "package:flutter/material.dart";
+import "../../../theme/app_colors.dart";
+import "../../../theme/app_spacing.dart";
+import "../../../theme/app_typography.dart";
 
 class ProKitAuthDemo extends StatefulWidget {
   const ProKitAuthDemo({super.key});
@@ -35,7 +35,7 @@ class _ProKitAuthDemoState extends State<ProKitAuthDemo> {
     setState(() => isLogin = false);
   }
 
-  void _handleAuth() async {
+  Future<void> _handleAuth() async {
     if (!_formKey.currentState!.validate()) return;
 
     setState(() => isLoading = true);
@@ -48,7 +48,7 @@ class _ProKitAuthDemoState extends State<ProKitAuthDemo> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            isLogin ? 'Login successful!' : 'Account created successfully!',
+            isLogin ? "Login successful!" : "Account created successfully!",
           ),
           backgroundColor: AppColors.logoRed,
         ),
@@ -57,8 +57,7 @@ class _ProKitAuthDemoState extends State<ProKitAuthDemo> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  Widget build(BuildContext context) => Scaffold(
       backgroundColor: AppColors.offWhite,
       appBar: AppBar(
         title: const Text('ProKit UI Demo'),
@@ -558,10 +557,8 @@ class _ProKitAuthDemoState extends State<ProKitAuthDemo> {
         ),
       ),
     );
-  }
 
-  Widget _buildFeatureItem(IconData icon, String title, String subtitle) {
-    return Padding(
+  Widget _buildFeatureItem(IconData icon, String title, String subtitle) => Padding(
       padding: EdgeInsets.only(bottom: AppSpacing.md),
       child: Row(
         children: [
@@ -595,5 +592,11 @@ class _ProKitAuthDemoState extends State<ProKitAuthDemo> {
         ],
       ),
     );
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<bool>('isLogin', isLogin));
+    properties.add(DiagnosticsProperty<bool>('isLoading', isLoading));
   }
 }

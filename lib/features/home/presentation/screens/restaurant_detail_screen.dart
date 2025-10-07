@@ -1,57 +1,58 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
-import 'package:otlob_app/core/theme/app_colors.dart';
-import 'package:otlob_app/core/theme/app_typography.dart';
-import 'package:otlob_app/core/theme/app_spacing.dart';
-import 'package:otlob_app/core/theme/app_radius.dart';
-import 'package:otlob_app/core/theme/app_shadows.dart';
-import 'package:otlob_app/core/widgets/branding/otlob_logo.dart';
-import 'package:otlob_app/core/widgets/badges/tawseya_badge.dart';
-import 'package:otlob_app/core/providers.dart';
-import 'package:otlob_app/features/home/domain/entities/restaurant.dart';
-import 'package:otlob_app/features/cart/domain/entities/cart_item.dart';
+import "package:flutter/material.dart";
+import "package:flutter_riverpod/flutter_riverpod.dart";
+import "package:flutter_screenutil/flutter_screenutil.dart";
+import "package:go_router/go_router.dart";
+import "../../../../core/theme/app_colors.dart";
+import "../../../../core/theme/app_typography.dart";
+import "../../../../core/theme/app_spacing.dart";
+import "../../../../core/theme/app_radius.dart";
+import "../../../../core/theme/app_shadows.dart";
+import "../../../../core/widgets/branding/otlob_logo.dart";
+import "../../../../core/widgets/badges/tawseya_badge.dart";
+import "../../../../core/providers.dart";
+import "../../domain/entities/restaurant.dart";
+import "../../../cart/domain/entities/cart_item.dart";
+import "pdf_viewer_screen.dart";
 
 class RestaurantDetailScreen extends ConsumerWidget {
-  final String id;
 
   const RestaurantDetailScreen({super.key, required this.id});
+  final String id;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final restaurantsAsync = ref.watch(restaurantsProvider);
-    final cartState = ref.watch(cartProvider);
-    final cartNotifier = ref.read(cartProvider.notifier);
+    var restaurantsAsync = ref.watch(restaurantsProvider);
+    var cartState = ref.watch(cartProvider);
+    var cartNotifier = ref.read(cartProvider.notifier);
 
     return restaurantsAsync.when(
       loading: () =>
           const Scaffold(body: Center(child: CircularProgressIndicator())),
       error: (error, stack) => Scaffold(
-        body: Center(child: Text('Error loading restaurant: $error')),
+        body: Center(child: Text("Error loading restaurant: $error")),
       ),
       data: (restaurants) {
-        final restaurant = restaurants.firstWhere(
+        var restaurant = restaurants.firstWhere(
           (r) => r.id == id,
           orElse: () => const Restaurant(
-            id: '',
-            name: 'Not Found',
+            id: "",
+            name: "Not Found",
             rating: 0,
-            imageUrl: '',
+            imageUrl: "",
             tawseyaCount: 0,
-            cuisine: '',
-            description: 'Restaurant not found.',
+            cuisine: "",
+            description: "Restaurant not found.",
             menuCategories: [],
             isOpen: false,
             distance: 0,
-            address: '',
+            address: "",
             priceLevel: 0,
             isFavorite: false,
           ),
         );
 
-        final favoritesNotifier = ref.read(favoritesProvider.notifier);
-        final isFavorite = ref
+        var favoritesNotifier = ref.read(favoritesProvider.notifier);
+        var isFavorite = ref
             .watch(favoritesProvider)
             .any((r) => r.id == restaurant.id);
 
@@ -66,7 +67,7 @@ class RestaurantDetailScreen extends ConsumerWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _buildRestaurantInfo(restaurant),
+                    _buildRestaurantInfo(context, restaurant),
                     SizedBox(height: AppSpacing.sectionSpacing),
                     _buildMenu(
                       restaurant.menuCategories,
@@ -90,8 +91,7 @@ class RestaurantDetailScreen extends ConsumerWidget {
     Restaurant restaurant,
     bool isFavorite,
     favoritesNotifier,
-  ) {
-    return SliverAppBar(
+  ) => SliverAppBar(
       expandedHeight: 250.h,
       pinned: true,
       backgroundColor: AppColors.offWhite,
@@ -186,10 +186,8 @@ class RestaurantDetailScreen extends ConsumerWidget {
         ),
       ),
     );
-  }
 
-  Widget _buildRestaurantInfo(Restaurant restaurant) {
-    return Container(
+  Widget _buildRestaurantInfo(BuildContext context, Restaurant restaurant) => Container(
       margin: EdgeInsets.symmetric(horizontal: AppSpacing.screenPadding),
       padding: EdgeInsets.all(AppSpacing.lg),
       decoration: BoxDecoration(
@@ -296,17 +294,55 @@ class RestaurantDetailScreen extends ConsumerWidget {
           SizedBox(height: AppSpacing.md),
 
           // Description
-          Text(
-            restaurant.description,
-            style: AppTypography.bodyMedium.copyWith(
-              color: AppColors.darkGray,
-              height: 1.5,
-            ),
-          ),
+           Text(
+             restaurant.description,
+             style: AppTypography.bodyMedium.copyWith(
+               color: AppColors.darkGray,
+               height: 1.5,
+             ),
+           ),
+
+           // PDF Menu Button (if available)
+           if (restaurant.pdfMenuUrl != null && restaurant.pdfMenuUrl!.isNotEmpty) ...[
+             SizedBox(height: AppSpacing.lg),
+             SizedBox(
+               width: double.infinity,
+               child: ElevatedButton.icon(
+                 onPressed: () {
+                   Navigator.of(context).push(
+                     MaterialPageRoute(
+                       builder: (context) => PDFViewerScreen(
+                         pdfUrl: restaurant.pdfMenuUrl!,
+                         title: '${restaurant.name} Menu',
+                       ),
+                     ),
+                   );
+                 },
+                 icon: Icon(Icons.picture_as_pdf, size: 20.sp),
+                 label: Text(
+                   'View PDF Menu',
+                   style: AppTypography.bodyLarge.copyWith(
+                     fontWeight: FontWeight.w600,
+                   ),
+                 ),
+                 style: ElevatedButton.styleFrom(
+                   backgroundColor: AppColors.logoRed,
+                   foregroundColor: AppColors.white,
+                   padding: EdgeInsets.symmetric(
+                     horizontal: AppSpacing.lg,
+                     vertical: AppSpacing.md,
+                   ),
+                   shape: RoundedRectangleBorder(
+                     borderRadius: BorderRadius.circular(AppRadius.md),
+                   ),
+                   elevation: 2,
+                 ),
+               ),
+             ),
+           ],
         ],
       ),
     );
-  }
 
   Widget _buildMenu(
     List<String> menuCategories,
@@ -315,14 +351,14 @@ class RestaurantDetailScreen extends ConsumerWidget {
     BuildContext context,
   ) {
     // Create mock menu data based on categories
-    final mockMenu = menuCategories
+    var mockMenu = menuCategories
         .map(
           (category) => {
-            'category': category,
-            'dishes': [
-              {'name': 'Grilled Chicken', 'price': 15.99, 'imageUrl': null},
-              {'name': 'Beef Burger', 'price': 12.99, 'imageUrl': null},
-              {'name': 'Caesar Salad', 'price': 8.99, 'imageUrl': null},
+            "category": category,
+            "dishes": [
+              {"name": "Grilled Chicken", "price": 15.99, "imageUrl": null},
+              {"name": "Beef Burger", "price": 12.99, "imageUrl": null},
+              {"name": "Caesar Salad", "price": 8.99, "imageUrl": null},
             ],
           },
         )
@@ -334,7 +370,7 @@ class RestaurantDetailScreen extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Menu',
+            "Menu",
             style: AppTypography.headlineMedium.copyWith(
               fontWeight: FontWeight.w700,
             ),
@@ -345,7 +381,7 @@ class RestaurantDetailScreen extends ConsumerWidget {
             physics: const NeverScrollableScrollPhysics(),
             itemCount: mockMenu.length,
             itemBuilder: (context, categoryIndex) {
-              final category = mockMenu[categoryIndex];
+              var category = mockMenu[categoryIndex];
               return Padding(
                 padding: EdgeInsets.only(bottom: AppSpacing.lg),
                 child: Column(
@@ -353,7 +389,7 @@ class RestaurantDetailScreen extends ConsumerWidget {
                   children: [
                     // Category Header
                     Text(
-                      category['category'] as String,
+                      category["category"] as String,
                       style: AppTypography.titleLarge.copyWith(
                         fontWeight: FontWeight.w600,
                       ),
@@ -363,14 +399,14 @@ class RestaurantDetailScreen extends ConsumerWidget {
                     ListView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
-                      itemCount: (category['dishes'] as List).length,
+                      itemCount: (category["dishes"] as List).length,
                       itemBuilder: (context, dishIndex) {
-                        final dish = (category['dishes'] as List)[dishIndex];
+                        var dish = (category["dishes"] as List)[dishIndex];
                         return Padding(
                           padding: EdgeInsets.only(
                             bottom:
                                 dishIndex <
-                                    (category['dishes'] as List).length - 1
+                                    (category["dishes"] as List).length - 1
                                 ? AppSpacing.md
                                 : 0,
                           ),
@@ -403,13 +439,13 @@ class RestaurantDetailScreen extends ConsumerWidget {
     CartItem? cartItem;
     try {
       cartItem = cartState.firstWhere(
-        (item) => item.name == dish['name'] && item.price == dish['price'],
+        (item) => item.name == dish["name"] && item.price == dish["price"],
       );
     } catch (_) {
       cartItem = null;
     }
-    final quantity = cartItem != null ? cartItem.quantity : 0;
-    return Container(
+    var quantity = cartItem != null ? cartItem.quantity : 0;
+    return DecoratedBox(
       decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: AppRadius.cardRadius,
@@ -437,7 +473,7 @@ class RestaurantDetailScreen extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    dish['name'],
+                    dish["name"],
                     style: AppTypography.titleMedium.copyWith(
                       fontWeight: FontWeight.w600,
                     ),
@@ -455,8 +491,7 @@ class RestaurantDetailScreen extends ConsumerWidget {
             ),
 
             // Quantity Selector
-            quantity == 0
-                ? GestureDetector(
+            if (quantity == 0) GestureDetector(
                     onTap: () {
                       cartNotifier.addItem(
                         name: dish['name'],
@@ -499,8 +534,7 @@ class RestaurantDetailScreen extends ConsumerWidget {
                         size: 20.sp,
                       ),
                     ),
-                  )
-                : Row(
+                  ) else Row(
                     children: [
                       // Decrement button
                       GestureDetector(
@@ -567,5 +601,11 @@ class RestaurantDetailScreen extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(StringProperty('id', id));
   }
 }

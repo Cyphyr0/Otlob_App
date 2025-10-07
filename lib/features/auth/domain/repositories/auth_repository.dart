@@ -1,4 +1,4 @@
-import 'package:otlob_app/features/auth/domain/entities/user.dart';
+import "../entities/user.dart";
 
 abstract class AuthRepository {
   Future<void> sendOTP(String phoneNumber);
@@ -20,4 +20,5 @@ abstract class AuthRepository {
   Future<void> logout();
   User? getCurrentUser();
   Future<void> saveUser(User user);
+  Future<void> sendEmailVerification();
 }

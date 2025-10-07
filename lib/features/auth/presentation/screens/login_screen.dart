@@ -1,15 +1,15 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
-import 'package:otlob_app/core/theme/app_colors.dart';
-import 'package:otlob_app/core/theme/app_typography.dart';
-import 'package:otlob_app/core/theme/app_spacing.dart';
-import 'package:otlob_app/core/widgets/branding/otlob_logo.dart';
-import 'package:otlob_app/core/widgets/buttons/primary_button.dart';
-import 'package:otlob_app/core/widgets/buttons/secondary_button.dart';
-import 'package:otlob_app/core/widgets/inputs/custom_text_field.dart';
-import 'package:otlob_app/core/errors/failures.dart';
-import 'package:otlob_app/features/auth/presentation/providers/auth_provider.dart';
+import "package:flutter/material.dart";
+import "package:flutter_riverpod/flutter_riverpod.dart";
+import "package:go_router/go_router.dart";
+import "../../../../core/theme/app_colors.dart";
+import "../../../../core/theme/app_typography.dart";
+import "../../../../core/theme/app_spacing.dart";
+import "../../../../core/widgets/branding/otlob_logo.dart";
+import "../../../../core/widgets/buttons/primary_button.dart";
+import "../../../../core/widgets/buttons/secondary_button.dart";
+import "../../../../core/widgets/inputs/custom_text_field.dart";
+import "../../../../core/errors/failures.dart";
+import "../providers/auth_provider.dart";
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -39,50 +39,50 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       _passwordError = null;
     });
 
-    final email = _emailController.text.trim();
-    final password = _passwordController.text;
-    bool hasError = false;
+    var email = _emailController.text.trim();
+    var password = _passwordController.text;
+    var hasError = false;
     if (email.isEmpty) {
-      setState(() => _emailError = 'Please enter your email');
+      setState(() => _emailError = "Please enter your email");
       hasError = true;
-    } else if (!RegExp(r"^[\w-.]+@([\w-]+\.)+[\w-]{2,4}").hasMatch(email)) {
-      setState(() => _emailError = 'Please enter a valid email');
+    } else if (!RegExp(r'^[\w-.]+@([\w-]+\.)+[\w-]{2,4}').hasMatch(email)) {
+      setState(() => _emailError = "Please enter a valid email");
       hasError = true;
     }
     if (password.isEmpty) {
-      setState(() => _passwordError = 'Please enter your password');
+      setState(() => _passwordError = "Please enter your password");
       hasError = true;
     }
     if (hasError) return;
 
     setState(() => _isLoading = true);
-    final authNotifier = ref.read(authProvider.notifier);
+    var authNotifier = ref.read(authProvider.notifier);
     try {
       await authNotifier.signInWithEmail(email, password);
       if (!mounted) return;
       setState(() => _isLoading = false);
-      context.go('/home');
+      context.go("/home");
     } on AuthFailure catch (e) {
       if (!mounted) return;
       setState(() => _isLoading = false);
-      final msg = e.message.isNotEmpty
+      var msg = e.message.isNotEmpty
           ? e.message
-          : 'Login failed. Please try again.';
+          : "Login failed. Please try again.";
       // Try to map error to field
-      if (msg.toLowerCase().contains('email')) {
+      if (msg.toLowerCase().contains("email")) {
         setState(() => _emailError = msg);
-      } else if (msg.toLowerCase().contains('password')) {
+      } else if (msg.toLowerCase().contains("password")) {
         setState(() => _passwordError = msg);
       } else {
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
-            title: Text('Login Error'),
+            title: const Text("Login Error"),
             content: Text(msg),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
-                child: Text('OK'),
+                child: const Text("OK"),
               ),
             ],
           ),
@@ -94,12 +94,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: Text('Login Error'),
-          content: Text('An unexpected error occurred: $e'),
+          title: const Text("Login Error"),
+          content: Text("An unexpected error occurred: $e"),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: Text('OK'),
+              child: const Text("OK"),
             ),
           ],
         ),
@@ -108,45 +108,44 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 
   Future<void> _signInWithGoogle() async {
-    final authNotifier = ref.read(authProvider.notifier);
+    var authNotifier = ref.read(authProvider.notifier);
     try {
       await authNotifier.signInWithGoogle();
       if (mounted) {
-        context.go('/home');
+        context.go("/home");
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(SnackBar(content: Text('Google sign-in failed: $e')));
+        ).showSnackBar(SnackBar(content: Text("Google sign-in failed: $e")));
       }
     }
   }
 
   Future<void> _signInWithFacebook() async {
-    final authNotifier = ref.read(authProvider.notifier);
+    var authNotifier = ref.read(authProvider.notifier);
     try {
       await authNotifier.signInWithFacebook();
       if (mounted) {
-        context.go('/home');
+        context.go("/home");
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(SnackBar(content: Text('Facebook sign-in failed: $e')));
+        ).showSnackBar(SnackBar(content: Text("Facebook sign-in failed: $e")));
       }
     }
   }
 
   void _handleForgotPassword() {
     // Navigate to the Forgot Password screen where user can request a reset link
-    context.go('/forgot-password');
+    context.go("/forgot-password");
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  Widget build(BuildContext context) => Scaffold(
       backgroundColor: AppColors.offWhite,
       body: SafeArea(
         child: SingleChildScrollView(
@@ -326,15 +325,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         ),
       ),
     );
-  }
 }
 
 class _SocialLoginButton extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final Color backgroundColor;
-  final Color textColor;
-  final VoidCallback onPressed;
 
   const _SocialLoginButton({
     required this.icon,
@@ -343,10 +336,14 @@ class _SocialLoginButton extends StatelessWidget {
     required this.textColor,
     required this.onPressed,
   });
+  final IconData icon;
+  final String label;
+  final Color backgroundColor;
+  final Color textColor;
+  final VoidCallback onPressed;
 
   @override
-  Widget build(BuildContext context) {
-    return SizedBox(
+  Widget build(BuildContext context) => SizedBox(
       height: 48,
       child: OutlinedButton.icon(
         onPressed: onPressed,
@@ -367,5 +364,14 @@ class _SocialLoginButton extends StatelessWidget {
         ),
       ),
     );
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<IconData>('icon', icon));
+    properties.add(StringProperty('label', label));
+    properties.add(ColorProperty('backgroundColor', backgroundColor));
+    properties.add(ColorProperty('textColor', textColor));
+    properties.add(ObjectFlagProperty<VoidCallback>.has('onPressed', onPressed));
   }
 }

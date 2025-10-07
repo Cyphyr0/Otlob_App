@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'app_colors.dart';
-import 'app_typography.dart';
-import 'app_spacing.dart';
-import 'app_radius.dart';
+import "package:flutter/material.dart";
+import "package:flutter/services.dart";
+import "app_colors.dart";
+import "app_typography.dart";
+import "app_spacing.dart";
+import "app_radius.dart";
 
 /// Shadcn-Inspired Design System for Otlob App
 ///
@@ -15,8 +15,7 @@ class ShadcnTheme {
   ShadcnTheme._();
 
   /// Get the Shadcn-inspired theme data configured for Otlob
-  static ThemeData get shadcnTheme {
-    return ThemeData(
+  static ThemeData get shadcnTheme => ThemeData(
       // Use Material 3
       useMaterial3: true,
 
@@ -68,7 +67,6 @@ class ShadcnTheme {
       inputDecorationTheme: inputDecorationTheme,
       appBarTheme: appBarTheme,
     );
-  }
 
   /// Elevated Button Theme (Primary buttons)
   static ElevatedButtonThemeData get elevatedButtonTheme =>
@@ -192,8 +190,7 @@ class ShadcnTheme {
     VoidCallback? onPressed,
     bool enabled = true,
     EdgeInsets? padding,
-  }) {
-    return ElevatedButton(
+  }) => ElevatedButton(
       onPressed: enabled ? onPressed : null,
       style: ElevatedButton.styleFrom(
         backgroundColor: enabled ? AppColors.logoRed : AppColors.lightGray,
@@ -204,7 +201,6 @@ class ShadcnTheme {
       ),
       child: child,
     );
-  }
 
   /// Utility method to create secondary buttons
   static Widget secondaryButton({
@@ -212,8 +208,7 @@ class ShadcnTheme {
     VoidCallback? onPressed,
     bool enabled = true,
     EdgeInsets? padding,
-  }) {
-    return ElevatedButton(
+  }) => ElevatedButton(
       onPressed: enabled ? onPressed : null,
       style: ElevatedButton.styleFrom(
         backgroundColor: enabled ? AppColors.primaryGold : AppColors.lightGray,
@@ -224,7 +219,6 @@ class ShadcnTheme {
       ),
       child: child,
     );
-  }
 
   /// Utility method to create outline buttons
   static Widget outlineButton({
@@ -232,8 +226,7 @@ class ShadcnTheme {
     VoidCallback? onPressed,
     bool enabled = true,
     EdgeInsets? padding,
-  }) {
-    return OutlinedButton(
+  }) => OutlinedButton(
       onPressed: enabled ? onPressed : null,
       style: OutlinedButton.styleFrom(
         foregroundColor: AppColors.logoRed,
@@ -244,15 +237,13 @@ class ShadcnTheme {
       ),
       child: child,
     );
-  }
 
   /// Utility method to create Shadcn-style cards
   static Widget shadcnCard({
     required Widget child,
     EdgeInsets? padding,
     EdgeInsets? margin,
-  }) {
-    return Card(
+  }) => Card(
       elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: AppRadius.cardRadius,
@@ -261,7 +252,6 @@ class ShadcnTheme {
       margin: margin ?? EdgeInsets.zero,
       child: Padding(padding: padding ?? AppSpacing.allMd, child: child),
     );
-  }
 
   /// Utility method to create Shadcn-style text fields
   static Widget shadcnTextField({
@@ -271,8 +261,7 @@ class ShadcnTheme {
     bool obscureText = false,
     TextInputType? keyboardType,
     String? Function(String?)? validator,
-  }) {
-    return TextFormField(
+  }) => TextFormField(
       controller: controller,
       obscureText: obscureText,
       keyboardType: keyboardType,
@@ -310,5 +299,4 @@ class ShadcnTheme {
         ),
       ),
     );
-  }
 }

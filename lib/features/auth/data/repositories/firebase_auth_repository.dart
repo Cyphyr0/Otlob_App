@@ -1,10 +1,12 @@
-import 'package:logger/logger.dart';
-import 'package:otlob_app/core/errors/failures.dart';
-import 'package:otlob_app/features/auth/data/datasources/firebase_auth_datasource.dart';
-import 'package:otlob_app/features/auth/domain/entities/user.dart';
-import 'package:otlob_app/features/auth/domain/repositories/auth_repository.dart';
+import "package:logger/logger.dart";
+import "../../../../core/errors/failures.dart";
+import "../datasources/firebase_auth_datasource.dart";
+import "../../domain/entities/user.dart";
+import "../../domain/repositories/auth_repository.dart";
 
 class FirebaseAuthRepository implements AuthRepository {
+
+  FirebaseAuthRepository(this._dataSource);
   final FirebaseAuthDataSource _dataSource;
 
   // Expose password reset for provider
@@ -12,58 +14,56 @@ class FirebaseAuthRepository implements AuthRepository {
     await _dataSource.sendPasswordResetEmail(email);
   }
 
-  FirebaseAuthRepository(this._dataSource);
-
   @override
   Future<void> sendOTP(String phoneNumber) async {
     try {
       await _dataSource.sendOTP(phoneNumber);
     } catch (e) {
-      throw AuthFailure(message: 'Failed to send OTP: $e');
+      throw AuthFailure(message: "Failed to send OTP: $e");
     }
   }
 
   @override
   Future<User> verifyOTP(String otp, String phoneNumber) async {
     try {
-      final user = await _dataSource.verifyOTP(otp, phoneNumber);
+      var user = await _dataSource.verifyOTP(otp, phoneNumber);
       await saveUser(user); // Save after verification
       return user;
     } catch (e) {
-      throw AuthFailure(message: 'Verification failed: $e');
+      throw AuthFailure(message: "Verification failed: $e");
     }
   }
 
   @override
   Future<User> signInWithGoogle() async {
     try {
-      final user = await _dataSource.signInWithGoogle();
+      var user = await _dataSource.signInWithGoogle();
       await saveUser(user);
       return user;
     } catch (e) {
-      throw AuthFailure(message: 'Google sign-in failed: $e');
+      throw AuthFailure(message: "Google sign-in failed: $e");
     }
   }
 
   @override
   Future<User> signInWithFacebook() async {
     try {
-      final user = await _dataSource.signInWithFacebook();
+      var user = await _dataSource.signInWithFacebook();
       await saveUser(user);
       return user;
     } catch (e) {
-      throw AuthFailure(message: 'Facebook sign-in failed: $e');
+      throw AuthFailure(message: "Facebook sign-in failed: $e");
     }
   }
 
   @override
   Future<User> signInWithEmail(String email, String password) async {
     try {
-      final user = await _dataSource.signInWithEmail(email, password);
+      var user = await _dataSource.signInWithEmail(email, password);
       await saveUser(user);
       return user;
     } catch (e) {
-      throw AuthFailure(message: 'Email sign-in failed: $e');
+      throw AuthFailure(message: "Email sign-in failed: $e");
     }
   }
 
@@ -74,11 +74,11 @@ class FirebaseAuthRepository implements AuthRepository {
     String password,
   ) async {
     try {
-      final user = await _dataSource.signUpWithEmail(name, email, password);
+      var user = await _dataSource.signUpWithEmail(name, email, password);
       await saveUser(user);
       return user;
     } catch (e) {
-      throw AuthFailure(message: 'Email sign-up failed: $e');
+      throw AuthFailure(message: "Email sign-up failed: $e");
     }
   }
 
@@ -133,7 +133,7 @@ class FirebaseAuthRepository implements AuthRepository {
     try {
       await _dataSource.logout();
     } catch (e) {
-      throw AuthFailure(message: 'Logout failed: $e');
+      throw AuthFailure(message: "Logout failed: $e");
     }
   }
 
@@ -142,7 +142,7 @@ class FirebaseAuthRepository implements AuthRepository {
     try {
       return _dataSource.getCurrentUser();
     } catch (e) {
-      throw AuthFailure(message: 'Failed to get current user: $e');
+      throw AuthFailure(message: "Failed to get current user: $e");
     }
   }
 
@@ -150,7 +150,16 @@ class FirebaseAuthRepository implements AuthRepository {
   Future<void> saveUser(User user) async {
     // Mock save - in real, use Firestore or Drift
     // For now, print to console
-    Logger().i('Mock saving user to local DB: ${user.name} (${user.email})');
+    Logger().i("Mock saving user to local DB: ${user.name} (${user.email})");
     // To avoid type conflict, skip actual DB insert for mock
+  }
+
+  @override
+  Future<void> sendEmailVerification() async {
+    try {
+      await _dataSource.sendEmailVerification();
+    } catch (e) {
+      throw AuthFailure(message: "Failed to send email verification: $e");
+    }
   }
 }

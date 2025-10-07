@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import "package:flutter/material.dart";
 
 /// Otlob Design System
 /// Foundation for consistent UI/UX across the app
@@ -24,22 +24,22 @@ class OtlobDesignSystem {
   // SPACING SYSTEM - 8pt Grid
   // =========================================
 
-  static const double xs = 4.0;
-  static const double sm = 8.0;
-  static const double md = 16.0;
-  static const double lg = 24.0;
-  static const double xl = 32.0;
-  static const double xxl = 48.0;
+  static const double xs = 4;
+  static const double sm = 8;
+  static const double md = 16;
+  static const double lg = 24;
+  static const double xl = 32;
+  static const double xxl = 48;
 
   // =========================================
   // BORDER RADIUS SYSTEM
   // =========================================
 
-  static const double radiusSm = 4.0;
-  static const double radiusMd = 8.0;
-  static const double radiusLg = 12.0;
-  static const double radiusXl = 16.0;
-  static const double radiusRound = 999.0;
+  static const double radiusSm = 4;
+  static const double radiusMd = 8;
+  static const double radiusLg = 12;
+  static const double radiusXl = 16;
+  static const double radiusRound = 999;
 
   // =========================================
   // SHADOWS - Elevation System
@@ -193,22 +193,18 @@ class OtlobDesignSystem {
   // =========================================
 
   /// Create a themed Text widget
-  static Text themedText(String text, TextStyle style, {TextAlign? textAlign}) {
-    return Text(
+  static Text themedText(String text, TextStyle style, {TextAlign? textAlign}) => Text(
       text,
       style: style,
       textAlign: textAlign,
     );
-  }
 
   /// Create a themed Icon
-  static Icon themedIcon(IconData icon, {Color? color, double? size}) {
-    return Icon(
+  static Icon themedIcon(IconData icon, {Color? color, double? size}) => Icon(
       icon,
       color: color ?? textSecondary,
       size: size ?? 24,
     );
-  }
 
   /// Standard spacing sized box
   static SizedBox spacing(double height) => SizedBox(height: height);

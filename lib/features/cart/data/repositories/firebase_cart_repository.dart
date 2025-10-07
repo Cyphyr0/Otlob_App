@@ -1,16 +1,14 @@
-import 'package:otlob_app/core/services/firebase/firebase_firestore_service.dart';
-import 'package:otlob_app/features/cart/domain/entities/cart_item.dart';
-import 'package:otlob_app/features/cart/domain/repositories/cart_repository.dart';
+import "../../../../core/services/firebase/firebase_firestore_service.dart";
+import "../../domain/entities/cart_item.dart";
+import "../../domain/repositories/cart_repository.dart";
 
 class FirebaseCartRepository implements CartRepository {
-  final FirebaseFirestoreService _firestoreService;
 
   FirebaseCartRepository(this._firestoreService);
+  final FirebaseFirestoreService _firestoreService;
 
   @override
-  Future<List<CartItem>> getCartItems(String userId) async {
-    return await _firestoreService.getCartItems(userId);
-  }
+  Future<List<CartItem>> getCartItems(String userId) async => await _firestoreService.getCartItems(userId);
 
   @override
   Future<void> addToCart(String userId, CartItem item) async {
@@ -38,9 +36,9 @@ class FirebaseCartRepository implements CartRepository {
 
   @override
   Future<double> getCartTotal(String userId) async {
-    final items = await getCartItems(userId);
+    var items = await getCartItems(userId);
     return items.fold<double>(
-      0.0,
+      0,
       (total, item) => total + (item.price * item.quantity),
     );
   }

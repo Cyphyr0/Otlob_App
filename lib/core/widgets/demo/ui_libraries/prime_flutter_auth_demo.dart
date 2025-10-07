@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../theme/app_colors.dart';
-import '../../../theme/app_spacing.dart';
-import '../../../theme/app_typography.dart';
+import "package:flutter/material.dart";
+import "package:flutter_screenutil/flutter_screenutil.dart";
+import "../../../theme/app_colors.dart";
+import "../../../theme/app_spacing.dart";
+import "../../../theme/app_typography.dart";
 
 class PrimeFlutterAuthDemo extends StatefulWidget {
   const PrimeFlutterAuthDemo({super.key});
@@ -41,8 +41,8 @@ class _PrimeFlutterAuthDemoState extends State<PrimeFlutterAuthDemo> {
           SnackBar(
             content: Text(
               _isLogin
-                  ? 'Prime Flutter Login Successful'
-                  : 'Prime Flutter Account Created',
+                  ? "Prime Flutter Login Successful"
+                  : "Prime Flutter Account Created",
             ),
             backgroundColor: AppColors.logoRed,
           ),
@@ -52,8 +52,7 @@ class _PrimeFlutterAuthDemoState extends State<PrimeFlutterAuthDemo> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  Widget build(BuildContext context) => Scaffold(
       backgroundColor: AppColors.offWhite,
       appBar: AppBar(
         title: Text(
@@ -385,5 +384,4 @@ class _PrimeFlutterAuthDemoState extends State<PrimeFlutterAuthDemo> {
         ),
       ),
     );
-  }
 }

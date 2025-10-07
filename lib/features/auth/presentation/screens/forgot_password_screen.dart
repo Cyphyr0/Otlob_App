@@ -1,11 +1,11 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:otlob_app/core/theme/app_colors.dart';
-import 'package:otlob_app/core/theme/app_typography.dart';
-import 'package:otlob_app/core/theme/app_spacing.dart';
-import 'package:otlob_app/core/widgets/buttons/primary_button.dart';
-import 'package:otlob_app/core/widgets/inputs/custom_text_field.dart';
-import 'package:otlob_app/features/auth/presentation/providers/auth_provider.dart';
+import "package:flutter/material.dart";
+import "package:flutter_riverpod/flutter_riverpod.dart";
+import "../../../../core/theme/app_colors.dart";
+import "../../../../core/theme/app_typography.dart";
+import "../../../../core/theme/app_spacing.dart";
+import "../../../../core/widgets/buttons/primary_button.dart";
+import "../../../../core/widgets/inputs/custom_text_field.dart";
+import "../providers/auth_provider.dart";
 
 // Note: This widget uses Riverpod to call the password reset provider method.
 
@@ -33,29 +33,29 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
       _emailError = null;
     });
 
-    final email = _emailController.text.trim();
+    var email = _emailController.text.trim();
     if (email.isEmpty) {
-      setState(() => _emailError = 'Please enter your email');
+      setState(() => _emailError = "Please enter your email");
       return;
     }
-    if (!RegExp(r"^[\w-.]+@([\w-]+\.)+[\w-]{2,4}").hasMatch(email)) {
-      setState(() => _emailError = 'Please enter a valid email');
+    if (!RegExp(r'^[\w-.]+@([\w-]+\.)+[\w-]{2,4}').hasMatch(email)) {
+      setState(() => _emailError = "Please enter a valid email");
       return;
     }
 
     setState(() => _isLoading = true);
     try {
-      final notifier = ref.read(authProvider.notifier);
+      var notifier = ref.read(authProvider.notifier);
       await notifier.sendPasswordResetEmail(email);
       if (!mounted) return;
       setState(() => _isLoading = false);
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: Text('Password reset', style: AppTypography.titleMedium),
-          content: Text('If that email exists we sent a reset link.'),
+          title: Text("Password reset", style: AppTypography.titleMedium),
+          content: const Text("If that email exists we sent a reset link."),
           actions: [
-            PrimaryButton(text: 'OK', onPressed: () => Navigator.pop(context)),
+            PrimaryButton(text: "OK", onPressed: () => Navigator.pop(context)),
           ],
         ),
       );
@@ -64,7 +64,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
       setState(() => _isLoading = false);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Failed to send reset link: $e'),
+          content: Text("Failed to send reset link: $e"),
           backgroundColor: AppColors.error,
         ),
       );
@@ -72,8 +72,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  Widget build(BuildContext context) => Scaffold(
       backgroundColor: AppColors.offWhite,
       appBar: AppBar(
         title: Text(
@@ -132,5 +131,4 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
         ),
       ),
     );
-  }
 }

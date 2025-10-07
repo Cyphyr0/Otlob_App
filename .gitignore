@@ -133,3 +133,9 @@ poetry.lock
 .cursor/
 .windsurf/
 .cline/
+
+# MCP server directories (local development only)
+C\357\200\272UsershishamDocumentsClineMCPfetch-mcp/
+
+# Screen examples and feature assets (local development only)
+assets/Screens&Features Examples/

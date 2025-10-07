@@ -1,3 +1,40 @@
 description: This file stores settings for Dart & Flutter DevTools.
 documentation: https://docs.flutter.dev/tools/devtools/extensions#configure-extension-enablement-states
+
 extensions:
+  # Performance & Memory
+  - performance: true
+  - memory: true
+
+  # Debugging & Inspection
+  - inspector: true
+  - debugger: true
+  - network: true
+  - logging: true
+
+  # Widget & Layout
+  - widget_inspector: true
+
+  # App Size & Performance
+  - app_size: true
+
+  # Provider & State Management
+  - provider: true
+
+  # Firebase Services
+  - firebase_performance: true
+  - firebase_auth: true
+
+# Global DevTools settings
+global:
+  # Show structured errors in console
+  structured_errors: true
+
+  # Enable verbose logging for debugging
+  verbose_logging: false
+
+  # Maximum log line length
+  max_log_line_length: 1000
+
+  # Enable timeline events recording
+  timeline_events: true

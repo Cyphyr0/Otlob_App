@@ -1,10 +1,10 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
-import 'package:shadcn_ui/shadcn_ui.dart';
+import "package:flutter/material.dart";
+import "package:flutter_screenutil/flutter_screenutil.dart";
+import "package:go_router/go_router.dart";
+import "package:shadcn_ui/shadcn_ui.dart";
 
-import 'package:otlob_app/core/utils/shared_prefs_helper.dart';
-import 'package:otlob_app/features/onboarding/presentation/widgets/onboarding_page.dart';
+import "../../../../core/utils/shared_prefs_helper.dart";
+import "../widgets/onboarding_page.dart";
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -19,20 +19,20 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   final List<Map<String, String>> _pages = [
     {
-      'title': 'Discover Amazing Food',
-      'subtitle': 'Explore restaurants and cuisines from local heroes',
+      "title": "Discover Amazing Food",
+      "subtitle": "Explore restaurants and cuisines from local heroes",
     },
     {
-      'title': 'Lightning Fast Delivery',
-      'subtitle': 'Get your order in 30 mins or less with real-time tracking',
+      "title": "Lightning Fast Delivery",
+      "subtitle": "Get your order in 30 mins or less with real-time tracking",
     },
     {
-      'title': 'Safe & Secure',
-      'subtitle': 'Contactless delivery and secure payment options',
+      "title": "Safe & Secure",
+      "subtitle": "Contactless delivery and secure payment options",
     },
     {
-      'title': 'Exclusive Offers',
-      'subtitle': 'Daily deals, discounts, and loyalty rewards await',
+      "title": "Exclusive Offers",
+      "subtitle": "Daily deals, discounts, and loyalty rewards await",
     },
   ];
 
@@ -98,7 +98,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    var theme = Theme.of(context);
 
     return Scaffold(
       body: Stack(
@@ -111,13 +111,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               });
             },
             itemCount: _pages.length,
-            itemBuilder: (context, index) {
-              return OnboardingPage(
+            itemBuilder: (context, index) => OnboardingPage(
                 title: _pages[index]['title']!,
                 subtitle: _pages[index]['subtitle']!,
                 imageWidget: _buildImageWidget(index),
-              );
-            },
+              ),
           ),
           // Bottom indicators and buttons
           Positioned(
@@ -154,13 +152,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         alignment: Alignment.centerLeft,
                         child: ShadButton.outline(
                           child: Text(
-                            'Skip',
+                            "Skip",
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 16.sp,
                             ),
                           ),
-                          onPressed: () => _navigateToAuth(),
+                          onPressed: _navigateToAuth,
                         ),
                       ),
                     ),
@@ -176,8 +174,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                 ),
                           child: Text(
                             _currentPage == _pages.length - 1
-                                ? 'Start'
-                                : 'Next',
+                                ? "Start"
+                                : "Next",
                             style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
@@ -196,10 +194,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     );
   }
 
-  void _navigateToAuth() async {
+  Future<void> _navigateToAuth() async {
     await SharedPrefsHelper.setOnboardingCompleted(true);
     if (mounted) {
-      context.go('/auth');
+      context.go("/auth");
     }
   }
 }

@@ -1,54 +1,65 @@
-import 'sensitive_config.dart';
-
+/// Application configuration for different environments
 class AppConfig {
   static const String appName = 'Otlob';
-  static const String appVersion = '1.0.0';
-  static const String baseUrl =
-      'https://api.otlob.com'; // Replace with actual API URL
-  static const String termsUrl =
-      'https://otlob.com/terms'; // Replace with actual terms URL
-  static const String privacyUrl =
-      'https://otlob.com/privacy'; // Replace with actual privacy URL
+  static const String version = '1.0.0';
 
-  // API Endpoints
-  static const String loginEndpoint = '/auth/login';
-  static const String registerEndpoint = '/auth/register';
-  static const String resetPasswordEndpoint = '/auth/reset-password';
-  static const String userProfileEndpoint = '/user/profile';
+  // Environment configuration
+  static const bool isDevelopment = bool.fromEnvironment('dart.vm.product') == false;
+  static const bool isProduction = bool.fromEnvironment('dart.vm.product');
 
-  // Shared Preferences Keys
-  static const String tokenKey = 'auth_token';
-  static const String userIdKey = 'user_id';
-  static const String isFirstRunKey = 'is_first_run';
-  static const String isDarkModeKey = 'is_dark_mode';
-  static const String languageKey = 'language';
+  // API Configuration
+  static const String baseUrl = isProduction
+      ? 'https://api.otlob.com'
+      : 'https://dev-api.otlob.com';
 
-  // Default Values
-  static const String defaultLanguage = 'ar';
-  static const bool defaultDarkMode = false;
+  // Network timeouts (in milliseconds)
+  static const int connectionTimeout = 30000;
+  static const int receiveTimeout = 30000;
 
-  // Timeouts
-  static const int connectionTimeout = 30000; // milliseconds
-  static const int receiveTimeout = 30000; // milliseconds
+  // Feature flags
+  static const bool enableLogging = !isProduction;
+  static const bool enableCrashReporting = true;
+  static const bool enableAnalytics = true;
 
-  // Cache Config
-  static const int maxCacheAge = 7; // days
-  static const int maxCacheSize = 100; // MB
+  // Third-party service configurations
+  static const String googleMapsApiKey = String.fromEnvironment(
+    'GOOGLE_MAPS_API_KEY',
+    defaultValue: 'YOUR_GOOGLE_MAPS_API_KEY',
+  );
 
-  // Firebase Config - Now handled by firebase_keys.dart for platform-specific keys
-  static const String firebaseProjectId = 'otlob-6e081';
-  static const String firebaseMessagingSenderId = '450554002301';
+  static const String mapboxApiKey = String.fromEnvironment(
+    'MAPBOX_API_KEY',
+    defaultValue: 'YOUR_MAPBOX_API_KEY',
+  );
 
-  // Map Config
-  static String get googleMapsApiKey => SensitiveConfig.googleMapsApiKey;
-  static const double defaultLatitude = 30.0444; // Cairo's latitude
-  static const double defaultLongitude = 31.2357; // Cairo's longitude
+  static const String paymobApiKey = String.fromEnvironment(
+    'PAYMOB_API_KEY',
+    defaultValue: 'YOUR_PAYMOB_API_KEY',
+  );
 
-  // Payment Config
-  static String get payMobApiKey => SensitiveConfig.payMobApiKey;
-  static String get payMobFrameId => SensitiveConfig.payMobFrameId;
-  static String get payMobIntegrationId => SensitiveConfig.payMobIntegrationId;
+  static const String unsplashAccessKey = String.fromEnvironment(
+    'UNSPLASH_ACCESS_KEY',
+    defaultValue: 'YOUR_UNSPLASH_ACCESS_KEY',
+  );
 
-  // Unsplash Config
-  static String get unsplashAccessKey => SensitiveConfig.unsplashAccessKey;
+  // Firebase configuration
+  static const String firebaseProjectId = String.fromEnvironment(
+    'FIREBASE_PROJECT_ID',
+    defaultValue: 'otlob-app',
+  );
+
+  // App Store configuration
+  static const String appStoreId = 'YOUR_APP_STORE_ID';
+  static const String playStoreId = 'com.otlob.app';
+
+  // Social login configuration
+  static const String googleClientId = String.fromEnvironment(
+    'GOOGLE_CLIENT_ID',
+    defaultValue: 'YOUR_GOOGLE_CLIENT_ID',
+  );
+
+  static const String facebookAppId = String.fromEnvironment(
+    'FACEBOOK_APP_ID',
+    defaultValue: 'YOUR_FACEBOOK_APP_ID',
+  );
 }

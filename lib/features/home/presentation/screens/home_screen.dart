@@ -1,22 +1,25 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:geocoding/geocoding.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:go_router/go_router.dart';
-import 'package:otlob_app/core/providers.dart';
-import 'package:otlob_app/core/theme/app_colors.dart';
-import 'package:otlob_app/core/theme/app_radius.dart';
-import 'package:otlob_app/core/theme/app_shadows.dart';
-import 'package:otlob_app/core/theme/app_spacing.dart';
-import 'package:otlob_app/core/theme/app_typography.dart';
-import 'package:otlob_app/core/theme/otlob_design_system.dart';
-import 'package:otlob_app/core/widgets/branding/otlob_logo.dart';
-import 'package:otlob_app/core/widgets/buttons/primary_button.dart';
-import 'package:otlob_app/core/widgets/buttons/secondary_button.dart';
-import 'package:otlob_app/core/widgets/cards/restaurant_card.dart';
-import 'package:otlob_app/core/widgets/inputs/search_bar_widget.dart';
-import 'package:otlob_app/features/home/domain/entities/restaurant.dart';
+import "package:flutter/material.dart";
+import "package:flutter_riverpod/flutter_riverpod.dart";
+import "package:flutter_screenutil/flutter_screenutil.dart";
+import "package:geocoding/geocoding.dart";
+import "package:geolocator/geolocator.dart";
+import "package:go_router/go_router.dart";
+import "../../../../core/providers.dart";
+import "../../../../core/theme/app_colors.dart";
+import "../../../../core/theme/app_radius.dart";
+import "../../../../core/theme/app_shadows.dart";
+import "../../../../core/theme/app_spacing.dart";
+import "../../../../core/theme/app_typography.dart";
+import "../../../../core/theme/otlob_design_system.dart";
+import "../../../../core/widgets/branding/otlob_logo.dart";
+import "../../../../core/widgets/buttons/primary_button.dart";
+import "../../../../core/widgets/buttons/secondary_button.dart";
+import "../../../../core/widgets/cards/restaurant_card.dart";
+import "../../../../core/widgets/inputs/search_bar_widget.dart";
+import "../../../../core/widgets/prayer_times/prayer_times_card.dart";
+import "../../domain/entities/restaurant.dart";
+import "../../../location/presentation/screens/map_screen.dart";
+import "../../../surprise_me/presentation/screens/surprise_me_screen.dart";
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -29,9 +32,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   String? _currentAddress;
   bool _isLocating = false;
   String? _locationError;
-  String _selectedCuisine = 'All';
-  double _minRating = 0.0;
-  String _priceRange = 'All';
+  String _selectedCuisine = "All";
+  double _minRating = 0;
+  String _priceRange = "All";
 
   final ScrollController _scrollController = ScrollController();
   bool _isLoadingMore = false;
@@ -43,20 +46,20 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       _locationError = null;
     });
     try {
-      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      var serviceEnabled = await Geolocator.isLocationServiceEnabled();
       if (!serviceEnabled) {
         setState(() {
-          _locationError = 'Location services are disabled.';
+          _locationError = "Location services are disabled.";
         });
         return;
       }
 
-      LocationPermission permission = await Geolocator.checkPermission();
+      var permission = await Geolocator.checkPermission();
       if (permission == LocationPermission.denied) {
         permission = await Geolocator.requestPermission();
         if (permission == LocationPermission.denied) {
           setState(() {
-            _locationError = 'Location permissions are denied.';
+            _locationError = "Location permissions are denied.";
             _isLocating = false;
           });
           return;
@@ -64,29 +67,29 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       }
       if (permission == LocationPermission.deniedForever) {
         setState(() {
-          _locationError = 'Location permissions are permanently denied.';
+          _locationError = "Location permissions are permanently denied.";
           _isLocating = false;
         });
         return;
       }
 
-      final position = await Geolocator.getCurrentPosition(
+      var position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high,
       );
-      List<Placemark> placemarks = await placemarkFromCoordinates(
+      var placemarks = await placemarkFromCoordinates(
         position.latitude,
         position.longitude,
       );
-      String address = placemarks.isNotEmpty
-          ? '${placemarks.first.street}, ${placemarks.first.subAdministrativeArea ?? placemarks.first.locality}, ${placemarks.first.country}'
-          : 'Unknown location';
+      var address = placemarks.isNotEmpty
+          ? "${placemarks.first.street}, ${placemarks.first.subAdministrativeArea ?? placemarks.first.locality}, ${placemarks.first.country}"
+          : "Unknown location";
       setState(() {
         _currentAddress = address;
         _isLocating = false;
       });
     } catch (e) {
       setState(() {
-        _locationError = 'Failed to get location: $e';
+        _locationError = "Failed to get location: $e";
         _isLocating = false;
       });
     }
@@ -94,19 +97,19 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final restaurantsAsync = ref.watch(filteredRestaurantsProvider);
-    final hiddenGemsAsync = ref.watch(hiddenGemsProvider);
-    final localHeroesAsync = ref.watch(localHeroesProvider);
+    var restaurantsAsync = ref.watch(filteredRestaurantsProvider);
+    var hiddenGemsAsync = ref.watch(hiddenGemsProvider);
+    var localHeroesAsync = ref.watch(localHeroesProvider);
 
     return restaurantsAsync.when(
-      loading: () => _buildLoadingState(),
+      loading: _buildLoadingState,
       error: (error, stack) => Scaffold(
-        body: Center(child: Text('Error loading restaurants: $error')),
+        body: Center(child: Text("Error loading restaurants: $error")),
       ),
       data: (restaurants) {
         // Apply client-side filters
         var filtered = restaurants;
-        if (_selectedCuisine != 'All') {
+        if (_selectedCuisine != "All") {
           filtered = filtered
               .where((r) => r.cuisine == _selectedCuisine)
               .toList();
@@ -114,24 +117,23 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         if (_minRating > 0) {
           filtered = filtered.where((r) => r.rating >= _minRating).toList();
         }
-        if (_priceRange != 'All') {
+        if (_priceRange != "All") {
           switch (_priceRange) {
-            case 'Budget':
+            case "Budget":
               filtered = filtered.where((r) => r.priceLevel <= 1.5).toList();
               break;
-            case 'Premium':
+            case "Premium":
               filtered = filtered.where((r) => r.priceLevel > 1.5).toList();
               break;
           }
         }
 
         return hiddenGemsAsync.when(
-          loading: () => _buildLoadingState(),
+          loading: _buildLoadingState,
           error: (error, stack) => Scaffold(
-            body: Center(child: Text('Error loading hidden gems: $error')),
+            body: Center(child: Text("Error loading hidden gems: $error")),
           ),
-          data: (hiddenGems) {
-            return localHeroesAsync.when(
+          data: (hiddenGems) => localHeroesAsync.when(
               loading: () => _buildLoadingState(),
               error: (error, stack) => Scaffold(
                 body: Center(child: Text('Error loading local heroes: $error')),
@@ -153,6 +155,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
                             // Search Bar
                             _buildSearchSection(),
+
+                            SizedBox(height: AppSpacing.md),
+
+                            // Prayer Times Card (Egyptian Market Feature)
+                            const PrayerTimesCard(),
 
                             SizedBox(height: AppSpacing.md),
 
@@ -186,8 +193,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   ),
                 );
               },
-            );
-          },
+            ),
         );
       },
     );
@@ -220,11 +226,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     setState(() => _isLoadingMore = true);
 
     try {
-      final currentPage = ref.read(restaurantsPageProvider);
-      final nextPage = currentPage + 1;
+      var currentPage = ref.read(restaurantsPageProvider);
+      var nextPage = currentPage + 1;
 
-      final repository = ref.read(homeRepositoryProvider);
-      final newData = await repository.getRestaurantsPaginated(
+      var repository = ref.read(homeRepositoryProvider);
+      var newData = await repository.getRestaurantsPaginated(
         page: nextPage,
         limit: 20,
       );
@@ -238,7 +244,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       }
     } catch (e) {
       // Handle error - could show snackbar
-      debugPrint('Error loading more data: $e');
+      debugPrint("Error loading more data: $e");
     } finally {
       if (mounted) {
         setState(() => _isLoadingMore = false);
@@ -246,8 +252,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     }
   }
 
-  Widget _buildAppBar() {
-    return SliverAppBar(
+  Widget _buildAppBar() => SliverAppBar(
       backgroundColor: Theme.of(context).colorScheme.surface,
       elevation: 0,
       pinned: true,
@@ -363,10 +368,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         ),
       ),
     );
-  }
 
-  Widget _buildSearchSection() {
-    return Padding(
+  Widget _buildSearchSection() => Padding(
       padding: EdgeInsets.symmetric(horizontal: AppSpacing.screenPadding),
       child: SearchBarWidget(
         hintText: 'Search restaurants or dishes...',
@@ -379,47 +382,74 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         },
       ),
     );
-  }
 
-  Widget _buildActionButtons(List<Restaurant> restaurants) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: AppSpacing.screenPadding),
-      child: Row(
-        children: [
-          // Filter Button
-          Expanded(
-            child: SecondaryButton(
-              text: 'Filter',
-              icon: Icons.tune,
-              onPressed: () => _showFilterBottomSheet(context),
-            ),
-          ),
+  Widget _buildActionButtons(List<Restaurant> restaurants) => Padding(
+       padding: EdgeInsets.symmetric(horizontal: AppSpacing.screenPadding),
+       child: Column(
+         children: [
+           // Map View Button
+           SizedBox(
+             width: double.infinity,
+             child: PrimaryButton(
+               text: 'View on Map',
+               icon: Icons.map,
+               onPressed: () {
+                 // Navigate to map screen
+                 Navigator.of(context).push(
+                   MaterialPageRoute(
+                     builder: (context) => const MapDiscoveryScreen(),
+                   ),
+                 );
+               },
+             ),
+           ),
 
-          SizedBox(width: AppSpacing.md),
+           SizedBox(height: AppSpacing.md),
 
-          // Surprise Me Button
-          Expanded(
-            flex: 2,
-            child: PrimaryButton(
-              text: 'Surprise Me!',
-              icon: Icons.casino,
-              onPressed: restaurants.isEmpty
-                  ? null
-                  : () {
-                      final random = List<Restaurant>.from(restaurants)
-                        ..shuffle();
-                      final selected = random.first;
-                      context.go('/restaurant/${selected.id}');
-                    },
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+           // Filter and Surprise Me Buttons
+           Row(
+             children: [
+               // Filter Button
+               Expanded(
+                 child: SecondaryButton(
+                   text: 'Filter',
+                   icon: Icons.tune,
+                   onPressed: () => _showFilterBottomSheet(context),
+                 ),
+               ),
 
-  Widget _buildHiddenGemsSection(List<Restaurant> restaurants) {
-    return Column(
+               SizedBox(width: AppSpacing.md),
+
+               // Surprise Me Button
+               Expanded(
+                 flex: 2,
+                 child: PrimaryButton(
+                   text: 'Surprise Me!',
+                   icon: Icons.casino,
+                   onPressed: restaurants.isEmpty
+                       ? null
+                       : () {
+                           Navigator.of(context).push(
+                             MaterialPageRoute(
+                               builder: (context) => SurpriseMeScreen(
+                                 restaurants: restaurants,
+                                 // TODO: Pass actual user preferences, favorites, and tawseya data
+                                 userPreferences: null, // ref.watch(userPreferencesProvider),
+                                 userFavorites: [], // ref.watch(favoritesProvider),
+                                 tawseyaItems: [], // ref.watch(tawseyaItemsProvider),
+                               ),
+                             ),
+                           );
+                         },
+                 ),
+               ),
+             ],
+           ),
+         ],
+       ),
+     );
+
+  Widget _buildHiddenGemsSection(List<Restaurant> restaurants) => Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Section Header
@@ -471,7 +501,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   width: 260.w,
                   child: RestaurantCard(
                     restaurantId: restaurant.id,
-                    imageUrl: restaurant.imageUrl,
+                    imageUrl: restaurant.imageUrl ?? '',
                     name: restaurant.name,
                     cuisine: restaurant.cuisine,
                     rating: restaurant.rating,
@@ -479,12 +509,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     reviewCount: 0,
                     tawseyaCount: restaurant.tawseyaCount,
                     isFavorite: ref
-                        .watch(favoritesProvider)
-                        .any((r) => r.id == restaurant.id),
+                        .watch(isFavoriteProvider(restaurant.id)),
                     onTap: () => context.go('/restaurant/${restaurant.id}'),
                     onFavoriteTap: () => ref
                         .read(favoritesProvider.notifier)
-                        .toggleFavorite(restaurant),
+                        .toggleFavorite(
+                          restaurant.id,
+                          restaurant.name,
+                          restaurant.imageUrl,
+                        ),
                   ),
                 ),
               );
@@ -493,10 +526,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         ),
       ],
     );
-  }
 
-  Widget _buildLocalHeroesSection(List<Restaurant> restaurants) {
-    return Column(
+  Widget _buildLocalHeroesSection(List<Restaurant> restaurants) => Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Section Header
@@ -554,12 +585,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   reviewCount: null,
                   tawseyaCount: restaurant.tawseyaCount,
                   isFavorite: ref
-                      .watch(favoritesProvider)
-                      .any((r) => r.id == restaurant.id),
+                      .watch(isFavoriteProvider(restaurant.id)),
                   onTap: () => context.go('/restaurant/${restaurant.id}'),
                   onFavoriteTap: () => ref
                       .read(favoritesProvider.notifier)
-                      .toggleFavorite(restaurant),
+                      .toggleFavorite(
+                        restaurant.id,
+                        restaurant.name,
+                        restaurant.imageUrl,
+                      ),
                 ),
               );
             },
@@ -567,10 +601,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         ),
       ],
     );
-  }
 
-  Widget _buildAllRestaurantsSection(List<Restaurant> restaurants) {
-    return Padding(
+  Widget _buildAllRestaurantsSection(List<Restaurant> restaurants) => Padding(
       padding: EdgeInsets.symmetric(horizontal: AppSpacing.screenPadding),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -648,16 +680,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         ],
       ),
     );
-  }
 
   Widget _buildCompactRestaurantCard(Restaurant restaurant) {
-    final isFavorite = ref
-        .watch(favoritesProvider)
-        .any((r) => r.id == restaurant.id);
+    var isFavorite = ref
+        .watch(isFavoriteProvider(restaurant.id));
 
     return GestureDetector(
-      onTap: () => context.go('/restaurant/${restaurant.id}'),
-      child: Container(
+      onTap: () => context.go("/restaurant/${restaurant.id}"),
+      child: DecoratedBox(
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.surface,
           borderRadius: AppRadius.cardRadius,
@@ -677,31 +707,27 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   child:
                       restaurant.imageUrl != null &&
                           restaurant.imageUrl!.isNotEmpty
-                      ? (restaurant.imageUrl!.startsWith('assets/')
+                      ? (restaurant.imageUrl!.startsWith("assets/")
                             ? Image.asset(
                                 restaurant.imageUrl!.replaceFirst(
-                                  'assets/',
-                                  '',
+                                  "assets/",
+                                  "",
                                 ),
                                 fit: BoxFit.cover,
-                                errorBuilder: (context, error, stackTrace) {
-                                  return Icon(
+                                errorBuilder: (context, error, stackTrace) => Icon(
                                     Icons.restaurant,
                                     size: 32.sp,
                                     color: AppColors.gray,
-                                  );
-                                },
+                                  ),
                               )
                             : Image.network(
                                 restaurant.imageUrl!,
                                 fit: BoxFit.cover,
-                                errorBuilder: (context, error, stackTrace) {
-                                  return Icon(
+                                errorBuilder: (context, error, stackTrace) => Icon(
                                     Icons.restaurant,
                                     size: 32.sp,
                                     color: AppColors.gray,
-                                  );
-                                },
+                                  ),
                               ))
                       : Icon(
                           Icons.restaurant,
@@ -774,7 +800,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         SizedBox(width: 2.w),
                         Expanded(
                           child: Text(
-                            '${restaurant.distance.toStringAsFixed(1)} km',
+                            "${restaurant.distance.toStringAsFixed(1)} km",
                             style: AppTypography.bodySmall.copyWith(
                               color: Theme.of(
                                 context,
@@ -793,7 +819,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           ),
                           SizedBox(width: 2.w),
                           Text(
-                            '${restaurant.tawseyaCount}',
+                            "${restaurant.tawseyaCount}",
                             style: AppTypography.bodySmall.copyWith(
                               color: AppColors.primaryGold,
                               fontWeight: FontWeight.w600,
@@ -812,7 +838,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               GestureDetector(
                 onTap: () => ref
                     .read(favoritesProvider.notifier)
-                    .toggleFavorite(restaurant),
+                    .toggleFavorite(
+                      restaurant.id,
+                      restaurant.name,
+                      restaurant.imageUrl,
+                    ),
                 child: Container(
                   padding: EdgeInsets.all(AppSpacing.xs),
                   decoration: BoxDecoration(
@@ -856,8 +886,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     );
   }
 
-  Widget _buildLoadingState() {
-    return Scaffold(
+  Widget _buildLoadingState() => Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       body: CustomScrollView(
         controller: _scrollController,
@@ -1048,16 +1077,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         ],
       ),
     );
-  }
 }
 
 class FilterBottomSheet extends StatefulWidget {
-  final String selectedCuisine;
-  final double minRating;
-  final String priceRange;
-  final Function(String) onCuisineChanged;
-  final Function(double) onRatingChanged;
-  final Function(String) onPriceChanged;
 
   const FilterBottomSheet({
     super.key,
@@ -1068,9 +1090,26 @@ class FilterBottomSheet extends StatefulWidget {
     required this.onRatingChanged,
     required this.onPriceChanged,
   });
+  final String selectedCuisine;
+  final double minRating;
+  final String priceRange;
+  final Function(String) onCuisineChanged;
+  final Function(double) onRatingChanged;
+  final Function(String) onPriceChanged;
 
   @override
   State<FilterBottomSheet> createState() => _FilterBottomSheetState();
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(StringProperty('selectedCuisine', selectedCuisine));
+    properties.add(DoubleProperty('minRating', minRating));
+    properties.add(StringProperty('priceRange', priceRange));
+    properties.add(ObjectFlagProperty<Function(String p1)>.has('onCuisineChanged', onCuisineChanged));
+    properties.add(ObjectFlagProperty<Function(double p1)>.has('onRatingChanged', onRatingChanged));
+    properties.add(ObjectFlagProperty<Function(String p1)>.has('onPriceChanged', onPriceChanged));
+  }
 }
 
 class _FilterBottomSheetState extends State<FilterBottomSheet> {
@@ -1087,8 +1126,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
+  Widget build(BuildContext context) => Container(
       padding: EdgeInsets.all(AppSpacing.lg),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -1287,5 +1325,4 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
         ],
       ),
     );
-  }
 }

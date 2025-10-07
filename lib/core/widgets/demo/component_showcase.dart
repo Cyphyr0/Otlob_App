@@ -1,32 +1,28 @@
-import 'package:flutter/material.dart';
-import '../branding/otlob_logo.dart';
-import '../buttons/primary_button.dart';
-import '../buttons/secondary_button.dart';
-import '../buttons/icon_button_custom.dart';
-import '../cards/restaurant_card.dart';
-import '../cards/dish_card.dart';
-import '../badges/tawseya_badge.dart';
-import '../badges/cuisine_tag.dart';
-import '../inputs/search_bar_widget.dart';
-import '../inputs/custom_text_field.dart';
-import '../states/loading_indicator.dart';
-import '../states/empty_state.dart';
-import 'ui_libraries/shadcn_auth_demo.dart';
-import 'ui_libraries/getwidget_auth_demo.dart';
-import 'ui_libraries/prime_flutter_auth_demo.dart';
-import 'ui_libraries/prokit_auth_demo.dart';
-import 'ui_libraries/prokit_home_demo.dart';
-import 'ui_libraries/modern_home_demo.dart';
-import '../../theme/app_colors.dart';
-import '../../theme/app_spacing.dart';
-import '../../theme/app_typography.dart';
+import "package:flutter/material.dart";
+import "package:flutter/foundation.dart";
+import "../branding/otlob_logo.dart";
+import "../buttons/primary_button.dart";
+import "../buttons/secondary_button.dart";
+import "../buttons/icon_button_custom.dart";
+import "../cards/restaurant_card.dart";
+import "../cards/dish_card.dart";
+import "../badges/tawseya_badge.dart";
+import "../badges/cuisine_tag.dart";
+import "../inputs/search_bar_widget.dart";
+import "../inputs/custom_text_field.dart";
+import "../states/loading_indicator.dart";
+import "../states/empty_state.dart";
+import "ui_libraries/shadcn_auth_demo.dart";
+import "ui_libraries/getwidget_auth_demo.dart";
+import "ui_libraries/prime_flutter_auth_demo.dart";
+import "ui_libraries/prokit_auth_demo.dart";
+import "ui_libraries/prokit_home_demo.dart";
+import "ui_libraries/modern_home_demo.dart";
+import "../../theme/app_colors.dart";
+import "../../theme/app_spacing.dart";
+import "../../theme/app_typography.dart";
 
 class _SocialLoginButton extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final Color backgroundColor;
-  final Color textColor;
-  final VoidCallback onPressed;
 
   const _SocialLoginButton({
     required this.icon,
@@ -35,10 +31,14 @@ class _SocialLoginButton extends StatelessWidget {
     required this.textColor,
     required this.onPressed,
   });
+  final IconData icon;
+  final String label;
+  final Color backgroundColor;
+  final Color textColor;
+  final VoidCallback onPressed;
 
   @override
-  Widget build(BuildContext context) {
-    return SizedBox(
+  Widget build(BuildContext context) => SizedBox(
       height: 48,
       child: OutlinedButton.icon(
         onPressed: onPressed,
@@ -59,6 +59,15 @@ class _SocialLoginButton extends StatelessWidget {
         ),
       ),
     );
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<IconData>('icon', icon));
+    properties.add(StringProperty('label', label));
+    properties.add(ColorProperty('backgroundColor', backgroundColor));
+    properties.add(ColorProperty('textColor', textColor));
+    properties.add(ObjectFlagProperty<VoidCallback>.has('onPressed', onPressed));
   }
 }
 
@@ -90,8 +99,7 @@ class _ComponentShowcaseScreenState extends State<ComponentShowcaseScreen> {
   Widget _buildSection({
     required String title,
     required List<Widget> children,
-  }) {
-    return Column(
+  }) => Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
@@ -112,10 +120,8 @@ class _ComponentShowcaseScreenState extends State<ComponentShowcaseScreen> {
         SizedBox(height: AppSpacing.lg),
       ],
     );
-  }
 
-  Widget _buildCard(Widget child) {
-    return Container(
+  Widget _buildCard(Widget child) => Container(
       margin: EdgeInsets.symmetric(
         horizontal: AppSpacing.md,
         vertical: AppSpacing.xs,
@@ -134,11 +140,9 @@ class _ComponentShowcaseScreenState extends State<ComponentShowcaseScreen> {
       ),
       child: child,
     );
-  }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  Widget build(BuildContext context) => Scaffold(
       backgroundColor: AppColors.offWhite,
       appBar: AppBar(
         title: const Text('Component Showcase'),
@@ -814,5 +818,4 @@ class _ComponentShowcaseScreenState extends State<ComponentShowcaseScreen> {
         ],
       ),
     );
-  }
 }

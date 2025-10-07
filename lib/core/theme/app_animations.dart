@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import "package:flutter/material.dart";
 
 /// Animation System
 ///
@@ -123,65 +123,55 @@ class AppAnimations {
   static Widget fadeTransition({
     required Animation<double> animation,
     required Widget child,
-  }) {
-    return FadeTransition(opacity: animation, child: child);
-  }
+  }) => FadeTransition(opacity: animation, child: child);
 
   /// Slide transition builder (from bottom)
   static Widget slideTransitionFromBottom({
     required Animation<double> animation,
     required Widget child,
-  }) {
-    return SlideTransition(
+  }) => SlideTransition(
       position: Tween<Offset>(
         begin: const Offset(0, 1),
         end: Offset.zero,
       ).animate(CurvedAnimation(parent: animation, curve: easeOut)),
       child: child,
     );
-  }
 
   /// Slide transition builder (from right)
   static Widget slideTransitionFromRight({
     required Animation<double> animation,
     required Widget child,
-  }) {
-    return SlideTransition(
+  }) => SlideTransition(
       position: Tween<Offset>(
         begin: const Offset(1, 0),
         end: Offset.zero,
       ).animate(CurvedAnimation(parent: animation, curve: easeOut)),
       child: child,
     );
-  }
 
   /// Scale transition builder
   static Widget scaleTransition({
     required Animation<double> animation,
     required Widget child,
     Alignment alignment = Alignment.center,
-  }) {
-    return ScaleTransition(
+  }) => ScaleTransition(
       scale: CurvedAnimation(parent: animation, curve: easeOut),
       alignment: alignment,
       child: child,
     );
-  }
 
   /// Combined fade + slide transition
   static Widget fadeSlideTransition({
     required Animation<double> animation,
     required Widget child,
     Offset begin = const Offset(0, 0.1),
-  }) {
-    return SlideTransition(
+  }) => SlideTransition(
       position: Tween<Offset>(
         begin: begin,
         end: Offset.zero,
       ).animate(CurvedAnimation(parent: animation, curve: easeOut)),
       child: FadeTransition(opacity: animation, child: child),
     );
-  }
 
   // ============================================================================
   // PAGE ROUTE BUILDERS
@@ -191,23 +181,20 @@ class AppAnimations {
   static PageRouteBuilder<T> fadeRoute<T>({
     required Widget page,
     Duration? duration,
-  }) {
-    return PageRouteBuilder<T>(
+  }) => PageRouteBuilder<T>(
       pageBuilder: (context, animation, secondaryAnimation) => page,
       transitionDuration: duration ?? normal,
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
         return FadeTransition(opacity: animation, child: child);
       },
     );
-  }
 
   /// Slide page route (from right)
   static PageRouteBuilder<T> slideRoute<T>({
     required Widget page,
     Duration? duration,
     Offset begin = const Offset(1, 0),
-  }) {
-    return PageRouteBuilder<T>(
+  }) => PageRouteBuilder<T>(
       pageBuilder: (context, animation, secondaryAnimation) => page,
       transitionDuration: duration ?? normal,
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
@@ -220,14 +207,12 @@ class AppAnimations {
         );
       },
     );
-  }
 
   /// Scale page route
   static PageRouteBuilder<T> scaleRoute<T>({
     required Widget page,
     Duration? duration,
-  }) {
-    return PageRouteBuilder<T>(
+  }) => PageRouteBuilder<T>(
       pageBuilder: (context, animation, secondaryAnimation) => page,
       transitionDuration: duration ?? normal,
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
@@ -240,5 +225,4 @@ class AppAnimations {
         );
       },
     );
-  }
 }

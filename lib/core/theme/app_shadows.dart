@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
-import 'app_colors.dart';
+import "package:flutter/material.dart";
+import "app_colors.dart";
 
 /// Shadow & Elevation System
 ///
@@ -208,8 +208,7 @@ class AppShadows {
     required Offset offset,
     required double blurRadius,
     double spreadRadius = 0,
-  }) {
-    return [
+  }) => [
       BoxShadow(
         color: color,
         offset: offset,
@@ -217,7 +216,6 @@ class AppShadows {
         spreadRadius: spreadRadius,
       ),
     ];
-  }
 
   /// No shadow - For flat designs
   static List<BoxShadow> get none => [];

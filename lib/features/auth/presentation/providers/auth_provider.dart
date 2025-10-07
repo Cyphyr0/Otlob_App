@@ -1,15 +1,15 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:otlob_app/core/services/service_locator.dart';
-import 'package:otlob_app/core/utils/shared_prefs_helper.dart';
-import 'package:otlob_app/features/auth/data/repositories/firebase_auth_repository.dart';
-import 'package:otlob_app/features/auth/domain/entities/user.dart';
-import 'package:otlob_app/features/auth/domain/repositories/auth_repository.dart';
+import "package:flutter_riverpod/flutter_riverpod.dart";
+import "../../../../core/services/service_locator.dart";
+import "../../../../core/utils/shared_prefs_helper.dart";
+import "../../data/repositories/firebase_auth_repository.dart";
+import "../../domain/entities/user.dart";
+import "../../domain/repositories/auth_repository.dart";
 
 class AuthStateNotifier extends AsyncNotifier<User?> {
   @override
   Future<User?> build() async {
-    final repository = ref.read(authRepositoryProvider);
-    final user = repository.getCurrentUser();
+    var repository = ref.read(authRepositoryProvider);
+    var user = repository.getCurrentUser();
     if (user != null) {
       return user;
     }
@@ -19,7 +19,7 @@ class AuthStateNotifier extends AsyncNotifier<User?> {
   Future<void> sendOTP(String phoneNumber) async {
     state = const AsyncValue.loading();
     try {
-      final repository = ref.read(authRepositoryProvider);
+      var repository = ref.read(authRepositoryProvider);
       await repository.sendOTP(phoneNumber);
       state = AsyncValue.data(state.value);
     } catch (e, st) {
@@ -31,8 +31,8 @@ class AuthStateNotifier extends AsyncNotifier<User?> {
     state = const AsyncValue.loading();
     try {
       // Call repository to verify OTP
-      final repository = ref.read(authRepositoryProvider);
-      final user = await repository.verifyOTP(otp, phoneNumber);
+      var repository = ref.read(authRepositoryProvider);
+      var user = await repository.verifyOTP(otp, phoneNumber);
 
       // Set authenticated
       await SharedPrefsHelper.setAuthenticated(true);
@@ -45,7 +45,7 @@ class AuthStateNotifier extends AsyncNotifier<User?> {
   Future<void> logout() async {
     state = const AsyncValue.loading();
     try {
-      final repository = ref.read(authRepositoryProvider);
+      var repository = ref.read(authRepositoryProvider);
       await repository.logout();
       state = const AsyncValue.data(null);
     } catch (e, st) {
@@ -57,8 +57,8 @@ class AuthStateNotifier extends AsyncNotifier<User?> {
   Future<void> signInWithGoogle() async {
     state = const AsyncValue.loading();
     try {
-      final repository = ref.read(authRepositoryProvider);
-      final user = await repository.signInWithGoogle();
+      var repository = ref.read(authRepositoryProvider);
+      var user = await repository.signInWithGoogle();
       state = AsyncValue.data(user);
     } catch (e, st) {
       state = AsyncValue.error(e, st);
@@ -68,8 +68,8 @@ class AuthStateNotifier extends AsyncNotifier<User?> {
   Future<void> signInWithFacebook() async {
     state = const AsyncValue.loading();
     try {
-      final repository = ref.read(authRepositoryProvider);
-      final user = await repository.signInWithFacebook();
+      var repository = ref.read(authRepositoryProvider);
+      var user = await repository.signInWithFacebook();
       state = AsyncValue.data(user);
     } catch (e, st) {
       state = AsyncValue.error(e, st);
@@ -80,8 +80,8 @@ class AuthStateNotifier extends AsyncNotifier<User?> {
   Future<void> signInWithEmail(String email, String password) async {
     state = const AsyncValue.loading();
     try {
-      final repository = ref.read(authRepositoryProvider);
-      final user = await repository.signInWithEmail(email, password);
+      var repository = ref.read(authRepositoryProvider);
+      var user = await repository.signInWithEmail(email, password);
       state = AsyncValue.data(user);
     } catch (e, st) {
       state = AsyncValue.error(e, st);
@@ -96,8 +96,8 @@ class AuthStateNotifier extends AsyncNotifier<User?> {
   ) async {
     state = const AsyncValue.loading();
     try {
-      final repository = ref.read(authRepositoryProvider);
-      final user = await repository.signUpWithEmail(name, email, password);
+      var repository = ref.read(authRepositoryProvider);
+      var user = await repository.signUpWithEmail(name, email, password);
       state = AsyncValue.data(user);
     } catch (e, st) {
       state = AsyncValue.error(e, st);
@@ -172,27 +172,50 @@ class AuthStateNotifier extends AsyncNotifier<User?> {
     state = const AsyncValue.loading();
     try {
       // Use the repository's method if available, otherwise access service directly
-      final repository = ref.read(authRepositoryProvider);
+      var repository = ref.read(authRepositoryProvider);
       if (repository is FirebaseAuthRepository) {
         // Use a public method for password reset if available
         await (repository as dynamic).sendPasswordResetEmail(email);
       } else {
-        throw Exception('Password reset not implemented for this repository');
+        throw Exception("Password reset not implemented for this repository");
       }
       state = AsyncValue.data(state.value);
     } catch (e, st) {
       state = AsyncValue.error(e, st);
     }
   }
+
+  // Email verification
+  Future<void> sendEmailVerification() async {
+    state = const AsyncValue.loading();
+    try {
+      var repository = ref.read(authRepositoryProvider);
+      if (repository is FirebaseAuthRepository) {
+        await (repository as dynamic).sendEmailVerification();
+      } else {
+        throw Exception("Email verification not implemented for this repository");
+      }
+      state = AsyncValue.data(state.value);
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+    }
+  }
+
+  Future<bool> isEmailVerified() async {
+    try {
+      var repository = ref.read(authRepositoryProvider);
+      return repository.getCurrentUser()?.isVerified ?? false;
+    } catch (e) {
+      return false;
+    }
+  }
 }
 
 // Providers
 final authProvider = AsyncNotifierProvider<AuthStateNotifier, User?>(
-  () => AuthStateNotifier(),
+  AuthStateNotifier.new,
 );
 
-final phoneProvider = StateProvider<String>((ref) => '');
+final phoneProvider = StateProvider<String>((ref) => "");
 
-final authRepositoryProvider = Provider<AuthRepository>((ref) {
-  return getIt<FirebaseAuthRepository>();
-});
+final authRepositoryProvider = Provider<AuthRepository>((ref) => getIt<FirebaseAuthRepository>());

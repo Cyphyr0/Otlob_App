@@ -1,16 +1,16 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
-import 'package:otlob_app/core/theme/app_colors.dart';
-import 'package:otlob_app/core/theme/app_typography.dart';
-import 'dart:math' as math;
-import 'package:otlob_app/core/theme/app_spacing.dart';
-import 'package:otlob_app/core/utils/shared_prefs_helper.dart';
-import 'package:otlob_app/core/widgets/branding/otlob_logo.dart';
-import 'package:otlob_app/core/widgets/buttons/primary_button.dart';
-import 'package:otlob_app/core/widgets/buttons/secondary_button.dart';
-import 'package:otlob_app/core/widgets/inputs/custom_text_field.dart';
-import 'package:otlob_app/features/auth/presentation/providers/auth_provider.dart';
+import "package:flutter/material.dart";
+import "package:flutter_riverpod/flutter_riverpod.dart";
+import "package:go_router/go_router.dart";
+import "../../../../core/theme/app_colors.dart";
+import "../../../../core/theme/app_typography.dart";
+import "dart:math" as math;
+import "../../../../core/theme/app_spacing.dart";
+import "../../../../core/utils/shared_prefs_helper.dart";
+import "../../../../core/widgets/branding/otlob_logo.dart";
+import "../../../../core/widgets/buttons/primary_button.dart";
+import "../../../../core/widgets/buttons/secondary_button.dart";
+import "../../../../core/widgets/inputs/custom_text_field.dart";
+import "../providers/auth_provider.dart";
 
 class AuthWrapper extends ConsumerStatefulWidget {
   const AuthWrapper({super.key});
@@ -36,8 +36,7 @@ class _AuthWrapperState extends ConsumerState<AuthWrapper>
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  Widget build(BuildContext context) => Scaffold(
       backgroundColor: AppColors.offWhite,
       body: SafeArea(
         child: LayoutBuilder(
@@ -101,7 +100,6 @@ class _AuthWrapperState extends ConsumerState<AuthWrapper>
         ),
       ),
     );
-  }
 }
 
 // Login Tab Content
@@ -133,27 +131,27 @@ class _LoginTabState extends ConsumerState<_LoginTab> {
     });
 
     if (_emailController.text.trim().isEmpty) {
-      setState(() => _emailError = 'Please enter your email');
+      setState(() => _emailError = "Please enter your email");
       return;
     }
     if (_passwordController.text.isEmpty) {
-      setState(() => _passwordError = 'Please enter your password');
+      setState(() => _passwordError = "Please enter your password");
       return;
     }
 
     setState(() => _isLoading = true);
-    final authNotifier = ref.read(authProvider.notifier);
+    var authNotifier = ref.read(authProvider.notifier);
     try {
       await authNotifier.signInWithEmail(
         _emailController.text.trim(),
         _passwordController.text,
       );
-      if (mounted) context.go('/home');
+      if (mounted) context.go("/home");
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(SnackBar(content: Text('Login failed: $e')));
+        ).showSnackBar(SnackBar(content: Text("Login failed: $e")));
       }
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -161,36 +159,35 @@ class _LoginTabState extends ConsumerState<_LoginTab> {
   }
 
   Future<void> _signInWithGoogle() async {
-    final authNotifier = ref.read(authProvider.notifier);
+    var authNotifier = ref.read(authProvider.notifier);
     try {
       await authNotifier.signInWithGoogle();
-      if (mounted) context.go('/home');
+      if (mounted) context.go("/home");
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(SnackBar(content: Text('Google sign-in failed: $e')));
+        ).showSnackBar(SnackBar(content: Text("Google sign-in failed: $e")));
       }
     }
   }
 
   Future<void> _signInWithFacebook() async {
-    final authNotifier = ref.read(authProvider.notifier);
+    var authNotifier = ref.read(authProvider.notifier);
     try {
       await authNotifier.signInWithFacebook();
-      if (mounted) context.go('/home');
+      if (mounted) context.go("/home");
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(SnackBar(content: Text('Facebook sign-in failed: $e')));
+        ).showSnackBar(SnackBar(content: Text("Facebook sign-in failed: $e")));
       }
     }
   }
 
   @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
+  Widget build(BuildContext context) => SingleChildScrollView(
       padding: AppSpacing.allLg,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -288,7 +285,6 @@ class _LoginTabState extends ConsumerState<_LoginTab> {
         ],
       ),
     );
-  }
 }
 
 // Signup Tab Content
@@ -329,27 +325,27 @@ class _SignupTabState extends ConsumerState<_SignupTab> {
       _confirmPasswordError = null;
     });
 
-    bool hasError = false;
+    var hasError = false;
 
     if (_nameController.text.trim().isEmpty) {
-      setState(() => _nameError = 'Please enter your name');
+      setState(() => _nameError = "Please enter your name");
       hasError = true;
     }
     if (_emailController.text.trim().isEmpty) {
-      setState(() => _emailError = 'Please enter your email');
+      setState(() => _emailError = "Please enter your email");
       hasError = true;
     }
     if (_passwordController.text.isEmpty) {
-      setState(() => _passwordError = 'Please enter a password');
+      setState(() => _passwordError = "Please enter a password");
       hasError = true;
     }
     if (_confirmPasswordController.text != _passwordController.text) {
-      setState(() => _confirmPasswordError = 'Passwords do not match');
+      setState(() => _confirmPasswordError = "Passwords do not match");
       hasError = true;
     }
     if (!_acceptedTerms) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please accept terms and conditions')),
+        const SnackBar(content: Text("Please accept terms and conditions")),
       );
       hasError = true;
     }
@@ -357,56 +353,115 @@ class _SignupTabState extends ConsumerState<_SignupTab> {
     if (hasError) return;
 
     setState(() => _isLoading = true);
-    final authNotifier = ref.read(authProvider.notifier);
+    var authNotifier = ref.read(authProvider.notifier);
     try {
-      await authNotifier.signUpWithEmail(
-        _nameController.text.trim(),
-        _emailController.text.trim(),
-        _passwordController.text,
-      );
-      if (mounted) context.go('/home');
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Sign up failed: $e')));
-      }
-    } finally {
-      if (mounted) setState(() => _isLoading = false);
-    }
+       await authNotifier.signUpWithEmail(
+         _nameController.text.trim(),
+         _emailController.text.trim(),
+         _passwordController.text,
+       );
+
+       // Send email verification after successful signup
+       try {
+         await authNotifier.sendEmailVerification();
+         if (mounted) {
+           _showEmailVerificationDialog();
+         }
+       } catch (verificationError) {
+         // Email verification failed but signup succeeded
+         if (mounted) {
+           ScaffoldMessenger.of(context).showSnackBar(
+             SnackBar(
+               content: Text("Account created! Please check your email to verify your account."),
+               backgroundColor: Colors.orange,
+             ),
+           );
+           context.go("/home");
+         }
+       }
+     } catch (e) {
+       if (mounted) {
+         ScaffoldMessenger.of(
+           context,
+         ).showSnackBar(SnackBar(content: Text("Sign up failed: $e")));
+       }
+     } finally {
+       if (mounted) setState(() => _isLoading = false);
+     }
   }
 
   Future<void> _signInWithGoogle() async {
-    final authNotifier = ref.read(authProvider.notifier);
+    var authNotifier = ref.read(authProvider.notifier);
     try {
       await authNotifier.signInWithGoogle();
-      if (mounted) context.go('/home');
+      if (mounted) context.go("/home");
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(SnackBar(content: Text('Google sign-in failed: $e')));
+        ).showSnackBar(SnackBar(content: Text("Google sign-in failed: $e")));
       }
     }
   }
 
   Future<void> _signInWithFacebook() async {
-    final authNotifier = ref.read(authProvider.notifier);
+    var authNotifier = ref.read(authProvider.notifier);
     try {
       await authNotifier.signInWithFacebook();
-      if (mounted) context.go('/home');
+      if (mounted) context.go("/home");
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(SnackBar(content: Text('Facebook sign-in failed: $e')));
+        ).showSnackBar(SnackBar(content: Text("Facebook sign-in failed: $e")));
       }
     }
   }
 
+  void _showEmailVerificationDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        title: Text(
+          "Verify your email",
+          style: AppTypography.titleLarge.copyWith(color: AppColors.primaryDark),
+        ),
+        content: Text(
+          "We've sent a verification link to your email address. Please check your email and click the link to verify your account before continuing.",
+          style: AppTypography.bodyMedium.copyWith(color: AppColors.gray),
+        ),
+        actions: [
+          PrimaryButton(
+            text: "Continue to Home",
+            onPressed: () {
+              Navigator.of(context).pop();
+              context.go("/home");
+            },
+          ),
+          SecondaryButton(
+            text: "Resend verification",
+            onPressed: () async {
+              try {
+                var authNotifier = ref.read(authProvider.notifier);
+                await authNotifier.sendEmailVerification();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text("Verification email sent!")),
+                );
+              } catch (e) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text("Failed to resend: $e")),
+                );
+              }
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
+  Widget build(BuildContext context) => SingleChildScrollView(
       padding: AppSpacing.allLg,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -553,24 +608,22 @@ class _SignupTabState extends ConsumerState<_SignupTab> {
         ],
       ),
     );
-  }
 }
 
 // Social Button Widget
 class _SocialButton extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final VoidCallback onPressed;
 
   const _SocialButton({
     required this.icon,
     required this.label,
     required this.onPressed,
   });
+  final IconData icon;
+  final String label;
+  final VoidCallback onPressed;
 
   @override
-  Widget build(BuildContext context) {
-    return SizedBox(
+  Widget build(BuildContext context) => SizedBox(
       height: 48,
       child: OutlinedButton.icon(
         onPressed: onPressed,
@@ -587,5 +640,12 @@ class _SocialButton extends StatelessWidget {
         ),
       ),
     );
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<IconData>('icon', icon));
+    properties.add(StringProperty('label', label));
+    properties.add(ObjectFlagProperty<VoidCallback>.has('onPressed', onPressed));
   }
 }

@@ -1,9 +1,10 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../theme/app_colors.dart';
-import '../../theme/app_typography.dart';
-import '../../theme/app_spacing.dart';
-import '../buttons/primary_button.dart';
+import "package:flutter/material.dart";
+import "package:flutter/foundation.dart";
+import "package:flutter_screenutil/flutter_screenutil.dart";
+import "../../theme/app_colors.dart";
+import "../../theme/app_typography.dart";
+import "../../theme/app_spacing.dart";
+import "../buttons/primary_button.dart";
 
 /// Empty State Component
 ///
@@ -38,23 +39,6 @@ import '../buttons/primary_button.dart';
 /// )
 /// ```
 class EmptyState extends StatelessWidget {
-  /// Icon to display
-  final IconData icon;
-
-  /// Title text
-  final String title;
-
-  /// Description message
-  final String message;
-
-  /// Action button text (optional)
-  final String? actionText;
-
-  /// Callback when action button is pressed
-  final VoidCallback? onAction;
-
-  /// Icon color
-  final Color? iconColor;
 
   const EmptyState({
     super.key,
@@ -149,10 +133,26 @@ class EmptyState extends StatelessWidget {
       iconColor: AppColors.error,
     );
   }
+  /// Icon to display
+  final IconData icon;
+
+  /// Title text
+  final String title;
+
+  /// Description message
+  final String message;
+
+  /// Action button text (optional)
+  final String? actionText;
+
+  /// Callback when action button is pressed
+  final VoidCallback? onAction;
+
+  /// Icon color
+  final Color? iconColor;
 
   @override
-  Widget build(BuildContext context) {
-    return Center(
+  Widget build(BuildContext context) => Center(
       child: Padding(
         padding: EdgeInsets.all(AppSpacing.xl),
         child: Column(
@@ -198,5 +198,15 @@ class EmptyState extends StatelessWidget {
         ),
       ),
     );
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<IconData>('icon', icon));
+    properties.add(StringProperty('title', title));
+    properties.add(StringProperty('message', message));
+    properties.add(StringProperty('actionText', actionText));
+    properties.add(ObjectFlagProperty<VoidCallback?>.has('onAction', onAction));
+    properties.add(ColorProperty('iconColor', iconColor));
   }
 }

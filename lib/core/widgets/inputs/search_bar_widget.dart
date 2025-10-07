@@ -1,12 +1,12 @@
-import 'dart:async';
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../theme/app_colors.dart';
-import '../../theme/app_typography.dart';
-import '../../theme/app_radius.dart';
-import '../../theme/app_spacing.dart';
-import '../../theme/app_shadows.dart';
-import '../../theme/app_animations.dart';
+import "dart:async";
+import "package:flutter/material.dart";
+import "package:flutter_screenutil/flutter_screenutil.dart";
+import "../../theme/app_colors.dart";
+import "../../theme/app_typography.dart";
+import "../../theme/app_radius.dart";
+import "../../theme/app_spacing.dart";
+import "../../theme/app_shadows.dart";
+import "../../theme/app_animations.dart";
 
 /// Search Bar Widget Component
 ///
@@ -45,6 +45,17 @@ import '../../theme/app_animations.dart';
 /// )
 /// ```
 class SearchBarWidget extends StatefulWidget {
+
+  const SearchBarWidget({
+    super.key,
+    this.onSearch,
+    this.onSubmitted,
+    this.onClear,
+    this.controller,
+    this.hintText = 'Search...',
+    this.debounceDuration = const Duration(milliseconds: 300),
+    this.autofocus = false,
+  });
   /// Callback when search query changes (after debounce)
   final ValueChanged<String>? onSearch;
 
@@ -66,19 +77,20 @@ class SearchBarWidget extends StatefulWidget {
   /// Auto focus on widget creation
   final bool autofocus;
 
-  const SearchBarWidget({
-    super.key,
-    this.onSearch,
-    this.onSubmitted,
-    this.onClear,
-    this.controller,
-    this.hintText = 'Search...',
-    this.debounceDuration = const Duration(milliseconds: 300),
-    this.autofocus = false,
-  });
-
   @override
   State<SearchBarWidget> createState() => _SearchBarWidgetState();
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(ObjectFlagProperty<ValueChanged<String>?>.has('onSearch', onSearch));
+    properties.add(ObjectFlagProperty<ValueChanged<String>?>.has('onSubmitted', onSubmitted));
+    properties.add(ObjectFlagProperty<VoidCallback?>.has('onClear', onClear));
+    properties.add(DiagnosticsProperty<TextEditingController?>('controller', controller));
+    properties.add(StringProperty('hintText', hintText));
+    properties.add(DiagnosticsProperty<Duration>('debounceDuration', debounceDuration));
+    properties.add(DiagnosticsProperty<bool>('autofocus', autofocus));
+  }
 }
 
 class _SearchBarWidgetState extends State<SearchBarWidget> {
@@ -111,7 +123,7 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
   }
 
   void _onTextChanged() {
-    final hasText = _controller.text.isNotEmpty;
+    var hasText = _controller.text.isNotEmpty;
     if (hasText != _hasText) {
       setState(() => _hasText = hasText);
     }
@@ -139,13 +151,12 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
       widget.onClear!();
     }
     if (widget.onSearch != null) {
-      widget.onSearch!('');
+      widget.onSearch!("");
     }
   }
 
   @override
-  Widget build(BuildContext context) {
-    return AnimatedContainer(
+  Widget build(BuildContext context) => AnimatedContainer(
       duration: AppAnimations.fast,
       curve: AppAnimations.easeOut,
       decoration: BoxDecoration(
@@ -188,5 +199,4 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
         textInputAction: TextInputAction.search,
       ),
     );
-  }
 }

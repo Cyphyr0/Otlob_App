@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../theme/app_colors.dart';
-import '../../theme/app_typography.dart';
-import '../../theme/app_spacing.dart';
-import '../branding/otlob_logo.dart';
+import "package:flutter/material.dart";
+import "package:flutter_screenutil/flutter_screenutil.dart";
+import "../../theme/app_colors.dart";
+import "../../theme/app_typography.dart";
+import "../../theme/app_spacing.dart";
+import "../branding/otlob_logo.dart";
 
 /// Loading Indicator Component
 ///
@@ -29,14 +29,6 @@ import '../branding/otlob_logo.dart';
 /// LoadingIndicator.linear()
 /// ```
 class LoadingIndicator extends StatelessWidget {
-  /// Loading message to display below indicator
-  final String? message;
-
-  /// Size of the loading indicator
-  final LoadingSize size;
-
-  /// Color of the spinner (defaults to accentOrange)
-  final Color? color;
 
   const LoadingIndicator({
     super.key,
@@ -56,10 +48,17 @@ class LoadingIndicator extends StatelessWidget {
   /// Linear progress indicator
   const LoadingIndicator.linear({super.key, this.message, this.color})
     : size = LoadingSize.medium;
+  /// Loading message to display below indicator
+  final String? message;
+
+  /// Size of the loading indicator
+  final LoadingSize size;
+
+  /// Color of the spinner (defaults to accentOrange)
+  final Color? color;
 
   @override
-  Widget build(BuildContext context) {
-    return Center(
+  Widget build(BuildContext context) => Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -75,11 +74,10 @@ class LoadingIndicator extends StatelessWidget {
         ],
       ),
     );
-  }
 
   Widget _buildIndicator() {
-    final indicatorColor = color ?? AppColors.accentOrange;
-    final indicatorSize = _getSize();
+    var indicatorColor = color ?? AppColors.accentOrange;
+    var indicatorSize = _getSize();
 
     return SizedBox(
       width: indicatorSize,
@@ -105,12 +103,20 @@ class LoadingIndicator extends StatelessWidget {
   double _getStrokeWidth() {
     switch (size) {
       case LoadingSize.small:
-        return 2.0;
+        return 2;
       case LoadingSize.medium:
-        return 3.0;
+        return 3;
       case LoadingSize.large:
-        return 4.0;
+        return 4;
     }
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(StringProperty('message', message));
+    properties.add(EnumProperty<LoadingSize>('size', size));
+    properties.add(ColorProperty('color', color));
   }
 }
 
@@ -118,14 +124,13 @@ class LoadingIndicator extends StatelessWidget {
 ///
 /// Shows an animated Otlob logo with loading message
 class LogoLoadingIndicator extends StatelessWidget {
+
+  const LogoLoadingIndicator({super.key, this.message});
   /// Loading message
   final String? message;
 
-  const LogoLoadingIndicator({super.key, this.message});
-
   @override
-  Widget build(BuildContext context) {
-    return Center(
+  Widget build(BuildContext context) => Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -150,6 +155,11 @@ class LogoLoadingIndicator extends StatelessWidget {
         ],
       ),
     );
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(StringProperty('message', message));
   }
 }
 
@@ -157,6 +167,13 @@ class LogoLoadingIndicator extends StatelessWidget {
 ///
 /// A thin progress bar, typically used at the top of screens
 class LinearLoadingIndicator extends StatelessWidget {
+
+  const LinearLoadingIndicator({
+    super.key,
+    this.value,
+    this.color,
+    this.backgroundColor,
+  });
   /// Progress value (0.0 to 1.0), null for indeterminate
   final double? value;
 
@@ -166,16 +183,8 @@ class LinearLoadingIndicator extends StatelessWidget {
   /// Background color
   final Color? backgroundColor;
 
-  const LinearLoadingIndicator({
-    super.key,
-    this.value,
-    this.color,
-    this.backgroundColor,
-  });
-
   @override
-  Widget build(BuildContext context) {
-    return LinearProgressIndicator(
+  Widget build(BuildContext context) => LinearProgressIndicator(
       value: value,
       valueColor: AlwaysStoppedAnimation<Color>(
         color ?? AppColors.accentOrange,
@@ -183,6 +192,13 @@ class LinearLoadingIndicator extends StatelessWidget {
       backgroundColor: backgroundColor ?? AppColors.lightGray.withOpacity(0.3),
       minHeight: 3.h,
     );
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DoubleProperty('value', value));
+    properties.add(ColorProperty('color', color));
+    properties.add(ColorProperty('backgroundColor', backgroundColor));
   }
 }
 

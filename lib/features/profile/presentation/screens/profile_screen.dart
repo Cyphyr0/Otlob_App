@@ -1,16 +1,21 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
-import 'package:otlob_app/core/theme/app_colors.dart';
-import 'package:otlob_app/core/theme/app_typography.dart';
-import 'package:otlob_app/core/theme/app_spacing.dart';
-import 'package:otlob_app/core/theme/app_radius.dart';
-import 'package:otlob_app/core/theme/app_shadows.dart';
-import 'package:otlob_app/core/widgets/branding/otlob_logo.dart';
-import 'package:otlob_app/core/widgets/buttons/primary_button.dart';
-import 'package:otlob_app/core/widgets/buttons/secondary_button.dart';
-import 'package:otlob_app/core/utils/shared_prefs_helper.dart';
+import "package:flutter/material.dart";
+import "package:flutter_riverpod/flutter_riverpod.dart";
+import "package:flutter_screenutil/flutter_screenutil.dart";
+import "package:go_router/go_router.dart";
+import "package:cached_network_image/cached_network_image.dart";
+import "../../../../core/theme/app_colors.dart";
+import "../../../../core/theme/app_typography.dart";
+import "../../../../core/theme/app_spacing.dart";
+import "../../../../core/theme/app_radius.dart";
+import "../../../../core/theme/app_shadows.dart";
+import "../../../../core/widgets/branding/otlob_logo.dart";
+import "../../../../core/widgets/buttons/primary_button.dart";
+import "../../../../core/widgets/buttons/secondary_button.dart";
+import "../../../../core/widgets/states/loading_indicator.dart";
+import "../../../../core/widgets/states/empty_state.dart";
+import "../providers/profile_provider.dart";
+import "../../domain/entities/profile.dart";
+import "notification_settings_screen.dart";
 
 class ProfileScreen extends ConsumerStatefulWidget {
   const ProfileScreen({super.key});
@@ -20,32 +25,25 @@ class ProfileScreen extends ConsumerStatefulWidget {
 }
 
 class _ProfileScreenState extends ConsumerState<ProfileScreen> {
-  bool _isAuthenticated = false;
-
   @override
   void initState() {
     super.initState();
-    _checkAuth();
-  }
-
-  Future<void> _checkAuth() async {
-    final isAuth = await SharedPrefsHelper.isAuthenticated();
-    if (mounted) {
-      setState(() => _isAuthenticated = isAuth);
-    }
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  Widget build(BuildContext context) => Scaffold(
       backgroundColor: AppColors.offWhite,
       appBar: _buildAppBar(),
-      body: _isAuthenticated ? _buildAuthenticatedView() : _buildGuestView(),
+      body: _buildBody(),
     );
+
+  Widget _buildBody() {
+    // For now, show a placeholder - this should be connected to actual auth state
+    // TODO: Connect to Firebase Auth state provider
+    return _buildGuestView();
   }
 
-  PreferredSizeWidget _buildAppBar() {
-    return AppBar(
+  PreferredSizeWidget _buildAppBar() => AppBar(
       backgroundColor: AppColors.offWhite,
       elevation: 0,
       title: Row(
@@ -62,10 +60,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         ],
       ),
     );
-  }
 
-  Widget _buildGuestView() {
-    return Center(
+  Widget _buildGuestView() => Center(
       child: Padding(
         padding: EdgeInsets.all(AppSpacing.xl),
         child: Column(
@@ -114,10 +110,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         ),
       ),
     );
-  }
 
-  Widget _buildAuthenticatedView() {
-    return SingleChildScrollView(
+  Widget _buildAuthenticatedView() => SingleChildScrollView(
       padding: EdgeInsets.all(AppSpacing.screenPadding),
       child: Column(
         children: [
@@ -206,7 +200,11 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             icon: Icons.notifications_outlined,
             title: 'Notifications',
             onTap: () {
-              // TODO: Navigate to notifications
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const NotificationSettingsScreen(),
+                ),
+              );
             },
           ),
           SizedBox(height: AppSpacing.sm),
@@ -241,9 +239,11 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             backgroundColor: AppColors.error,
             fullWidth: true,
             onPressed: () async {
-              await SharedPrefsHelper.setAuthenticated(false);
+              // TODO: Implement logout functionality with Firebase Auth
+              // await SharedPrefsHelper.setAuthenticated(false);
+              // For now, just navigate back to home
               if (mounted) {
-                setState(() => _isAuthenticated = false);
+                context.go('/home');
               }
             },
           ),
@@ -252,15 +252,12 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         ],
       ),
     );
-  }
 
   Widget _buildMenuItem({
     required IconData icon,
     required String title,
-    String? subtitle,
-    required VoidCallback onTap,
-  }) {
-    return GestureDetector(
+    required VoidCallback onTap, String? subtitle,
+  }) => GestureDetector(
       onTap: onTap,
       child: Container(
         padding: EdgeInsets.all(AppSpacing.md),
@@ -307,5 +304,4 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         ),
       ),
     );
-  }
 }

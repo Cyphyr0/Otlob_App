@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lottie/lottie.dart';
+import "package:flutter/material.dart";
+import "package:go_router/go_router.dart";
+import "package:flutter_screenutil/flutter_screenutil.dart";
+import "package:lottie/lottie.dart";
 
-import '../../../../core/theme/app_typography.dart';
+import "../../../../core/theme/app_typography.dart";
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -20,26 +20,26 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> _checkNavigation() async {
-    print('SplashScreen: Starting navigation check');
+    print("SplashScreen: Starting navigation check");
 
     // Simulate loading delay
     await Future.delayed(const Duration(seconds: 2));
 
-    print('SplashScreen: Navigation delay completed, navigating to onboarding');
+    print("SplashScreen: Navigation delay completed, navigating to onboarding");
 
     if (mounted) {
       // For debugging, always go to onboarding first
-      context.go('/onboarding');
+      context.go("/onboarding");
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    print('SplashScreen: Building splash screen widget');
-    final theme = Theme.of(context);
+    print("SplashScreen: Building splash screen widget");
+    var theme = Theme.of(context);
 
     return Scaffold(
-      body: Container(
+      body: DecoratedBox(
         decoration: BoxDecoration(color: theme.colorScheme.primary),
         child: Center(
           child: Column(
@@ -47,7 +47,7 @@ class _SplashScreenState extends State<SplashScreen> {
             children: [
               // Animated Otlob logo
               Lottie.asset(
-                'assets/animations/Otlob-white.json',
+                "assets/animations/Otlob-white.json",
                 width: 280.w,
                 height: 280.h,
                 fit: BoxFit.contain,
@@ -56,7 +56,7 @@ class _SplashScreenState extends State<SplashScreen> {
               ),
               SizedBox(height: 24.h),
               Text(
-                'Discover Authentic Food',
+                "Discover Authentic Food",
                 style: AppTypography.bodyLarge.copyWith(
                   color: theme.colorScheme.onPrimary.withValues(alpha: 0.9),
                   letterSpacing: 0.5,
