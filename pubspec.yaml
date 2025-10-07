@@ -113,6 +113,10 @@ dependencies:
   flutter_staggered_animations: ^1.1.1
   flutter_native_splash: ^2.4.4
   smooth_page_indicator: ^1.2.0+3
+  timezone: any
+  collection: any
+  crypto: any
+  http: any
 dev_dependencies:
  flutter_test:
    sdk: flutter
