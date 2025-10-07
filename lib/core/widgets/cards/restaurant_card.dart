@@ -1,124 +1,57 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:shimmer/shimmer.dart';
-import '../../theme/app_colors.dart';
-import '../../theme/app_typography.dart';
-import '../../theme/app_radius.dart';
-import '../../theme/app_spacing.dart';
-import '../../theme/app_shadows.dart';
-import '../../theme/app_animations.dart';
-import '../badges/tawseya_badge.dart';
-import '../badges/cuisine_tag.dart';
+import 'package:otlob_app/core/theme/otlob_design_system.dart';
 
-/// Restaurant Card Component
-///
-/// A featured card component displaying restaurant information with:
-/// - Image with gradient overlay
-/// - Restaurant name and rating
-/// - Tawseya badge
-/// - Cuisine tags
-/// - Distance indicator
-/// - Favorite button overlay
-/// - Tap animation
-/// - Shimmer loading state
-///
-/// Usage Examples:
-/// ```dart
-/// // Basic usage
-/// RestaurantCard(
-///   imageUrl: 'https://example.com/restaurant.jpg',
-///   name: 'El Shabrawy',
-///   cuisines: ['Egyptian', 'Grill'],
-///   distance: '2.5 km',
-///   rating: 4.5,
-///   onTap: () => _openRestaurant(restaurant),
-/// )
-///
-/// // With Tawseya badge
-/// RestaurantCard(
-///   imageUrl: imageUrl,
-///   name: name,
-///   cuisines: cuisines,
-///   hasTawseya: true,
-///   tawseyaCount: 156,
-///   onTap: onTap,
-/// )
-///
-/// // With favorite button
-/// RestaurantCard(
-///   imageUrl: imageUrl,
-///   name: name,
-///   cuisines: cuisines,
-///   isFavorite: true,
-///   onFavoritePressed: _toggleFavorite,
-///   onTap: onTap,
-/// )
-///
-/// // Loading state
-/// RestaurantCard.loading()
-/// ```
+/// Modern Restaurant Card Component
+/// Uses Shadcn UI inspired design with clean, modern aesthetics
 class RestaurantCard extends StatefulWidget {
-  /// Restaurant image URL
-  final String? imageUrl;
-
-  /// Restaurant name
+  final String restaurantId;
   final String name;
-
-  /// List of cuisine types
-  final List<String> cuisines;
-
-  /// Distance from user
-  final String? distance;
-
-  /// Restaurant rating (0-5)
-  final double? rating;
-
-  /// Whether restaurant has Tawseya
-  final bool hasTawseya;
-
-  /// Number of Tawseya recommendations
+  final String? cuisine;
+  final double rating;
+  final int? deliveryTime;
+  final int? reviewCount;
+  final String imageUrl;
   final int? tawseyaCount;
-
-  /// Whether restaurant is favorited
   final bool isFavorite;
-
-  /// Callback when card is tapped
   final VoidCallback? onTap;
+  final VoidCallback? onFavoriteTap;
 
-  /// Callback when favorite button is pressed
-  final VoidCallback? onFavoritePressed;
-
-  /// Show loading shimmer state
-  final bool isLoading;
+  // Backward compatibility: accept cuisines parameter as alternative to cuisine
+  final List<String>? cuisines;
 
   const RestaurantCard({
     super.key,
-    this.imageUrl,
+    required this.restaurantId,
     required this.name,
-    required this.cuisines,
-    this.distance,
-    this.rating,
-    this.hasTawseya = false,
+    this.cuisine,
+    required this.rating,
+    this.deliveryTime,
+    this.reviewCount,
+    this.imageUrl = '',
     this.tawseyaCount,
     this.isFavorite = false,
     this.onTap,
-    this.onFavoritePressed,
-    this.isLoading = false,
+    this.onFavoriteTap,
+    this.cuisines,
   });
 
-  /// Loading state constructor
-  const RestaurantCard.loading({super.key})
-    : imageUrl = null,
-      name = '',
-      cuisines = const [],
-      distance = null,
-      rating = null,
-      hasTawseya = false,
-      tawseyaCount = null,
-      isFavorite = false,
-      onTap = null,
-      onFavoritePressed = null,
-      isLoading = true;
+  // Factory method for loading state (backward compatibility)
+  const factory RestaurantCard.loading() = RestaurantCard._loading;
+
+  const RestaurantCard._loading()
+      : restaurantId = '',
+        name = '',
+        cuisine = '',
+        rating = 0.0,
+        deliveryTime = null,
+        reviewCount = null,
+        imageUrl = '',
+        tawseyaCount = null,
+        isFavorite = false,
+        onTap = null,
+        onFavoriteTap = null,
+        cuisines = null;
 
   @override
   State<RestaurantCard> createState() => _RestaurantCardState();
@@ -126,345 +59,439 @@ class RestaurantCard extends StatefulWidget {
 
 class _RestaurantCardState extends State<RestaurantCard>
     with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
+  late AnimationController _animationController;
   late Animation<double> _scaleAnimation;
-  bool _isPressed = false;
 
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      duration: AppAnimations.cardAnimation,
+    _animationController = AnimationController(
       vsync: this,
+      duration: const Duration(milliseconds: 150),
     );
-
     _scaleAnimation = Tween<double>(begin: 1.0, end: 0.98).animate(
-      CurvedAnimation(parent: _controller, curve: AppAnimations.cardCurve),
+      CurvedAnimation(
+        parent: _animationController,
+        curve: Curves.easeInOut,
+      ),
     );
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    _animationController.dispose();
     super.dispose();
   }
 
-  void _handleTapDown(TapDownDetails details) {
-    if (widget.onTap != null && !widget.isLoading) {
-      setState(() => _isPressed = true);
-      _controller.forward();
-    }
+  void _handleTap() {
+    _animationController.forward().then((_) => _animationController.reverse());
+    widget.onTap?.call();
   }
 
-  void _handleTapUp(TapUpDetails details) {
-    if (_isPressed) {
-      _controller.reverse();
-      setState(() => _isPressed = false);
-    }
-  }
-
-  void _handleTapCancel() {
-    if (_isPressed) {
-      _controller.reverse();
-      setState(() => _isPressed = false);
-    }
+  void _handleFavoriteTap() {
+    widget.onFavoriteTap?.call();
   }
 
   @override
   Widget build(BuildContext context) {
-    if (widget.isLoading) {
-      return _buildLoadingState();
-    }
-
-    return GestureDetector(
-      onTapDown: _handleTapDown,
-      onTapUp: _handleTapUp,
-      onTapCancel: _handleTapCancel,
-      onTap: widget.onTap,
-      child: AnimatedBuilder(
-        animation: _scaleAnimation,
-        builder: (context, child) {
-          return Transform.scale(scale: _scaleAnimation.value, child: child);
-        },
-        child: Container(
-          decoration: BoxDecoration(
-            color: AppColors.white,
-            borderRadius: AppRadius.cardRadius,
-            boxShadow: AppShadows.card,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [_buildImage(), _buildDetails()],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildImage() {
-    return Stack(
-      children: [
-        // Restaurant image with gradient overlay
-        ClipRRect(
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(AppRadius.lg),
-            topRight: Radius.circular(AppRadius.lg),
-          ),
-          child: Stack(
-            children: [
-              // Image
-              Container(
-                height: 160.h,
-                width: double.infinity,
-                color: AppColors.lightGray,
-                child: widget.imageUrl != null
-                    ? (widget.imageUrl!.startsWith('assets/')
-                          ? Image.asset(
-                              widget.imageUrl!.replaceFirst('assets/', ''),
-                              fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) {
-                                return const Icon(
-                                  Icons.restaurant,
-                                  size: 48,
-                                  color: AppColors.gray,
-                                );
-                              },
-                            )
-                          : Image.network(
-                              widget.imageUrl!,
-                              fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) {
-                                return const Icon(
-                                  Icons.restaurant,
-                                  size: 48,
-                                  color: AppColors.gray,
-                                );
-                              },
-                            ))
-                    : const Icon(
-                        Icons.restaurant,
-                        size: 48,
-                        color: AppColors.gray,
-                      ),
-              ),
-              // Gradient overlay (Egyptian Sunset inspired)
-              Container(
-                height: 160.h,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      Colors.transparent,
-                      AppColors.black.withOpacity(0.6),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-
-        // Tawseya badge (top-left)
-        if (widget.hasTawseya)
-          Positioned(
-            top: AppSpacing.sm,
-            left: AppSpacing.sm,
-            child: TawseyaBadge(
-              count: widget.tawseyaCount,
-              size: BadgeSize.small,
-            ),
-          ),
-
-        // Favorite button (top-right)
-        if (widget.onFavoritePressed != null)
-          Positioned(
-            top: AppSpacing.sm,
-            right: AppSpacing.sm,
-            child: GestureDetector(
-              onTap: widget.onFavoritePressed,
-              child: Container(
-                padding: EdgeInsets.all(AppSpacing.xs),
-                decoration: BoxDecoration(
-                  color: AppColors.white,
-                  shape: BoxShape.circle,
-                  boxShadow: AppShadows.sm,
-                ),
-                child: Icon(
-                  widget.isFavorite ? Icons.favorite : Icons.favorite_border,
-                  color: widget.isFavorite
-                      ? AppColors.error
-                      : AppColors.primaryDark,
-                  size: 20.sp,
-                ),
-              ),
-            ),
-          ),
-
-        // Distance indicator (bottom-right on image)
-        if (widget.distance != null)
-          Positioned(
-            bottom: AppSpacing.sm,
-            right: AppSpacing.sm,
+    return AnimatedBuilder(
+      animation: _scaleAnimation,
+      builder: (context, child) {
+        return Transform.scale(
+          scale: _scaleAnimation.value,
+          child: GestureDetector(
+            onTap: _handleTap,
             child: Container(
-              padding: EdgeInsets.symmetric(
-                horizontal: AppSpacing.sm,
-                vertical: AppSpacing.xs,
-              ),
-              decoration: BoxDecoration(
-                color: AppColors.white.withOpacity(0.9),
-                borderRadius: BorderRadius.circular(AppRadius.sm),
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
+              width: 280,
+              height: 200,
+              decoration: OtlobDesignSystem.cardDecoration,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Icon(
-                    Icons.location_on,
-                    size: 14.sp,
-                    color: AppColors.logoRed,
+                  // Image Section with Overlays
+                  _ImageSection(
+                    imageUrl: widget.imageUrl,
+                    isFavorite: widget.isFavorite,
+                    onFavoriteTap: _handleFavoriteTap,
+                    tawseyaCount: widget.tawseyaCount,
                   ),
-                  SizedBox(width: 2.w),
-                  Text(
-                    widget.distance!,
-                    style: AppTypography.labelSmall.copyWith(
-                      color: AppColors.primaryDark,
-                      fontWeight: FontWeight.w600,
-                    ),
+
+                  // Content Section
+                  ContentSection(
+                    name: widget.name,
+                    cuisine: widget.cuisine,
+                    rating: widget.rating,
+                    deliveryTime: widget.deliveryTime,
+                    reviewCount: widget.reviewCount,
                   ),
                 ],
               ),
             ),
           ),
+        );
+      },
+    );
+  }
+}
+
+/// Image section with overlays
+class _ImageSection extends StatelessWidget {
+  final String imageUrl;
+  final bool isFavorite;
+  final int? tawseyaCount;
+  final VoidCallback? onFavoriteTap;
+
+  const _ImageSection({
+    required this.imageUrl,
+    required this.isFavorite,
+    this.tawseyaCount,
+    this.onFavoriteTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        // Hero Image
+        SizedBox(
+          height: 120,
+          width: double.infinity,
+          child: ClipRRect(
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(OtlobDesignSystem.radiusLg),
+              topRight: Radius.circular(OtlobDesignSystem.radiusLg),
+            ),
+            child: CachedNetworkImage(
+              imageUrl: imageUrl,
+              fit: BoxFit.cover,
+              placeholder: (context, url) => Container(
+                color: OtlobDesignSystem.textLight.withOpacity(0.1),
+                child: const Center(
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      OtlobDesignSystem.secondary,
+                    ),
+                  ),
+                ),
+              ),
+              errorWidget: (context, url, error) => Container(
+                color: OtlobDesignSystem.background,
+                child: Icon(
+                  Icons.restaurant,
+                  color: OtlobDesignSystem.textLight,
+                  size: 40,
+                ),
+              ),
+            ),
+          ),
+        ),
+
+        // Favorite Button Overlay
+        Positioned(
+          top: 12,
+          right: 12,
+          child: _FavoriteButton(
+            isFavorite: isFavorite,
+            onTap: onFavoriteTap,
+          ),
+        ),
+
+        // Tawseya Badge Overlay
+        if (tawseyaCount != null && tawseyaCount! > 0)
+          Positioned(
+            top: 12,
+            left: 12,
+            child: _TawseyaBadge(count: tawseyaCount!),
+          ),
       ],
     );
   }
+}
 
-  Widget _buildDetails() {
-    return Padding(
-      padding: EdgeInsets.all(AppSpacing.md),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+/// Animated favorite heart button
+class _FavoriteButton extends StatefulWidget {
+  final bool isFavorite;
+  final VoidCallback? onTap;
+
+  const _FavoriteButton({required this.isFavorite, this.onTap});
+
+  @override
+  State<_FavoriteButton> createState() => _FavoriteButtonState();
+}
+
+class _FavoriteButtonState extends State<_FavoriteButton>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _animationController;
+  late Animation<double> _scaleAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 200),
+    );
+    _scaleAnimation = Tween<double>(begin: 1.0, end: 1.2).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.elasticOut),
+    );
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        _animationController.forward().then((_) => _animationController.reverse());
+        widget.onTap?.call();
+      },
+      child: AnimatedScale(
+        scale: _scaleAnimation.value,
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.elasticOut,
+        child: Container(
+          width: 36,
+          height: 36,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            shape: BoxShape.circle,
+            boxShadow: OtlobDesignSystem.shadowSm,
+          ),
+          child: Icon(
+            widget.isFavorite ? Icons.favorite : Icons.favorite_border,
+            color: widget.isFavorite ? OtlobDesignSystem.error : OtlobDesignSystem.textSecondary,
+            size: 20,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Tawseya badge with golden theme
+class _TawseyaBadge extends StatelessWidget {
+  final int count;
+
+  const _TawseyaBadge({required this.count});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: OtlobDesignSystem.accent,
+        borderRadius: BorderRadius.circular(OtlobDesignSystem.radiusSm),
+        boxShadow: OtlobDesignSystem.shadowSm,
+      ),
+      child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // Restaurant name and rating
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  widget.name,
-                  style: AppTypography.titleLarge.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-              if (widget.rating != null) ...[
-                SizedBox(width: AppSpacing.sm),
-                Icon(
-                  Icons.star,
-                  size: 16.sp,
-                  color: AppColors.getRatingColor(widget.rating!),
-                ),
-                SizedBox(width: 2.w),
-                Text(
-                  widget.rating!.toStringAsFixed(1),
-                  style: AppTypography.bodyMedium.copyWith(
-                    color: AppColors.getRatingColor(widget.rating!),
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
-            ],
+          const Icon(
+            Icons.star,
+            color: OtlobDesignSystem.primary,
+            size: 12,
           ),
-          SizedBox(height: AppSpacing.xs),
-          Wrap(
-            spacing: AppSpacing.xs,
-            runSpacing: AppSpacing.xs,
-            children: widget.cuisines
-                .take(2)
-                .map((cuisine) => CuisineTag(name: cuisine))
-                .toList(),
+          const SizedBox(width: 4),
+          Text(
+            count.toString(),
+            style: OtlobDesignSystem.labelSmall.copyWith(
+              color: OtlobDesignSystem.primary,
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ],
       ),
     );
   }
+}
 
-  Widget _buildLoadingState() {
-    return Shimmer.fromColors(
-      baseColor: AppColors.lightGray,
-      highlightColor: AppColors.white,
-      child: ConstrainedBox(
-        constraints: BoxConstraints.tightFor(height: 280.h),
-        child: Container(
-          decoration: BoxDecoration(
-            color: AppColors.white,
-            borderRadius: AppRadius.cardRadius,
+/// Content section with restaurant details
+class ContentSection extends StatelessWidget {
+  final String name;
+  final String? cuisine;
+  final double rating;
+  final int? deliveryTime;
+  final int? reviewCount;
+
+  const ContentSection({
+    super.key,
+    required this.name,
+    this.cuisine,
+    required this.rating,
+    this.deliveryTime,
+    this.reviewCount,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(OtlobDesignSystem.md),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Restaurant Name
+          Text(
+            name,
+            style: OtlobDesignSystem.labelLarge,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+
+          const SizedBox(height: OtlobDesignSystem.xs),
+
+          // Cuisine
+          if (cuisine != null && cuisine!.isNotEmpty) ...[
+            Text(
+              cuisine!,
+              style: OtlobDesignSystem.bodySmall,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+            const SizedBox(height: OtlobDesignSystem.sm),
+          ] else
+            const SizedBox(height: OtlobDesignSystem.sm),
+
+          // Rating and Delivery Info
+          Row(
             children: [
-              SizedBox(
-                height: 160.h,
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: AppColors.lightGray,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(AppRadius.lg),
-                      topRight: Radius.circular(AppRadius.lg),
+              // Star Rating
+              Row(
+                children: [
+                  Icon(
+                    Icons.star,
+                    color: OtlobDesignSystem.accent,
+                    size: 16,
+                  ),
+                  const SizedBox(width: 2),
+                  Text(
+                    rating.toStringAsFixed(1),
+                    style: OtlobDesignSystem.labelMedium.copyWith(
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
-                ),
+                ],
               ),
-              Expanded(
-                child: SingleChildScrollView(
-                  physics: const ClampingScrollPhysics(),
-                  child: Padding(
-                    padding: EdgeInsets.all(AppSpacing.md),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          height: 18.h,
-                          width: 150.w,
-                          color: AppColors.lightGray,
-                        ),
-                        SizedBox(height: AppSpacing.sm),
-                        Row(
-                          children: [
-                            Container(
-                              height: 24.h,
-                              width: 70.w,
-                              decoration: BoxDecoration(
-                                color: AppColors.lightGray,
-                                borderRadius: BorderRadius.circular(
-                                  AppRadius.sm,
-                                ),
-                              ),
-                            ),
-                            SizedBox(width: AppSpacing.xs),
-                            Container(
-                              height: 24.h,
-                              width: 60.w,
-                              decoration: BoxDecoration(
-                                color: AppColors.lightGray,
-                                borderRadius: BorderRadius.circular(
-                                  AppRadius.sm,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
+
+              // Delivery Time (only if provided)
+              if (deliveryTime != null) ...[
+                const SizedBox(width: OtlobDesignSystem.md),
+                Icon(
+                  Icons.access_time,
+                  color: OtlobDesignSystem.success,
+                  size: 14,
+                ),
+                const SizedBox(width: 2),
+                Text(
+                  '$deliveryTime min',
+                  style: OtlobDesignSystem.labelSmall.copyWith(
+                    color: OtlobDesignSystem.success,
                   ),
                 ),
-              ),
+              ],
+
+              const Spacer(),
+
+              // Reviews Count (only if provided)
+              if (reviewCount != null) ...[
+                Row(
+                  children: [
+                    Icon(
+                      Icons.people,
+                      color: OtlobDesignSystem.textLight,
+                      size: 12,
+                    ),
+                    const SizedBox(width: 2),
+                    Text(
+                      reviewCount.toString(),
+                      style: OtlobDesignSystem.labelSmall,
+                    ),
+                  ],
+                ),
+              ],
             ],
           ),
-        ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Loading version of RestaurantCard
+class RestaurantCardLoading extends StatelessWidget {
+  const RestaurantCardLoading({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 280,
+      height: 200,
+      decoration: BoxDecoration(
+        color: OtlobDesignSystem.surface,
+        borderRadius: BorderRadius.circular(OtlobDesignSystem.radiusLg),
+        boxShadow: OtlobDesignSystem.shadowMd,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Image placeholder
+          Container(
+            height: 120,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: OtlobDesignSystem.textLight.withOpacity(0.1),
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(OtlobDesignSystem.radiusLg),
+                topRight: Radius.circular(OtlobDesignSystem.radiusLg),
+              ),
+            ),
+            child: const Icon(
+              Icons.restaurant,
+              color: OtlobDesignSystem.textLight,
+              size: 40,
+            ),
+          ),
+          // Content placeholder
+          Padding(
+            padding: const EdgeInsets.all(OtlobDesignSystem.md),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  height: 16,
+                  width: 180,
+                  color: OtlobDesignSystem.textLight.withOpacity(0.3),
+                ),
+                const SizedBox(height: OtlobDesignSystem.xs),
+                Container(
+                  height: 12,
+                  width: 100,
+                  color: OtlobDesignSystem.textLight.withOpacity(0.3),
+                ),
+                const SizedBox(height: OtlobDesignSystem.sm),
+                Row(
+                  children: [
+                    Container(
+                      height: 14,
+                      width: 60,
+                      color: OtlobDesignSystem.textLight.withOpacity(0.3),
+                    ),
+                    const Spacer(),
+                    Container(
+                      height: 12,
+                      width: 40,
+                      color: OtlobDesignSystem.textLight.withOpacity(0.3),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

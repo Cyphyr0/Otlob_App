@@ -50,7 +50,7 @@ dependencies:
   shimmer: ^3.0.0
   image_picker: ^1.2.0
   shadcn_ui: ^0.36.1
-  getwidget: ^4.0.0
+  styled_widget: ^0.4.1
 
   # Internationalization - Latest stable
   easy_localization: ^3.0.7
@@ -90,8 +90,6 @@ dependencies:
 
   # Icons
   cupertino_icons: ^1.0.6
-  prime: ^0.2.0
-  flutter_prime: ^0.2.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

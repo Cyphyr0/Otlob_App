@@ -768,14 +768,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.30"
-  flutter_prime:
-    dependency: "direct main"
-    description:
-      name: flutter_prime
-      sha256: d61cd46e59f9774a622f6a336840c09e6528ad35a87f05ad4c1f27d4c0b30301
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.2.0"
   flutter_riverpod:
     dependency: "direct main"
     description:
@@ -959,14 +951,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "7.7.0"
-  getwidget:
-    dependency: "direct main"
-    description:
-      name: getwidget
-      sha256: "91df14a8d80e21f3ec02759295b90cc8badb8a872b90d34ad4aeb4085d833b5c"
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.0.0"
   glob:
     dependency: transitive
     description:
@@ -1292,6 +1276,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.2"
+  lint:
+    dependency: transitive
+    description:
+      name: lint
+      sha256: "4a539aa34ec5721a2c7574ae2ca0336738ea4adc2a34887d54b7596310b33c85"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.10.0"
   lints:
     dependency: transitive
     description:
@@ -1580,14 +1572,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.0.3"
-  prime:
-    dependency: "direct main"
-    description:
-      name: prime
-      sha256: cec458b9e8fbf111da17895766efafdd834a0f63fd2d6efead6302718426331a
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.2.0"
   printing:
     dependency: "direct main"
     description:
@@ -1921,6 +1905,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.4.1"
+  styled_widget:
+    dependency: "direct main"
+    description:
+      name: styled_widget
+      sha256: "4d439802919b6ccf10d1488798656da8804633b03012682dd1c8ca70a084aa84"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.4.1"
   sweepline_intersections:
     dependency: transitive
     description:

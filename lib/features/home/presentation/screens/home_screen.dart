@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
+import 'package:otlob_app/core/providers.dart';
 import 'package:otlob_app/core/theme/app_colors.dart';
-import 'package:otlob_app/core/theme/app_typography.dart';
-import 'package:otlob_app/core/theme/app_spacing.dart';
-import 'package:otlob_app/core/theme/app_shadows.dart';
 import 'package:otlob_app/core/theme/app_radius.dart';
+import 'package:otlob_app/core/theme/app_shadows.dart';
+import 'package:otlob_app/core/theme/app_spacing.dart';
+import 'package:otlob_app/core/theme/app_typography.dart';
+import 'package:otlob_app/core/theme/otlob_design_system.dart';
 import 'package:otlob_app/core/widgets/branding/otlob_logo.dart';
 import 'package:otlob_app/core/widgets/buttons/primary_button.dart';
 import 'package:otlob_app/core/widgets/buttons/secondary_button.dart';
-import 'package:otlob_app/core/widgets/inputs/search_bar_widget.dart';
 import 'package:otlob_app/core/widgets/cards/restaurant_card.dart';
-import 'package:otlob_app/core/providers.dart';
+import 'package:otlob_app/core/widgets/inputs/search_bar_widget.dart';
 import 'package:otlob_app/features/home/domain/entities/restaurant.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:geocoding/geocoding.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -469,18 +470,19 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 child: SizedBox(
                   width: 260.w,
                   child: RestaurantCard(
+                    restaurantId: restaurant.id,
                     imageUrl: restaurant.imageUrl,
                     name: restaurant.name,
-                    cuisines: restaurant.cuisine.split(', '),
+                    cuisine: restaurant.cuisine,
                     rating: restaurant.rating,
-                    distance: '${restaurant.distance.toStringAsFixed(1)} km',
-                    hasTawseya: restaurant.tawseyaCount > 0,
+                    deliveryTime: null,
+                    reviewCount: 0,
                     tawseyaCount: restaurant.tawseyaCount,
                     isFavorite: ref
                         .watch(favoritesProvider)
                         .any((r) => r.id == restaurant.id),
                     onTap: () => context.go('/restaurant/${restaurant.id}'),
-                    onFavoritePressed: () => ref
+                    onFavoriteTap: () => ref
                         .read(favoritesProvider.notifier)
                         .toggleFavorite(restaurant),
                   ),
@@ -542,24 +544,22 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 padding: EdgeInsets.only(
                   right: index < restaurants.length - 1 ? AppSpacing.md : 0,
                 ),
-                child: SizedBox(
-                  width: 260.w,
-                  child: RestaurantCard(
-                    imageUrl: restaurant.imageUrl,
-                    name: restaurant.name,
-                    cuisines: restaurant.cuisine.split(', '),
-                    rating: restaurant.rating,
-                    distance: '${restaurant.distance.toStringAsFixed(1)} km',
-                    hasTawseya: restaurant.tawseyaCount > 0,
-                    tawseyaCount: restaurant.tawseyaCount,
-                    isFavorite: ref
-                        .watch(favoritesProvider)
-                        .any((r) => r.id == restaurant.id),
-                    onTap: () => context.go('/restaurant/${restaurant.id}'),
-                    onFavoritePressed: () => ref
-                        .read(favoritesProvider.notifier)
-                        .toggleFavorite(restaurant),
-                  ),
+                child: RestaurantCard(
+                  restaurantId: restaurant.id,
+                  imageUrl: restaurant.imageUrl!,
+                  name: restaurant.name,
+                  cuisine: restaurant.cuisine,
+                  rating: restaurant.rating,
+                  deliveryTime: null,
+                  reviewCount: null,
+                  tawseyaCount: restaurant.tawseyaCount,
+                  isFavorite: ref
+                      .watch(favoritesProvider)
+                      .any((r) => r.id == restaurant.id),
+                  onTap: () => context.go('/restaurant/${restaurant.id}'),
+                  onFavoriteTap: () => ref
+                      .read(favoritesProvider.notifier)
+                      .toggleFavorite(restaurant),
                 ),
               );
             },
@@ -949,7 +949,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             ),
                             child: SizedBox(
                               width: 260.w,
-                              child: RestaurantCard.loading(),
+                              child: Container(
+                                width: 260.w,
+                                height: 280.h,
+                                decoration: BoxDecoration(
+                                  color: OtlobDesignSystem.background,
+                                  borderRadius: BorderRadius.circular(
+                                    OtlobDesignSystem.radiusLg,
+                                  ),
+                                ),
+                              ),
                             ),
                           ),
                         ),
@@ -985,7 +994,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             ),
                             child: SizedBox(
                               width: 260.w,
-                              child: RestaurantCard.loading(),
+                              child: const RestaurantCardLoading(),
                             ),
                           ),
                         ),

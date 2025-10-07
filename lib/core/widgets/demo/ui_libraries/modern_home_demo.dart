@@ -34,7 +34,7 @@ class _ModernHomeDemoState extends State<ModernHomeDemo>
 
   final TextEditingController _searchController = TextEditingController();
   int _selectedCategoryIndex = 0;
-  String _userName = 'Hisham';
+  final String _userName = 'Hisham';
   int _bottomNavIndex = 0;
 
   final List<Map<String, dynamic>> _categories = [
