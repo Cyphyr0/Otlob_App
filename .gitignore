@@ -107,6 +107,10 @@ scripts/cleanup-git.ps1
 docs/.flutter-rules.md
 docs/mcp.md
 
+# AI Workflow Guidance
+../../../../Documents/Cline/Workflows/workflow two.md
+../../../../Documents/Cline/Workflows/otl_op_tech_roadmap.md
+
 # Additional Flutter/Dart ignores
 packages
 .flutter-plugins
