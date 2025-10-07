@@ -1,476 +1,184 @@
 # 📚 Otlob Documentation Index
-
-**Last Updated:** October 4, 2025
-
-This index helps you quickly find the right documentation for your needs.
+**Version:** 2.0 (Consolidated Structure)
+**Date:** October 7, 2025
 
 ---
 
-## 🚀 Quick Start (Read These First)
+## 🗺️ Documentation Navigation
 
-If you're new to the project, read these documents in this order:
+Use this index to quickly find the information you need for Otlob development.
 
-**🎨 FOR DESIGNERS & UI DEVELOPERS (START HERE):**
-1. **`UI_UX_REDESIGN_BRIEF.md`** - 20 min read ⭐ **CRITICAL**
-   - Complete UI/UX redesign requirements
-   - Visual design system (colors, typography, spacing)
-   - Screen-by-screen redesign guide
-   - Animation and interaction patterns
-   - Component library specifications
+### 🔴 **START HERE - Critical Reads**
 
-**FOR ALL DEVELOPERS:**
-2. **`brief.md`** - 5 min read
-   - High-level project overview
-   - Problem we're solving
-   - Target users and business goals
-
-3. **`CURRENT_STATUS.md`** - 3 min read
-   - What's implemented vs what's pending
-   - Known issues
-   - Next steps
-
-4. **`AI_AGENT_BRIEFING.md`** - 15 min read
-   - Complete development context
-   - Firebase setup guide
-   - Critical development rules
-   - Quick reference tables
+| Document | What It Contains | When to Read | Status |
+|----------|------------------|--------------|---------|
+| **[PROJECT_OVERVIEW.md](PROJECT_OVERVIEW.md)** | Project vision, strategy, roadmap, business model | **Before any work** - understand the "why" | ✅ **CORE** |
+| **[DEVELOPMENT_GUIDELINES.md](DEVELOPMENT_GUIDELINES.md)** | Security rules, coding standards, setup guides | **Before coding** - understand rules | ✅ **CORE** |
+| **[PRODUCT_REQUIREMENTS.md](PRODUCT_REQUIREMENTS.md)** | Complete PRD, functional requirements, success criteria | **Before implementing features** | ✅ **CORE** |
 
 ---
 
-## 📖 Comprehensive Documentation (Primary References)
+## 🏗️ **Technical Development**
 
-### For Product Understanding
+### Architecture & Implementation
+| Document | Purpose | Contains |
+|----------|---------|-----------|
+| **[FRONTEND_ARCHITECTURE.md](FRONTEND_ARCHITECTURE.md)** | Clean Architecture guide, state management, patterns | Layer structure, Riverpod patterns, examples |
+| **[UI_UX_SPECIFICATION.md](UI_UX_SPECIFICATION.md)** | Design system, wireframes, user flows | Colors, typography, component specs, animations |
 
-#### `PRODUCT_REQUIREMENTS.md` ⭐ **Product Bible**
-**When to Read:** Before implementing ANY feature
+### Story-Driven Development (BMAD-METHOD)
+| Document | Purpose | Contains |
+|----------|---------|-----------|
+| **[docs/prd.md](prd.md)** | BMAD-formatted PRD | Epic/story structure for development |
+| **[docs/architecture.md](architecture.md)** | BMAD-optimized architecture | Technical specifications for agents |
+| **docs/stories/epic-6/** | Feature development stories | Detailed implementation specs |
 
-**What's Inside:**
-- ✅ Complete Functional Requirements (FR1-FR16)
-- ✅ Non-Functional Requirements (performance, security, accessibility)
-- ✅ Epic & Story Breakdown with completion status
-- ✅ User persona: "Sara, the Urban Explorer"
-- ✅ User flows and acceptance criteria
-- ✅ Success metrics and KPIs
-
-**Best For:**
-- Understanding what a feature should do
-- Checking acceptance criteria
-- Prioritizing tasks
-- Writing user stories
-
-**Key Sections:**
-- Section 2: Functional Requirements (FR1-FR16)
-- Section 7: Epic & Story Breakdown
-- Section 8: Success Criteria
-
----
-
-### For Technical Implementation
-
-#### `FRONTEND_ARCHITECTURE.md` ⭐ **Technical Bible**
-**When to Read:** Before creating ANY new feature or component
-
-**What's Inside:**
-- ✅ Complete Clean Architecture guide (Domain/Data/Presentation)
-- ✅ State Management patterns with Riverpod
-- ✅ Repository pattern for backend abstraction
-- ✅ API integration with Dio (interceptors, error handling)
-- ✅ Error handling strategy (Failures & Exceptions)
-- ✅ Testing strategy with examples (unit, widget, integration)
-- ✅ Coding standards and developer guidelines
-
-**Best For:**
-- Understanding "where should this code go?"
-- Implementing state management
-- Handling API calls and errors
-- Writing tests
-- Following coding standards
-
-**Key Sections:**
-- Section 4: Clean Architecture Layers
-- Section 5: State Management with Riverpod
-- Section 6: Error Handling
-- Section 7: API Integration with Dio
-- Section 10: Testing Strategy
-- Section 11: Developer Guidelines
+### Quick Development References
+| Topic | Document | Section |
+|-------|----------|---------|
+| **Clean Architecture Setup** | FRONTEND_ARCHITECTURE.md | Section 4 |
+| **Riverpod Patterns** | FRONTEND_ARCHITECTURE.md | Section 5 |
+| **Error Handling** | FRONTEND_ARCHITECTURE.md | Section 6 |
+| **UI Components** | UI_UX_SPECIFICATION.md | Section 6-7 |
+| **Testing Guide** | FRONTEND_ARCHITECTURE.md | Section 10 |
+| **Firebase Security** | DEVELOPMENT_GUIDELINES.md | Section 3 |
+| **Pre-commit Checklist** | DEVELOPMENT_GUIDELINES.md | Appendix |
 
 ---
 
-#### `ADVANCED_ARCHITECTURE_PATTERNS.md` ⭐ **Advanced Patterns Reference**
-**When to Read:** When implementing complex features or patterns
+## 📋 **Development Workflows**
 
-**What's Inside:**
-- ✅ Detailed Clean Architecture implementation with full code examples
-- ✅ 7+ Riverpod state management patterns (Provider, StateProvider, StateNotifier, FutureProvider, StreamProvider, Family, etc.)
-- ✅ Error handling with Either/Failure types
-- ✅ API client architecture with interceptors (Auth, Retry, Error)
-- ✅ Testing strategies with complete test examples
-- ✅ Component development standards
-- ✅ Performance optimization techniques
+### Before Starting Development
+```
+1. Read PROJECT_OVERVIEW.md → Understand product vision
+2. Read DEVELOPMENT_GUIDELINES.md → Learn rules and setup
+3. Check PRODUCT_REQUIREMENTS.md → See what to build
+4. Review FRONTEND_ARCHITECTURE.md → Follow patterns
+5. Check CURRENT_STATUS.md → See what's already done
+```
 
-**Best For:**
-- Implementing complex state management
-- Setting up API client with interceptors
-- Writing comprehensive tests
-- Understanding advanced patterns
-- Optimizing performance
+### Feature Implementation Flow
+```
+1. Read requirements in PRODUCT_REQUIREMENTS.md
+2. Create story in docs/stories/ (use BMAD-METHOD format)
+3. Follow architecture patterns from FRONTEND_ARCHITECTURE.md
+4. Implement using guidelines from DEVELOPMENT_GUIDELINES.md
+5. Test per FRONTEND_ARCHITECTURE.md Section 10
+6. Update status in PRODUCT_REQUIREMENTS.md
+```
 
-**Key Sections:**
-- Clean Architecture Implementation (3 layers explained)
-- Riverpod State Management Patterns (7 patterns)
-- Error Handling Patterns
-- API Client Architecture
-- Testing Strategies
-- Component Development Standards
-- Performance Optimization
-
----
-
-### For UI/UX Implementation
-
-#### `UI_UX_REDESIGN_BRIEF.md` ⭐⭐⭐ **REDESIGN PRIORITY - READ FIRST**
-**When to Read:** BEFORE implementing ANY UI component
-
-**What's Inside:**
-- 🚨 **Critical notice:** Current UI needs complete redesign
-- ✅ Complete visual design system (Egyptian Sunset color palette)
-- ✅ Typography system (Poppins + Cairo fonts)
-- ✅ Spacing system (8-point grid)
-- ✅ Animation guidelines (durations, curves, patterns)
-- ✅ Screen-by-screen redesign guide (Splash, Onboarding, Home, Restaurant Detail, Cart, Checkout, Order Tracking)
-- ✅ Component library (buttons, cards, badges, inputs, bottom sheets)
-- ✅ Empty states & error handling UI
-- ✅ Accessibility requirements
-- ✅ Implementation checklist
-
-**Best For:**
-- Understanding design vision and priorities
-- Implementing visual design system
-- Redesigning screens from scratch
-- Creating beautiful, modern UI
-- Following Egyptian cultural design touches
-
-**Key Sections:**
-- Design Mission & Principles
-- Visual Design System (colors, typography, spacing, shadows)
-- Animation Guidelines
-- Screen-by-Screen Redesign Guide
-- Component Library
-- Accessibility Requirements
-- Implementation Checklist
+### Before Code Commits
+```
+□ flutter analyze → No errors
+□ flutter test → Tests pass (if any)
+□ check DEVELOPMENT_GUIDELINES.md security rules
+□ meaningful commit message
+□ update documentation if needed
+```
 
 ---
 
-#### `UI_UX_SPECIFICATION.md` ⭐ **Original Design Reference**
-**When to Read:** For reference on user flows and original wireframes
+## 🏷️ **Document Categories**
 
-**What's Inside:**
-- ✅ Complete user flows with Mermaid diagrams
-- ✅ Original wireframes for all key screens
-- ✅ Original design system (colors, typography, spacing, elevation)
-- ✅ Component library specifications
-- ✅ Accessibility requirements (WCAG 2.1 AA)
-- ✅ Animation guidelines (duration, curves, patterns)
-- ✅ Performance optimization strategies
+### 🎯 **Vision & Strategy** (Must Read First)
+- **PROJECT_OVERVIEW.md** - Mission, goals, business model, roadmap
+- **PRODUCT_REQUIREMENTS.md** - What we're building, success criteria
+- **brief.md** - High-level project overview
 
-**Best For:**
-- Understanding user journeys
-- Reference for original design decisions
-- Animation patterns
-- Accessibility requirements
-- Performance considerations
+### 🛠️ **Technical Implementation** (Read Before Coding)
+- **FRONTEND_ARCHITECTURE.md** - How to build (architecture, patterns, examples)
+- **DEVELOPMENT_GUIDELINES.md** - Rules, security, setup, workflow
+- **UI_UX_SPECIFICATION.md** - How it should look (design system, flows)
+- **FIREBASE_SETUP_GUIDE.md** - Firebase configuration steps
 
-**Key Sections:**
-- Section 3: User Flows
-- Section 4: Wireframes
-- Section 6: Visual Design System
-- Section 7: Accessibility Requirements
-- Section 9: Animation & Micro-interactions
-- Section 10: Performance Considerations
+### ⚙️ **Configuration & Setup**
+- **TECH_STACK_EVALUATION.md** 🆕 - Comprehensive 2025 tech stack analysis
+- **SECURITY_IMPLEMENTATION.md** - Security guidelines and implementation
+- **cline_mcp_settings_backup.json** - MCP configuration backup
+- **mcp.md** - MCP system documentation
+
+### 📊 **Status & Progress**
+- **CURRENT_STATUS.md** - What's implemented vs planned
+- **PROJECT_JOURNAL.md** - Development history and decisions
+- **ADVANCED_ARCHITECTURE_PATTERNS.md** - Advanced technical patterns
 
 ---
 
-## 🛠️ Implementation Guides
+## 📖 **Quick Reference Guides**
 
-### `AI_AGENT_BRIEFING.md`
-**Purpose:** Development context and step-by-step guides
+### "I need to implement a new feature"
+1. **PRODUCT_REQUIREMENTS.md** → Check if feature is in scope
+2. **FRONTEND_ARCHITECTURE.md** → Follow architecture patterns
+3. **DEVELOPMENT_GUIDELINES.md** → Code standards and security
+4. **UI_UX_SPECIFICATION.md** → Component design specs
 
-**What's Inside:**
-- Current project status
-- Firebase setup guide (detailed steps)
-- Code examples for replacing mocks
-- Critical development rules
-- Known issues and solutions
-- Quick reference tables
+### "I need to fix a bug"
+1. **PRODUCT_REQUIREMENTS.md** → Confirm expected behavior
+2. **DEVELOPMENT_GUIDELINES.md** → Pre-commit checklist
+3. **FRONTEND_ARCHITECTURE.md** → Error handling patterns
 
-**Best For:**
-- Setting up Firebase
-- Understanding current implementation
-- Finding specific information quickly
-- Troubleshooting common issues
+### "I need to add tests"
+1. **FRONTEND_ARCHITECTURE.md** → Section 10: Testing Strategy
+2. Follow examples for unit, widget, and integration tests
 
----
-
-### `FIREBASE_SETUP_GUIDE.md`
-**Purpose:** Complete Firebase configuration guide
-
-**What's Inside:**
-- Firebase project details (otlob-6e081)
-- SHA-1 fingerprint configuration
-- Service enabling steps
-- Security rules setup
-
-**Best For:**
-- Initial Firebase setup
-- Troubleshooting Firebase issues
+### "I need to style something"
+1. **UI_UX_SPECIFICATION.md** → Component library and design system
+2. Use predefined colors, spacing, and animation patterns
 
 ---
 
-### `SECURITY_IMPLEMENTATION.md`
-**Purpose:** Security guidelines and best practices
+## 🔗 **Cross-References**
 
-**What's Inside:**
-- Files to never commit
-- Security checklist
-- Production Firestore rules
-- Emergency procedures
-
-**Best For:**
-- Pre-commit security review
-- Deploying to production
-- Handling security incidents
+| Document A | References | Document B |
+|------------|------------|------------|
+| PRODUCT_REQUIREMENTS.md | "Technical Architecture" | FRONTEND_ARCHITECTURE.md |
+| AI_AGENT_BRIEFING.md | Complete overview | PROJECT_OVERVIEW.md + DEVELOPMENT_GUIDELINES.md |
+| FRONTEND_ARCHITECTURE.md | Design examples | UI_UX_SPECIFICATION.md |
+| DEVELOPMENT_GUIDELINES.md | Coding patterns | FRONTEND_ARCHITECTURE.md |
 
 ---
 
-## 📊 Status & Planning
-
-### `CURRENT_STATUS.md` ⭐ **CONSOLIDATED STATUS BIBLE**
-**When to Read:** Start here for current project status and next steps
-
-**What's Inside:**
-- ✅ Complete feature implementation status (100% functional app)
-- ✅ Recent improvements and code changes
-- ✅ Development roadmap with time estimates
-- ✅ Known issues and blockers
-- ✅ Deployment readiness status
-- ✅ Success metrics and achievements
-- ✅ Quick reference guides and commands
-
-**Best For:**
-- Understanding what's working vs what's pending
-- Finding next development priorities
-- Checking deployment readiness
-- Getting quick reference information
-
-**Key Sections:**
-- Section 1: App Status Overview
-- Section 2: Implemented Features (Complete)
-- Section 3: Current Development Status
-- Section 4: Recent Improvements
-- Section 5: Code Quality Metrics
-- Section 6: Next Actions (Priority Order)
-
----
-
-### `PROJECT_JOURNAL.md`
-**Purpose:** Development history and decisions
-
-**What's Inside:**
-- Timeline of major changes
-- Decision rationale
-- Lessons learned
-
-**Updated:** After major milestones
-
----
-
-### `SETUP_STATUS.md`
-**Purpose:** Environment and dependency status
-
-**What's Inside:**
-- Flutter version
-- Dependencies list
-- Environment configuration
-
----
-
-## 🎓 How to Use This Documentation
-
-### Example Workflows
-
-#### "I need to implement user authentication"
-
-1. **Read Requirements:**
-   - `PRODUCT_REQUIREMENTS.md` → FR1: Authentication & Onboarding
-   - Understand requirements and acceptance criteria
-
-2. **Follow Architecture:**
-   - `FRONTEND_ARCHITECTURE.md` → Section 4: Clean Architecture
-   - Create domain entities, repositories, datasources
-
-3. **Implement UI:**
-   - `UI_UX_SPECIFICATION.md` → Section 3: Flow 1 (FTUE)
-   - Follow user flow diagram
-   - Use design system for styling
-
-4. **Setup Backend:**
-   - `AI_AGENT_BRIEFING.md` → Step 2: Firebase Setup
-   - Enable authentication services
-   - Replace mock implementations
-
-5. **Test:**
-   - `FRONTEND_ARCHITECTURE.md` → Section 10: Testing Strategy
-   - Write unit tests for repositories
-   - Test on emulator
-
----
-
-#### "I need to style a button"
-
-1. **Check Design System:**
-   - `UI_UX_SPECIFICATION.md` → Section 6: Visual Design System
-   
-2. **Use Defined Values:**
-   ```dart
-   // Colors
-   AppColors.secondary  // Terracotta for primary buttons
-   AppColors.primary    // Dark Navy for text
-   
-   // Spacing
-   AppSpacing.md        // 16dp default padding
-   
-   // Border Radius
-   medium: 8dp          // Standard button radius
-   
-   // Animation
-   Duration: 100ms      // Button press
-   Scale: 0.95          // Press scale
-   ```
-
-3. **Follow Accessibility:**
-   - Minimum touch target: 44x44 dp
-   - Sufficient color contrast
-   - Semantic labels for screen readers
-
----
-
-#### "I need to handle an API error"
-
-1. **Check Error Strategy:**
-   - `FRONTEND_ARCHITECTURE.md` → Section 6: Error Handling
-
-2. **Use Failure Types:**
-   ```dart
-   try {
-     final data = await repository.getData();
-   } on ServerFailure catch (e) {
-     // Show error message
-     showError(e.message);
-   } on NetworkFailure {
-     // Show no internet message
-     showNoInternet();
-   }
-   ```
-
-3. **Display User-Friendly UI:**
-   - `UI_UX_SPECIFICATION.md` → Section 11: Content Strategy
-   - Use friendly error messages
-   - Provide action buttons (Retry, Go Back)
-
----
-
-## 🔍 Quick Reference
-
-| I Need To... | Document | Section |
-|-------------|----------|---------|
-| Understand requirements | PRODUCT_REQUIREMENTS.md | Section 2 |
-| Follow architecture | FRONTEND_ARCHITECTURE.md | Section 4 |
-| Manage state | FRONTEND_ARCHITECTURE.md | Section 5 |
-| Handle errors | FRONTEND_ARCHITECTURE.md | Section 6 |
-| Call APIs | FRONTEND_ARCHITECTURE.md | Section 7 |
-| Write tests | FRONTEND_ARCHITECTURE.md | Section 10 |
-| Style components | UI_UX_SPECIFICATION.md | Section 6 |
-| Implement animations | UI_UX_SPECIFICATION.md | Section 9 |
-| Meet accessibility | UI_UX_SPECIFICATION.md | Section 7 |
-| Setup Firebase | AI_AGENT_BRIEFING.md | Step 2 |
-| Find code examples | AI_AGENT_BRIEFING.md | Step 3-4 |
-| Check status | CURRENT_STATUS.md | - |
-
----
-
-## 📝 Document Maintenance
-
-### When to Update Documents
-
-**PRODUCT_REQUIREMENTS.md:**
-- ✅ New feature added
-- ✅ Requirements change
-- ✅ Feature status changes (pending → complete)
-
-**FRONTEND_ARCHITECTURE.md:**
-- ✅ New architecture pattern added
-- ✅ State management approach changes
-- ✅ New coding standard established
-
-**UI_UX_SPECIFICATION.md:**
-- ✅ Design system updated (colors, typography)
-- ✅ New component added
-- ✅ Animation pattern changes
-
-**AI_AGENT_BRIEFING.md:**
-- ✅ Implementation status changes
-- ✅ New development guide added
-- ✅ Known issues discovered/resolved
-
-**CURRENT_STATUS.md:**
-- ✅ After every feature completion
-- ✅ Weekly status reviews
+## 📝 **Documentation Standards**
 
 ### Version Control
+- **Major versions**: Significant content restructure (1.x → 2.x)
+- **Minor versions**: Content updates within structure (2.0 → 2.1)
+- **Last Updated**: Updated on every change
 
-All documentation updates should:
-1. Be committed to Git with clear messages
-2. Update "Last Updated" date in document header
-3. Add entry to Change Log section
-4. Update this index if new docs added
+### Content Organization
+- **Table of Contents**: Required for documents > 500 lines
+- **Section Numbers**: For easy reference (Section 1, 1.1, etc.)
+- **Change Logs**: Document version changes and reasons
+- **Appendices**: Supplementary information at end
 
----
-
-## 🎯 Documentation Quality Standards
-
-### All Documents Should:
-- ✅ Have clear headers and table of contents
-- ✅ Use consistent formatting (Markdown)
-- ✅ Include code examples where relevant
-- ✅ Be updated when implementation changes
-- ✅ Have "Last Updated" date in header
-
-### Writing Style:
-- ✅ Clear and concise
-- ✅ Use bullet points and tables
-- ✅ Include diagrams for complex flows
-- ✅ Provide examples for every concept
-- ✅ Link to related documents
+### Document Lifecycle
+- **Living Documents**: Updated as project evolves
+- **Regular Reviews**: Monthly for major docs
+- **Obsolete Removal**: Delete rather than archive outdated docs
 
 ---
 
-## 🚀 Getting Started Checklist
+## 🆘 **Getting Help**
 
-For new developers or AI agents joining the project:
+### I can't find what I need:
+1. Check this DOCUMENTATION_INDEX.md
+2. Look in PROJECT_OVERVIEW.md for high-level info
+3. Search by filename using patterns above
+4. Ask team for specific guidance
 
-- [ ] Read `brief.md` - Understand the product vision
-- [ ] Read `CURRENT_STATUS.md` - Know what's implemented
-- [ ] Skim `PRODUCT_REQUIREMENTS.md` - Understand scope
-- [ ] Read `FRONTEND_ARCHITECTURE.md` Sections 4, 5, 11 - Core architecture
-- [ ] Read `UI_UX_SPECIFICATION.md` Section 6 - Design system
-- [ ] Read `AI_AGENT_BRIEFING.md` - Development context
-- [ ] Run `flutter analyze` - Verify environment
-- [ ] Run app on emulator - Test current implementation
-- [ ] Review `SECURITY_IMPLEMENTATION.md` - Security awareness
-- [ ] Bookmark this index for quick reference
+### Document is missing information:
+- Update the document directly
+- Add changelog entry
+- Ping team if major changes needed
+
+### Conflicting information across docs:
+- Check "Last Updated" dates
+- Prefer most recent updates
+- Create clarification if needed
 
 ---
 
-**Happy Building! 🎉**
+**🚨 IMPORTANT**: Documents are interlinked - many reference each other. Start with the CORE documents (marked ✅ **CORE**) before diving into others.
 
-*This documentation represents the collective knowledge of the Otlob project. Keep it updated and use it as your primary reference.*
+**Last Updated**: October 7, 2025
+**Next Review**: Monthly with team
