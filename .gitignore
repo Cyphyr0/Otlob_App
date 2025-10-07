@@ -1,0 +1,135 @@
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.build/
+.buildlog/
+.history
+.svn/
+.swiftpm/
+migrate_working_dir/
+
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# VS Code settings (uncomment if you want to ignore)
+#.vscode/
+
+# Flutter/Dart/Pub related
+**/doc/api/
+**/ios/Flutter/.last_build_id
+.dart_tool/
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+/build/
+/coverage/
+
+# Symbolication related
+app.*.symbols
+
+# Obfuscation related
+app.*.map.json
+
+# Android Studio will place build artifacts here
+/android/app/debug
+/android/app/profile
+/android/app/release
+
+# Firebase sensitive files
+lib/firebase_options.dart
+android/app/google-services.json
+ios/Runner/GoogleService-Info.plist
+firebase.json
+.firebaserc
+firebase-debug.log
+
+# AI Assistant Rules (contains internal guidelines)
+.ai_rules.md
+AI_RULES.md
+docs/AI_AGENT_BRIEFING.md
+docs/AI_COMPREHENSIVE_MISSION.md
+
+# Security documentation (internal use only)
+docs/.security-rules.md
+
+# Environment variables
+.env
+.env.local
+.env.production
+.env.development
+
+# Secret keys and certificates
+*.key
+*.pem
+secrets/
+
+# Firebase keys config (do not commit)
+lib/core/config/firebase_keys.dart
+lib/core/config/sensitive_config.dart
+
+# Node.js dependencies (if using Firebase Functions or tools)
+node_modules/
+
+# AI Assistant workspace folders (local development only)
+.roo/
+.kilocode/
+
+# Local databases and caches
+chroma_db/
+
+# Windows-specific files
+nuget.exe
+
+# Temporary documentation files (local development)
+QUICK_FIX_NOW.md
+QUICK_START.md
+docs/COMPREHENSIVE_FIX_GUIDE.md
+docs/CURRENT_STATUS.md
+docs/DESIGN_IMPROVEMENTS_SUMMARY.md
+docs/FIRESTORE_RULES_FIX.md
+docs/UI_IMPROVEMENTS_SUMMARY.md
+docs/SHADCN_MIGRATION_GUIDE.md
+docs/SESSION_SUMMARY.md
+docs/LOTTIE_IMPLEMENTATION.md
+
+# Local scripts
+scripts/cleanup-git.ps1
+
+# Project-specific rules and guidelines
+.otlob-rules.md
+docs/.flutter-rules.md
+docs/mcp.md
+
+# Additional Flutter/Dart ignores
+packages
+.flutter-plugins
+
+# Dispose-specific ignores (*.iml files are already ignored)
+
+# Log files and debug output
+firebase-debug.log
+firebase-debug.log.*
+
+# Dependency lock files (keep package.json if needed for project)
+pubspec.lock
+Pipfile.lock
+poetry.lock
+
+# Editor-specific files (expand .vscode comment)
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Additional AI assistant directories that might appear
+.cursor/
+.windsurf/
+.cline/

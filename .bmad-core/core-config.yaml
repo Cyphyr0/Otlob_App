@@ -1,0 +1,51 @@
+# BMad Method Core Configuration for Flutter Otlob App
+projectName: "Flutter Otlob App"
+
+# BMAD Worker Agent Configuration
+agents:
+  pm:
+    role: Product Manager
+    model: "cursor"
+    temperature: 0.3
+  architect:
+    role: System Architect
+    model: "cursor"
+    temperature: 0.2
+  dev:
+    role: Flutter Developer
+    model: "cursor"
+    temperature: 0.1
+  qa:
+    role: Test Architect
+    model: "cursor"
+    temperature: 0.0
+
+# Dev Agent Context - Files that must always be loaded
+devLoadAlwaysFiles:
+  - docs/architecture/tech-stack.md
+  - docs/architecture/coding-standards.md
+  - docs/architecture/project-structure.md
+  - .bmad-core/data/technical-preferences.md
+
+# Project Paths
+paths:
+  docs: "docs"
+  stories: "docs/stories"
+  epics: "docs/epics"
+  qa: "docs/qa"
+
+# Flutter-Specific Configuration
+flutter:
+  supported: true
+  multiPlatform: true
+  platforms:
+    - android
+    - ios
+  architecture: "clean-architecture"
+  stateManagement: "riverpod"
+  testing: "flutter_test"
+
+# Quality Gates
+qualityGates:
+  enabled: true
+  strict: false
