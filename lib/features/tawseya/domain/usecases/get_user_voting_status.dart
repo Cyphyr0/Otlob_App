@@ -3,15 +3,15 @@ import '../entities/voting_period.dart';
 import '../repositories/tawseya_repository.dart';
 
 class GetUserVotingStatus {
-  final TawseyaRepository repository;
 
   const GetUserVotingStatus(this.repository);
+  final TawseyaRepository repository;
 
   Future<UserVotingStatus> call(String userId) async {
     final currentPeriod = await repository.getCurrentVotingPeriod();
 
     if (currentPeriod == null) {
-      throw NoActiveVotingPeriodException(
+      throw const NoActiveVotingPeriodException(
         'No active voting period found',
       );
     }
@@ -33,22 +33,21 @@ class GetUserVotingStatus {
 }
 
 class UserVotingStatus {
+
+  const UserVotingStatus({
+    required this.currentPeriod,
+    required this.hasVotedInCurrentPeriod,
+    required this.totalVotesCast, this.currentVote,
+  });
   final VotingPeriod currentPeriod;
   final bool hasVotedInCurrentPeriod;
   final Vote? currentVote;
   final int totalVotesCast;
 
-  const UserVotingStatus({
-    required this.currentPeriod,
-    required this.hasVotedInCurrentPeriod,
-    this.currentVote,
-    required this.totalVotesCast,
-  });
-
   bool get canVote => currentPeriod.isCurrentPeriod && !hasVotedInCurrentPeriod;
 }
 
 class NoActiveVotingPeriodException implements Exception {
-  final String message;
   const NoActiveVotingPeriodException(this.message);
+  final String message;
 }

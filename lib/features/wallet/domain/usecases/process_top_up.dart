@@ -13,9 +13,7 @@ class ProcessTopUp {
   }) async {
     // Get or create wallet
     var wallet = await repository.getWallet();
-    if (wallet == null) {
-      wallet = await repository.createWallet('EGP');
-    }
+    wallet ??= await repository.createWallet('EGP');
 
     return repository.processTopUp(
       walletId: wallet.id,

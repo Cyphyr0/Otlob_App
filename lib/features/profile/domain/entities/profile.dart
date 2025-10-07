@@ -30,8 +30,7 @@ class Profile {
     this.lastLoginAt,
   });
 
-  factory Profile.fromJson(Map<String, dynamic> json) {
-    return Profile(
+  factory Profile.fromJson(Map<String, dynamic> json) => Profile(
       id: json['id'] as String,
       userId: json['userId'] as String,
       displayName: json['displayName'] as String?,
@@ -73,17 +72,14 @@ class Profile {
           ? DateTime.parse(json['lastLoginAt'] as String)
           : null,
     );
-  }
 
-  factory Profile.fromAuthUser(auth_user.User authUser) {
-    return Profile(
+  factory Profile.fromAuthUser(auth_user.User authUser) => Profile(
       id: '${authUser.id}_profile',
       userId: authUser.id,
       displayName: authUser.name != 'User' ? authUser.name : null,
       createdAt: authUser.createdAt,
       updatedAt: DateTime.now(),
     );
-  }
 
   final String id;
   final String userId;
@@ -139,8 +135,7 @@ class Profile {
     DateTime? createdAt,
     DateTime? updatedAt,
     DateTime? lastLoginAt,
-  }) {
-    return Profile(
+  }) => Profile(
       id: id ?? this.id,
       userId: userId ?? this.userId,
       displayName: displayName ?? this.displayName,
@@ -168,10 +163,8 @@ class Profile {
       updatedAt: updatedAt ?? this.updatedAt,
       lastLoginAt: lastLoginAt ?? this.lastLoginAt,
     );
-  }
 
-  Map<String, dynamic> toJson() {
-    return {
+  Map<String, dynamic> toJson() => {
       'id': id,
       'userId': userId,
       'displayName': displayName,
@@ -199,5 +192,4 @@ class Profile {
       'updatedAt': updatedAt?.toIso8601String(),
       'lastLoginAt': lastLoginAt?.toIso8601String(),
     };
-  }
 }

@@ -1,11 +1,11 @@
+import '../../../../core/services/firebase/firebase_firestore_service.dart';
 import '../../domain/entities/user_preferences.dart';
 import '../../domain/repositories/user_preferences_repository.dart';
-import '../../../../core/services/firebase/firebase_firestore_service.dart';
 
 class FirebaseUserPreferencesRepository implements UserPreferencesRepository {
-  final FirebaseFirestoreService _firestoreService;
 
   const FirebaseUserPreferencesRepository(this._firestoreService);
+  final FirebaseFirestoreService _firestoreService;
 
   @override
   Future<UserPreferences?> getUserPreferences(String userId) async {

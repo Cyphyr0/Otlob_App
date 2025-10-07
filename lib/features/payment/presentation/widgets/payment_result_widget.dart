@@ -1,22 +1,20 @@
-import "package:flutter/material.dart";
-import "../../domain/entities/payment.dart";
+import 'package:flutter/material.dart';
+import '../../domain/entities/payment.dart';
 
 class PaymentResultWidget extends StatelessWidget {
+
+  const PaymentResultWidget({
+    required this.payment, required this.onContinue, super.key,
+  });
   final Payment payment;
   final VoidCallback onContinue;
 
-  const PaymentResultWidget({
-    super.key,
-    required this.payment,
-    required this.onContinue,
-  });
-
   @override
   Widget build(BuildContext context) {
-    final bool isSuccess = payment.status == PaymentTransactionStatus.completed;
+    final isSuccess = payment.status == PaymentTransactionStatus.completed;
 
     return Scaffold(
-      body: Container(
+      body: DecoratedBox(
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: isSuccess
@@ -33,7 +31,7 @@ class PaymentResultWidget extends StatelessWidget {
 
               // Header
               Text(
-                isSuccess ? "Payment Successful!" : "Payment Failed",
+                isSuccess ? 'Payment Successful!' : 'Payment Failed',
                 style: const TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.bold,
@@ -88,28 +86,28 @@ class PaymentResultWidget extends StatelessWidget {
                         child: Column(
                           children: [
                             _buildDetailRow(
-                              "Amount",
-                              "${payment.amount} ${payment.currency}",
+                              'Amount',
+                              '${payment.amount} ${payment.currency}',
                               isHeader: true,
                             ),
                             const SizedBox(height: 16),
                             _buildDetailRow(
-                              "Payment Method",
+                              'Payment Method',
                               _getProviderDisplayName(payment.provider),
                             ),
                             const SizedBox(height: 8),
                             _buildDetailRow(
-                              "Transaction ID",
-                              payment.transactionId ?? "N/A",
+                              'Transaction ID',
+                              payment.transactionId ?? 'N/A',
                             ),
                             const SizedBox(height: 8),
                             _buildDetailRow(
-                              "Date & Time",
+                              'Date & Time',
                               _formatDateTime(payment.createdAt),
                             ),
                             const SizedBox(height: 8),
                             _buildDetailRow(
-                              "Status",
+                              'Status',
                               _getStatusDisplayText(payment.status),
                               isStatus: true,
                               statusColor: _getStatusColor(payment.status),
@@ -125,8 +123,8 @@ class PaymentResultWidget extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(horizontal: 32),
                         child: Text(
                           isSuccess
-                              ? "Your payment has been processed successfully. You will receive a confirmation email shortly."
-                              : "Your payment could not be processed. Please try again or contact support.",
+                              ? 'Your payment has been processed successfully. You will receive a confirmation email shortly.'
+                              : 'Your payment could not be processed. Please try again or contact support.',
                           style: const TextStyle(
                             fontSize: 16,
                             color: Colors.white,
@@ -155,7 +153,7 @@ class PaymentResultWidget extends StatelessWidget {
                             borderRadius: BorderRadius.circular(12),
                           ),
                         ),
-                        child: const Text("Try Again"),
+                        child: const Text('Try Again'),
                       ),
                       const SizedBox(height: 16),
                     ],
@@ -170,7 +168,7 @@ class PaymentResultWidget extends StatelessWidget {
                           borderRadius: BorderRadius.circular(12),
                         ),
                       ),
-                      child: Text(isSuccess ? "Continue to Order" : "Back to Payment"),
+                      child: Text(isSuccess ? 'Continue to Order' : 'Back to Payment'),
                     ),
                   ],
                 ),
@@ -182,8 +180,7 @@ class PaymentResultWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildDetailRow(String label, String value, {bool isHeader = false, bool isStatus = false, Color? statusColor}) {
-    return Row(
+  Widget _buildDetailRow(String label, String value, {bool isHeader = false, bool isStatus = false, Color? statusColor}) => Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
@@ -204,39 +201,36 @@ class PaymentResultWidget extends StatelessWidget {
         ),
       ],
     );
-  }
 
   String _getProviderDisplayName(PaymentProvider provider) {
     switch (provider) {
       case PaymentProvider.stripe:
-        return "Credit/Debit Card";
+        return 'Credit/Debit Card';
       case PaymentProvider.fawry:
-        return "Fawry";
+        return 'Fawry';
       case PaymentProvider.vodafoneCash:
-        return "Vodafone CASH";
+        return 'Vodafone CASH';
       case PaymentProvider.meeza:
-        return "Meeza";
+        return 'Meeza';
     }
   }
 
-  String _formatDateTime(DateTime dateTime) {
-    return "${dateTime.day}/${dateTime.month}/${dateTime.year} ${dateTime.hour}:${dateTime.minute.toString().padLeft(2, '0')}";
-  }
+  String _formatDateTime(DateTime dateTime) => "${dateTime.day}/${dateTime.month}/${dateTime.year} ${dateTime.hour}:${dateTime.minute.toString().padLeft(2, '0')}";
 
   String _getStatusDisplayText(PaymentTransactionStatus status) {
     switch (status) {
       case PaymentTransactionStatus.completed:
-        return "Completed";
+        return 'Completed';
       case PaymentTransactionStatus.processing:
-        return "Processing";
+        return 'Processing';
       case PaymentTransactionStatus.failed:
-        return "Failed";
+        return 'Failed';
       case PaymentTransactionStatus.cancelled:
-        return "Cancelled";
+        return 'Cancelled';
       case PaymentTransactionStatus.refunded:
-        return "Refunded";
+        return 'Refunded';
       case PaymentTransactionStatus.pending:
-        return "Pending";
+        return 'Pending';
     }
   }
 
@@ -255,5 +249,12 @@ class PaymentResultWidget extends StatelessWidget {
       case PaymentTransactionStatus.pending:
         return Colors.amber;
     }
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<Payment>('payment', payment));
+    properties.add(ObjectFlagProperty<VoidCallback>.has('onContinue', onContinue));
   }
 }

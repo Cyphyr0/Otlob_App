@@ -1,16 +1,14 @@
-import "package:flutter/material.dart";
-import "package:flutter_screenutil/flutter_screenutil.dart";
-import "package:google_fonts/google_fonts.dart";
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 
-import "../../../../core/theme/shadcn_theme.dart";
+import '../../../../core/theme/shadcn_theme.dart';
 
 class OnboardingPage extends StatelessWidget {
 
   const OnboardingPage({
-    super.key,
-    required this.title,
-    required this.subtitle,
-    required this.imageWidget,
+    required this.title, required this.subtitle, required this.imageWidget, super.key,
   });
   final String title;
   final String subtitle;
@@ -59,7 +57,7 @@ class OnboardingPage extends StatelessWidget {
                       fontSize: 32.sp,
                       fontWeight: FontWeight.bold,
                       color: theme.colorScheme.onPrimary,
-                      fontFamily: "TutanoCCV2",
+                      fontFamily: 'TutanoCCV2',
                     ),
                     textAlign: TextAlign.center,
                   ),

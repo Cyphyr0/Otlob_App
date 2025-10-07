@@ -1,6 +1,7 @@
 /// Repository interface for delivery area validation operations
-import '../../../../features/location/domain/entities/location.dart';
+library;
 import '../../../../features/home/domain/entities/restaurant.dart';
+import '../../../../features/location/domain/entities/location.dart';
 import '../../domain/entities/delivery_area_status.dart';
 
 abstract class DeliveryAreaRepository {

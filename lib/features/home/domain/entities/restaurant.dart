@@ -1,5 +1,3 @@
-import '../../../restaurant_status/domain/entities/restaurant_status.dart';
-import '../../../restaurant_status/domain/entities/restaurant_status_type.dart';
 
 class Restaurant {
 
@@ -7,24 +5,13 @@ class Restaurant {
     required this.id,
     required this.name,
     required this.rating,
-    this.imageUrl,
-    required this.tawseyaCount,
-    required this.cuisine,
-    required this.description,
-    required this.menuCategories,
-    required this.isOpen,
-    required this.distance,
-    required this.address,
-    required this.priceLevel,
-    required this.latitude,
-    required this.longitude,
+    required this.tawseyaCount, required this.cuisine, required this.description, required this.menuCategories, required this.isOpen, required this.distance, required this.address, required this.priceLevel, required this.latitude, required this.longitude, this.imageUrl,
     this.deliveryRadius = 5.0, // Default 5km delivery radius
     this.isFavorite = false,
     this.pdfMenuUrl,
   });
 
-  factory Restaurant.fromJson(Map<String, dynamic> json) {
-    return Restaurant(
+  factory Restaurant.fromJson(Map<String, dynamic> json) => Restaurant(
       id: json['id'] as String,
       name: json['name'] as String,
       rating: (json['rating'] as num).toDouble(),
@@ -43,7 +30,6 @@ class Restaurant {
       isFavorite: json['isFavorite'] as bool? ?? false,
       pdfMenuUrl: json['pdfMenuUrl'] as String?,
     );
-  }
   final String id;
   final String name;
   final double rating;

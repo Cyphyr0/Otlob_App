@@ -4,14 +4,12 @@ class User { // For guest/anonymous users
     required this.id,
     required this.email,
     required this.name,
-    this.phone,
-    required this.createdAt,
+    required this.createdAt, this.phone,
     this.isVerified = false,
     this.isAnonymous = false, // Default to false for regular users
   });
 
-  factory User.fromJson(Map<String, dynamic> json) {
-    return User(
+  factory User.fromJson(Map<String, dynamic> json) => User(
       id: json['id'] as String,
       email: json['email'] as String,
       name: json['name'] as String,
@@ -20,7 +18,6 @@ class User { // For guest/anonymous users
       isVerified: json['isVerified'] as bool? ?? false,
       isAnonymous: json['isAnonymous'] as bool? ?? false,
     );
-  }
   final String id;
   final String email;
   final String name;

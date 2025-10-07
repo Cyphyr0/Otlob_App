@@ -1,10 +1,10 @@
 /// Core service for delivery area validation business logic
+library;
 import 'dart:async';
 
 import '../../../../core/errors/failures.dart';
-import '../../../../features/location/domain/entities/location.dart';
 import '../../../../features/home/domain/entities/restaurant.dart';
-import '../entities/delivery_area_status.dart';
+import '../../../../features/location/domain/entities/location.dart';
 import '../entities/delivery_area_validation.dart';
 import '../repositories/delivery_area_repository.dart';
 
@@ -204,13 +204,11 @@ class DeliveryAreaValidationService {
   Stream<DeliveryAreaValidation> validationStream({
     required Location userLocation,
     required Restaurant restaurant,
-  }) {
-    return Stream.periodic(
+  }) => Stream.periodic(
       const Duration(seconds: 5),
       (_) => validateUserLocation(
         userLocation: userLocation,
         restaurant: restaurant,
       ),
     ).asyncMap((future) => future);
-  }
 }

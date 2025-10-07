@@ -1,11 +1,12 @@
-import "package:flutter/material.dart";
-import "package:flutter/foundation.dart";
-import "package:flutter_screenutil/flutter_screenutil.dart";
-import "../../theme/app_colors.dart";
-import "../../theme/app_typography.dart";
-import "../../theme/app_radius.dart";
-import "../../theme/app_spacing.dart";
-import "../../theme/app_animations.dart";
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import '../../theme/app_animations.dart';
+import '../../theme/app_colors.dart';
+import '../../theme/app_radius.dart';
+import '../../theme/app_spacing.dart';
+import '../../theme/app_typography.dart';
 
 /// Secondary Button Component
 ///
@@ -53,9 +54,7 @@ import "../../theme/app_animations.dart";
 class SecondaryButton extends StatefulWidget {
 
   const SecondaryButton({
-    super.key,
-    required this.text,
-    required this.onPressed,
+    required this.text, required this.onPressed, super.key,
     this.icon,
     this.isLoading = false,
     this.fullWidth = false,
@@ -244,5 +243,11 @@ class _SecondaryButtonState extends State<SecondaryButton>
         ),
       ),
     );
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<bool>('isDisabled', isDisabled));
   }
 }

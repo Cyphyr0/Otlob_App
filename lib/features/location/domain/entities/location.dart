@@ -1,4 +1,5 @@
 /// Location entity representing a geographical point with coordinates
+library;
 import 'dart:math';
 class Location {
   const Location({
@@ -9,33 +10,29 @@ class Location {
     this.country,
   });
 
-  final double latitude;
-  final double longitude;
-  final String? address;
-  final String? city;
-  final String? country;
-
   /// Create a Location from a map (e.g., from geolocator or geocoding)
-  factory Location.fromMap(Map<String, dynamic> map) {
-    return Location(
+  factory Location.fromMap(Map<String, dynamic> map) => Location(
       latitude: map['latitude'] ?? 0.0,
       longitude: map['longitude'] ?? 0.0,
       address: map['address'],
       city: map['city'],
       country: map['country'],
     );
-  }
+
+  final double latitude;
+  final double longitude;
+  final String? address;
+  final String? city;
+  final String? country;
 
   /// Convert Location to a map
-  Map<String, dynamic> toMap() {
-    return {
+  Map<String, dynamic> toMap() => {
       'latitude': latitude,
       'longitude': longitude,
       'address': address,
       'city': city,
       'country': country,
     };
-  }
 
   /// Create a copy of this Location with modified fields
   Location copyWith({
@@ -44,20 +41,16 @@ class Location {
     String? address,
     String? city,
     String? country,
-  }) {
-    return Location(
+  }) => Location(
       latitude: latitude ?? this.latitude,
       longitude: longitude ?? this.longitude,
       address: address ?? this.address,
       city: city ?? this.city,
       country: country ?? this.country,
     );
-  }
 
   @override
-  String toString() {
-    return 'Location(latitude: $latitude, longitude: $longitude, address: $address)';
-  }
+  String toString() => 'Location(latitude: $latitude, longitude: $longitude, address: $address)';
 
   @override
   bool operator ==(Object other) {
@@ -116,19 +109,15 @@ class DeliveryArea {
     double? radius,
     String? name,
     String? description,
-  }) {
-    return DeliveryArea(
+  }) => DeliveryArea(
       center: center ?? this.center,
       radius: radius ?? this.radius,
       name: name ?? this.name,
       description: description ?? this.description,
     );
-  }
 
   @override
-  String toString() {
-    return 'DeliveryArea(center: $center, radius: $radius km)';
-  }
+  String toString() => 'DeliveryArea(center: $center, radius: $radius km)';
 }
 
 /// Location filter for searching restaurants within a specific area
@@ -157,8 +146,7 @@ class LocationFilter {
     double? priceRange,
     double? minRating,
     bool? isOpen,
-  }) {
-    return LocationFilter(
+  }) => LocationFilter(
       center: center ?? this.center,
       radius: radius ?? this.radius,
       cuisineTypes: cuisineTypes ?? this.cuisineTypes,
@@ -166,10 +154,7 @@ class LocationFilter {
       minRating: minRating ?? this.minRating,
       isOpen: isOpen ?? this.isOpen,
     );
-  }
 
   @override
-  String toString() {
-    return 'LocationFilter(center: $center, radius: $radius km, cuisines: $cuisineTypes)';
-  }
+  String toString() => 'LocationFilter(center: $center, radius: $radius km, cuisines: $cuisineTypes)';
 }

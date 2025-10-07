@@ -5,14 +5,13 @@ import '../../domain/entities/tawseya_item.dart';
 import '../providers/tawseya_provider.dart';
 
 class TawseyaVotingStatusBadge extends ConsumerWidget {
-  final TawseyaItem tawseyaItem;
-  final BadgeSize size;
 
   const TawseyaVotingStatusBadge({
-    super.key,
-    required this.tawseyaItem,
+    required this.tawseyaItem, super.key,
     this.size = BadgeSize.medium,
   });
+  final TawseyaItem tawseyaItem;
+  final BadgeSize size;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -54,20 +53,26 @@ class TawseyaVotingStatusBadge extends ConsumerWidget {
       ),
     );
   }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<TawseyaItem>('tawseyaItem', tawseyaItem));
+    properties.add(EnumProperty<BadgeSize>('size', size));
+  }
 }
 
 class _VotedBadge extends StatelessWidget {
-   final BadgeSize size;
-   final int voteCount;
 
    const _VotedBadge({
      required this.size,
      required this.voteCount,
    });
+   final BadgeSize size;
+   final int voteCount;
 
    @override
-   Widget build(BuildContext context) {
-     return Container(
+   Widget build(BuildContext context) => Container(
        padding: _getPaddingForSize(size),
        decoration: BoxDecoration(
          color: Colors.green[100],
@@ -99,11 +104,10 @@ class _VotedBadge extends StatelessWidget {
          ],
        ),
      );
-   }
 
    static String _formatCount(int count) {
      if (count >= 1000) {
-       return "${(count / 1000).toStringAsFixed(1)}k";
+       return '${(count / 1000).toStringAsFixed(1)}k';
      }
      return count.toString();
    }
@@ -151,20 +155,26 @@ class _VotedBadge extends StatelessWidget {
          return 6;
      }
    }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(EnumProperty<BadgeSize>('size', size));
+    properties.add(IntProperty('voteCount', voteCount));
+  }
  }
 
 class _CanVoteBadge extends StatelessWidget {
-  final BadgeSize size;
-  final int voteCount;
 
   const _CanVoteBadge({
     required this.size,
     required this.voteCount,
   });
+  final BadgeSize size;
+  final int voteCount;
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
+  Widget build(BuildContext context) => Container(
       padding: _getPaddingForSize(size),
       decoration: BoxDecoration(
         color: const Color(0xFFFFF3E0),
@@ -196,11 +206,10 @@ class _CanVoteBadge extends StatelessWidget {
         ],
       ),
     );
-  }
 
   static String _formatCount(int count) {
     if (count >= 1000) {
-      return "${(count / 1000).toStringAsFixed(1)}k";
+      return '${(count / 1000).toStringAsFixed(1)}k';
     }
     return count.toString();
   }
@@ -247,5 +256,12 @@ class _CanVoteBadge extends StatelessWidget {
       case BadgeSize.large:
         return 6;
     }
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(EnumProperty<BadgeSize>('size', size));
+    properties.add(IntProperty('voteCount', voteCount));
   }
 }

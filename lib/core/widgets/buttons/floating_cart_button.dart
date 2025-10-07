@@ -1,12 +1,13 @@
-import "package:flutter/material.dart";
-import "package:flutter/foundation.dart";
-import "package:flutter_riverpod/flutter_riverpod.dart";
-import "package:flutter_screenutil/flutter_screenutil.dart";
-import "package:go_router/go_router.dart";
-import "../../theme/app_colors.dart";
-import "../../theme/app_typography.dart";
-import "../../theme/app_shadows.dart";
-import "../../../features/cart/presentation/providers/cart_provider.dart";
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+
+import '../../../features/cart/presentation/providers/cart_provider.dart';
+import '../../theme/app_colors.dart';
+import '../../theme/app_shadows.dart';
+import '../../theme/app_typography.dart';
 
 /// Floating Cart Button
 ///
@@ -30,7 +31,7 @@ class FloatingCartButton extends ConsumerWidget {
     var cartNotifier = ref.read(cartProvider.notifier);
 
     // Hide on cart screen
-    if (currentRoute == "/cart" ||
+    if (currentRoute == '/cart' ||
         cartState.isEmpty ||
         cartNotifier.isLoading) {
       return const SizedBox.shrink();
@@ -51,7 +52,7 @@ class FloatingCartButton extends ConsumerWidget {
         duration: const Duration(milliseconds: 250),
         opacity: cartState.isEmpty ? 0.0 : 1.0,
         child: GestureDetector(
-          onTap: () => context.go("/cart"),
+          onTap: () => context.go('/cart'),
           child: Material(
             elevation: 8,
             shape: const CircleBorder(),
@@ -84,7 +85,7 @@ class FloatingCartButton extends ConsumerWidget {
                         minHeight: 16.h,
                       ),
                       child: Text(
-                        "$totalItems",
+                        '$totalItems',
                         style: AppTypography.labelSmall.copyWith(
                           color: AppColors.logoRed,
                           fontWeight: FontWeight.w800,

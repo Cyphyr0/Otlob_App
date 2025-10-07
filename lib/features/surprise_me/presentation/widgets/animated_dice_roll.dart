@@ -6,9 +6,7 @@ import '../../../../core/theme/app_spacing.dart';
 
 class AnimatedDiceRoll extends StatefulWidget {
   const AnimatedDiceRoll({
-    super.key,
-    required this.onRollComplete,
-    required this.restaurantName,
+    required this.onRollComplete, required this.restaurantName, super.key,
     this.size = 120,
   });
 
@@ -18,6 +16,14 @@ class AnimatedDiceRoll extends StatefulWidget {
 
   @override
   State<AnimatedDiceRoll> createState() => _AnimatedDiceRollState();
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(ObjectFlagProperty<VoidCallback>.has('onRollComplete', onRollComplete));
+    properties.add(StringProperty('restaurantName', restaurantName));
+    properties.add(DoubleProperty('size', size));
+  }
 }
 
 class _AnimatedDiceRollState extends State<AnimatedDiceRoll>
@@ -57,13 +63,13 @@ class _AnimatedDiceRollState extends State<AnimatedDiceRoll>
     // Scale animation for dice effect
     _scaleAnimation = TweenSequence<double>([
       TweenSequenceItem(
-        tween: Tween<double>(begin: 1.0, end: 1.2).chain(
+        tween: Tween<double>(begin: 1, end: 1.2).chain(
           CurveTween(curve: Curves.easeInOut),
         ),
         weight: 50,
       ),
       TweenSequenceItem(
-        tween: Tween<double>(begin: 1.2, end: 1.0).chain(
+        tween: Tween<double>(begin: 1.2, end: 1).chain(
           CurveTween(curve: Curves.bounceOut),
         ),
         weight: 50,
@@ -77,7 +83,7 @@ class _AnimatedDiceRollState extends State<AnimatedDiceRoll>
     ).animate(
       CurvedAnimation(
         parent: _controller,
-        curve: const Interval(0.7, 1.0, curve: Curves.easeIn),
+        curve: const Interval(0.7, 1, curve: Curves.easeIn),
       ),
     );
   }
@@ -98,8 +104,7 @@ class _AnimatedDiceRollState extends State<AnimatedDiceRoll>
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
+  Widget build(BuildContext context) => SizedBox(
       width: widget.size,
       height: widget.size,
       child: Stack(
@@ -108,8 +113,7 @@ class _AnimatedDiceRollState extends State<AnimatedDiceRoll>
           // Dice animation
           AnimatedBuilder(
             animation: Listenable.merge([_rotationAnimation, _scaleAnimation]),
-            builder: (context, child) {
-              return Transform.rotate(
+            builder: (context, child) => Transform.rotate(
                 angle: _rotationAnimation.value * (pi / 180),
                 child: Transform.scale(
                   scale: _scaleAnimation.value,
@@ -131,7 +135,7 @@ class _AnimatedDiceRollState extends State<AnimatedDiceRoll>
                         width: 2,
                       ),
                     ),
-                    child: Center(
+                    child: const Center(
                       child: Icon(
                         Icons.casino,
                         size: 48,
@@ -140,13 +144,12 @@ class _AnimatedDiceRollState extends State<AnimatedDiceRoll>
                     ),
                   ),
                 ),
-              );
-            },
+              ),
           ),
 
           // Rolling text
           if (!_showResult)
-            Positioned(
+            const Positioned(
               bottom: -40,
               child: Text(
                 'Rolling...',
@@ -162,8 +165,7 @@ class _AnimatedDiceRollState extends State<AnimatedDiceRoll>
           if (_showResult)
             AnimatedBuilder(
               animation: _fadeAnimation,
-              builder: (context, child) {
-                return Opacity(
+              builder: (context, child) => Opacity(
                   opacity: _fadeAnimation.value,
                   child: Container(
                     width: widget.size,
@@ -182,13 +184,13 @@ class _AnimatedDiceRollState extends State<AnimatedDiceRoll>
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(
+                        const Icon(
                           Icons.restaurant,
                           size: 48,
                           color: Colors.white,
                         ),
                         SizedBox(height: AppSpacing.sm),
-                        Text(
+                        const Text(
                           'Found!',
                           style: TextStyle(
                             color: Colors.white,
@@ -199,11 +201,9 @@ class _AnimatedDiceRollState extends State<AnimatedDiceRoll>
                       ],
                     ),
                   ),
-                );
-              },
+                ),
             ),
         ],
       ),
     );
-  }
 }

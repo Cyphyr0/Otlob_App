@@ -135,8 +135,7 @@ class _NotificationSettingsScreenState extends ConsumerState<NotificationSetting
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  Widget build(BuildContext context) => Scaffold(
       appBar: AppBar(
         title: Text(LocalizationHelper.of(context).profile_notification_settings),
         backgroundColor: Colors.white,
@@ -161,7 +160,7 @@ class _NotificationSettingsScreenState extends ConsumerState<NotificationSetting
                     trailing: Switch(
                       value: _notificationsEnabled,
                       onChanged: (_) => _toggleNotifications(),
-                      activeColor: const Color(0xFFDC2626),
+                      activeThumbColor: const Color(0xFFDC2626),
                     ),
                   ),
                 ),
@@ -181,7 +180,7 @@ class _NotificationSettingsScreenState extends ConsumerState<NotificationSetting
                     trailing: Switch(
                       value: _orderNotifications && _notificationsEnabled,
                       onChanged: _notificationsEnabled ? _updateOrderNotifications : null,
-                      activeColor: const Color(0xFFDC2626),
+                      activeThumbColor: const Color(0xFFDC2626),
                     ),
                     enabled: _notificationsEnabled,
                   ),
@@ -202,7 +201,7 @@ class _NotificationSettingsScreenState extends ConsumerState<NotificationSetting
                     trailing: Switch(
                       value: _tawseyaNotifications && _notificationsEnabled,
                       onChanged: _notificationsEnabled ? _updateTawseyaNotifications : null,
-                      activeColor: const Color(0xFFDC2626),
+                      activeThumbColor: const Color(0xFFDC2626),
                     ),
                     enabled: _notificationsEnabled,
                   ),
@@ -223,7 +222,7 @@ class _NotificationSettingsScreenState extends ConsumerState<NotificationSetting
                     trailing: Switch(
                       value: _promotionalNotifications && _notificationsEnabled,
                       onChanged: _notificationsEnabled ? (value) => setState(() => _promotionalNotifications = value) : null,
-                      activeColor: const Color(0xFFDC2626),
+                      activeThumbColor: const Color(0xFFDC2626),
                     ),
                     enabled: _notificationsEnabled,
                   ),
@@ -236,7 +235,7 @@ class _NotificationSettingsScreenState extends ConsumerState<NotificationSetting
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton.icon(
-                      onPressed: () => NotificationPermissionsService.openNotificationSettings(),
+                      onPressed: NotificationPermissionsService.openNotificationSettings,
                       icon: const Icon(Icons.settings),
                       label: const Text('إعدادات النظام'),
                       style: ElevatedButton.styleFrom(
@@ -269,5 +268,4 @@ class _NotificationSettingsScreenState extends ConsumerState<NotificationSetting
               ],
             ),
     );
-  }
 }

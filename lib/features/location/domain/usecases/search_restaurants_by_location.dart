@@ -1,8 +1,9 @@
 /// Use case for searching restaurants by location
+library;
 import '../../../../core/errors/failures.dart';
-import '../entities/location.dart';
-import '../../data/repositories/map_repository.dart';
 import '../../../home/domain/entities/restaurant.dart';
+import '../../data/repositories/map_repository.dart';
+import '../entities/location.dart';
 
 class SearchRestaurantsByLocation {
   const SearchRestaurantsByLocation(this._repository);

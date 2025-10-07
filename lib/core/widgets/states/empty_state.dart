@@ -1,10 +1,11 @@
-import "package:flutter/material.dart";
-import "package:flutter/foundation.dart";
-import "package:flutter_screenutil/flutter_screenutil.dart";
-import "../../theme/app_colors.dart";
-import "../../theme/app_typography.dart";
-import "../../theme/app_spacing.dart";
-import "../buttons/primary_button.dart";
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import '../../theme/app_colors.dart';
+import '../../theme/app_spacing.dart';
+import '../../theme/app_typography.dart';
+import '../buttons/primary_button.dart';
 
 /// Empty State Component
 ///
@@ -41,18 +42,14 @@ import "../buttons/primary_button.dart";
 class EmptyState extends StatelessWidget {
 
   const EmptyState({
-    super.key,
-    required this.icon,
-    required this.title,
-    required this.message,
+    required this.icon, required this.title, required this.message, super.key,
     this.actionText,
     this.onAction,
     this.iconColor,
   });
 
   /// No favorites empty state
-  factory EmptyState.noFavorites({VoidCallback? onAction}) {
-    return EmptyState(
+  factory EmptyState.noFavorites({VoidCallback? onAction}) => EmptyState(
       icon: Icons.favorite_border,
       title: 'No Favorites Yet',
       message: 'Start exploring and save your favorite restaurants here',
@@ -60,11 +57,9 @@ class EmptyState extends StatelessWidget {
       onAction: onAction,
       iconColor: AppColors.error,
     );
-  }
 
   /// No search results empty state
-  factory EmptyState.noSearchResults({String? query}) {
-    return EmptyState(
+  factory EmptyState.noSearchResults({String? query}) => EmptyState(
       icon: Icons.search_off,
       title: 'No Results Found',
       message: query != null
@@ -72,11 +67,9 @@ class EmptyState extends StatelessWidget {
           : 'Try different keywords or filters',
       iconColor: AppColors.gray,
     );
-  }
 
   /// No orders empty state
-  factory EmptyState.noOrders({VoidCallback? onAction}) {
-    return EmptyState(
+  factory EmptyState.noOrders({VoidCallback? onAction}) => EmptyState(
       icon: Icons.receipt_long_outlined,
       title: 'No Orders Yet',
       message:
@@ -85,11 +78,9 @@ class EmptyState extends StatelessWidget {
       onAction: onAction,
       iconColor: AppColors.logoRed,
     );
-  }
 
   /// Empty cart state
-  factory EmptyState.emptyCart({VoidCallback? onAction}) {
-    return EmptyState(
+  factory EmptyState.emptyCart({VoidCallback? onAction}) => EmptyState(
       icon: Icons.shopping_cart_outlined,
       title: 'Your Cart is Empty',
       message: 'Add some delicious items to get started',
@@ -97,22 +88,18 @@ class EmptyState extends StatelessWidget {
       onAction: onAction,
       iconColor: AppColors.logoRed,
     );
-  }
 
   /// No notifications state
-  factory EmptyState.noNotifications() {
-    return EmptyState(
+  factory EmptyState.noNotifications() => const EmptyState(
       icon: Icons.notifications_none,
       title: 'No Notifications',
       message:
           'You\'re all caught up! We\'ll notify you when something new happens',
       iconColor: AppColors.gray,
     );
-  }
 
   /// Network error state
-  factory EmptyState.networkError({VoidCallback? onAction}) {
-    return EmptyState(
+  factory EmptyState.networkError({VoidCallback? onAction}) => EmptyState(
       icon: Icons.wifi_off,
       title: 'No Internet Connection',
       message: 'Please check your connection and try again',
@@ -120,11 +107,9 @@ class EmptyState extends StatelessWidget {
       onAction: onAction,
       iconColor: AppColors.error,
     );
-  }
 
   /// Generic error state
-  factory EmptyState.error({VoidCallback? onAction, String? message}) {
-    return EmptyState(
+  factory EmptyState.error({VoidCallback? onAction, String? message}) => EmptyState(
       icon: Icons.error_outline,
       title: 'Something Went Wrong',
       message: message ?? 'We encountered an error. Please try again',
@@ -132,7 +117,6 @@ class EmptyState extends StatelessWidget {
       onAction: onAction,
       iconColor: AppColors.error,
     );
-  }
   /// Icon to display
   final IconData icon;
 

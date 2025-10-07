@@ -1,13 +1,13 @@
 /// Firebase implementation of delivery area repository
+library;
 import 'dart:math';
 
 import '../../../../core/errors/failures.dart';
 import '../../../../core/services/firebase/firebase_firestore_service.dart';
-import '../../../../features/location/domain/entities/location.dart';
 import '../../../../features/home/domain/entities/restaurant.dart';
+import '../../../../features/location/domain/entities/location.dart';
 import '../../domain/entities/delivery_area_status.dart';
 import '../../domain/repositories/delivery_area_repository.dart';
-import '../models/delivery_area_model.dart';
 
 class FirebaseDeliveryAreaRepository implements DeliveryAreaRepository {
   const FirebaseDeliveryAreaRepository(this._firestoreService);

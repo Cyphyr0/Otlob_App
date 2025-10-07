@@ -5,17 +5,9 @@ import '../../services/hijri_calendar_service.dart';
 
 /// Widget to display both Gregorian and Hijri dates
 class HijriDateDisplay extends StatelessWidget {
-  final DateTime gregorianDate;
-  final TextStyle? gregorianStyle;
-  final TextStyle? hijriStyle;
-  final bool showHijri;
-  final bool showGregorian;
-  final String separator;
-  final CrossAxisAlignment alignment;
 
   const HijriDateDisplay({
-    super.key,
-    required this.gregorianDate,
+    required this.gregorianDate, super.key,
     this.gregorianStyle,
     this.hijriStyle,
     this.showHijri = true,
@@ -23,6 +15,13 @@ class HijriDateDisplay extends StatelessWidget {
     this.separator = ' / ',
     this.alignment = CrossAxisAlignment.start,
   });
+  final DateTime gregorianDate;
+  final TextStyle? gregorianStyle;
+  final TextStyle? hijriStyle;
+  final bool showHijri;
+  final bool showGregorian;
+  final String separator;
+  final CrossAxisAlignment alignment;
 
   @override
   Widget build(BuildContext context) {
@@ -77,18 +76,29 @@ class HijriDateDisplay extends StatelessWidget {
       return '${date.day}/${date.month}/${date.year} ${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}';
     }
   }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<DateTime>('gregorianDate', gregorianDate));
+    properties.add(DiagnosticsProperty<TextStyle?>('gregorianStyle', gregorianStyle));
+    properties.add(DiagnosticsProperty<TextStyle?>('hijriStyle', hijriStyle));
+    properties.add(DiagnosticsProperty<bool>('showHijri', showHijri));
+    properties.add(DiagnosticsProperty<bool>('showGregorian', showGregorian));
+    properties.add(StringProperty('separator', separator));
+    properties.add(EnumProperty<CrossAxisAlignment>('alignment', alignment));
+  }
 }
 
 /// Compact Hijri date widget for tight spaces
 class CompactHijriDate extends StatelessWidget {
-  final DateTime gregorianDate;
-  final TextStyle? style;
 
   const CompactHijriDate({
-    super.key,
-    required this.gregorianDate,
+    required this.gregorianDate, super.key,
     this.style,
   });
+  final DateTime gregorianDate;
+  final TextStyle? style;
 
   @override
   Widget build(BuildContext context) {
@@ -115,20 +125,26 @@ class CompactHijriDate extends StatelessWidget {
       return '${date.day}/${date.month}';
     }
   }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<DateTime>('gregorianDate', gregorianDate));
+    properties.add(DiagnosticsProperty<TextStyle?>('style', style));
+  }
 }
 
 /// Hijri date badge for special occasions
 class HijriDateBadge extends StatelessWidget {
-  final DateTime gregorianDate;
-  final bool showRamadanBadge;
-  final bool showSacredMonthBadge;
 
   const HijriDateBadge({
-    super.key,
-    required this.gregorianDate,
+    required this.gregorianDate, super.key,
     this.showRamadanBadge = true,
     this.showSacredMonthBadge = true,
   });
+  final DateTime gregorianDate;
+  final bool showRamadanBadge;
+  final bool showSacredMonthBadge;
 
   @override
   Widget build(BuildContext context) {
@@ -184,13 +200,18 @@ class HijriDateBadge extends StatelessWidget {
       return const Color(0xFF6B7280); // Default gray
     }
   }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<DateTime>('gregorianDate', gregorianDate));
+    properties.add(DiagnosticsProperty<bool>('showRamadanBadge', showRamadanBadge));
+    properties.add(DiagnosticsProperty<bool>('showSacredMonthBadge', showSacredMonthBadge));
+  }
 }
 
 /// Hijri calendar widget for date picker
 class HijriCalendarWidget extends StatefulWidget {
-  final DateTime? selectedDate;
-  final Function(DateTime)? onDateSelected;
-  final bool showHijriDates;
 
   const HijriCalendarWidget({
     super.key,
@@ -198,9 +219,20 @@ class HijriCalendarWidget extends StatefulWidget {
     this.onDateSelected,
     this.showHijriDates = true,
   });
+  final DateTime? selectedDate;
+  final Function(DateTime)? onDateSelected;
+  final bool showHijriDates;
 
   @override
   State<HijriCalendarWidget> createState() => _HijriCalendarWidgetState();
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<DateTime?>('selectedDate', selectedDate));
+    properties.add(ObjectFlagProperty<Function(DateTime p1)?>.has('onDateSelected', onDateSelected));
+    properties.add(DiagnosticsProperty<bool>('showHijriDates', showHijriDates));
+  }
 }
 
 class _HijriCalendarWidgetState extends State<HijriCalendarWidget> {
@@ -215,8 +247,7 @@ class _HijriCalendarWidgetState extends State<HijriCalendarWidget> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Column(
+  Widget build(BuildContext context) => Column(
       children: [
         // Month/Year header
         _buildHeader(),
@@ -228,10 +259,8 @@ class _HijriCalendarWidgetState extends State<HijriCalendarWidget> {
         _buildCalendarDays(),
       ],
     );
-  }
 
-  Widget _buildHeader() {
-    return Padding(
+  Widget _buildHeader() => Padding(
       padding: EdgeInsets.all(16.w),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -285,7 +314,6 @@ class _HijriCalendarWidgetState extends State<HijriCalendarWidget> {
         ],
       ),
     );
-  }
 
   Widget _buildDaysOfWeekHeader() {
     final weekdays = ['السبت', 'الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة'];
@@ -293,8 +321,7 @@ class _HijriCalendarWidgetState extends State<HijriCalendarWidget> {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.w),
       child: Row(
-        children: weekdays.map((day) {
-          return Expanded(
+        children: weekdays.map((day) => Expanded(
             child: Container(
               padding: EdgeInsets.symmetric(vertical: 8.h),
               alignment: Alignment.center,
@@ -308,8 +335,7 @@ class _HijriCalendarWidgetState extends State<HijriCalendarWidget> {
                 ),
               ),
             ),
-          );
-        }).toList(),
+          )).toList(),
       ),
     );
   }
@@ -357,7 +383,7 @@ class _HijriCalendarWidgetState extends State<HijriCalendarWidget> {
               widget.onDateSelected?.call(dayDate);
             }
           : null,
-      child: Container(
+      child: DecoratedBox(
         decoration: BoxDecoration(
           color: isSelected
               ? Theme.of(context).colorScheme.primary

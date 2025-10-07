@@ -1,9 +1,10 @@
-import "package:flutter/material.dart";
-import "package:flutter/foundation.dart";
-import "package:flutter_screenutil/flutter_screenutil.dart";
-import "../../theme/app_colors.dart";
-import "../../theme/app_shadows.dart";
-import "../../theme/app_animations.dart";
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import '../../theme/app_animations.dart';
+import '../../theme/app_colors.dart';
+import '../../theme/app_shadows.dart';
 
 /// Custom Icon Button Component
 ///
@@ -57,9 +58,7 @@ import "../../theme/app_animations.dart";
 class IconButtonCustom extends StatefulWidget {
 
   const IconButtonCustom({
-    super.key,
-    required this.icon,
-    required this.onPressed,
+    required this.icon, required this.onPressed, super.key,
     this.variant = IconButtonVariant.filled,
     this.size = IconButtonSize.medium,
     this.badgeCount,
@@ -258,7 +257,7 @@ class _IconButtonCustomState extends State<IconButtonCustom>
               constraints: BoxConstraints(minWidth: 18.r, minHeight: 18.r),
               child: Center(
                 child: Text(
-                  widget.badgeCount! > 99 ? "99+" : "${widget.badgeCount}",
+                  widget.badgeCount! > 99 ? '99+' : '${widget.badgeCount}',
                   style: TextStyle(
                     color: AppColors.white,
                     fontSize: 10.sp,
@@ -274,6 +273,12 @@ class _IconButtonCustomState extends State<IconButtonCustom>
     }
 
     return button;
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<bool>('isDisabled', isDisabled));
   }
 }
 

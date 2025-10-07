@@ -1,8 +1,8 @@
 /// Location service for handling geolocation and geocoding operations
-import 'package:geolocator/geolocator.dart';
+library;
 import 'package:geocoding/geocoding.dart';
-import 'package:permission_handler/permission_handler.dart';
-import '../config/app_config.dart';
+import 'package:geolocator/geolocator.dart';
+
 import '../../features/location/domain/entities/location.dart' as app_location;
 
 /// Service for handling device location and geocoding operations
@@ -16,11 +16,11 @@ class LocationService {
   }) async {
     try {
       // Check location permissions
-      LocationPermission permission = await Geolocator.checkPermission();
+      var permission = await Geolocator.checkPermission();
       if (permission == LocationPermission.denied) {
         permission = await Geolocator.requestPermission();
         if (permission == LocationPermission.denied) {
-          throw LocationServiceException(
+          throw const LocationServiceException(
             'Location permissions are denied',
             LocationErrorType.permissionDenied,
           );
@@ -28,7 +28,7 @@ class LocationService {
       }
 
       if (permission == LocationPermission.deniedForever) {
-        throw LocationServiceException(
+        throw const LocationServiceException(
           'Location permissions are permanently denied',
           LocationErrorType.permissionDeniedForever,
         );
@@ -153,9 +153,7 @@ class LocationService {
   }
 
   /// Check if location services are enabled
-  Future<bool> isLocationServiceEnabled() async {
-    return Geolocator.isLocationServiceEnabled();
-  }
+  Future<bool> isLocationServiceEnabled() async => Geolocator.isLocationServiceEnabled();
 
   /// Open location settings
   Future<void> openLocationSettings() async {
@@ -169,7 +167,7 @@ class LocationService {
 
   /// Check and request location permissions
   Future<LocationPermission> checkAndRequestPermission() async {
-    LocationPermission permission = await Geolocator.checkPermission();
+    var permission = await Geolocator.checkPermission();
 
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
@@ -182,19 +180,19 @@ class LocationService {
   String _buildAddress(Placemark placemark) {
     final parts = <String>[];
 
-    if (placemark.street?.isNotEmpty == true) {
+    if (placemark.street?.isNotEmpty ?? false) {
       parts.add(placemark.street!);
     }
-    if (placemark.subLocality?.isNotEmpty == true) {
+    if (placemark.subLocality?.isNotEmpty ?? false) {
       parts.add(placemark.subLocality!);
     }
-    if (placemark.locality?.isNotEmpty == true) {
+    if (placemark.locality?.isNotEmpty ?? false) {
       parts.add(placemark.locality!);
     }
-    if (placemark.administrativeArea?.isNotEmpty == true) {
+    if (placemark.administrativeArea?.isNotEmpty ?? false) {
       parts.add(placemark.administrativeArea!);
     }
-    if (placemark.country?.isNotEmpty == true) {
+    if (placemark.country?.isNotEmpty ?? false) {
       parts.add(placemark.country!);
     }
 
@@ -205,22 +203,18 @@ class LocationService {
   Stream<Position> getPositionStream({
     LocationAccuracy accuracy = LocationAccuracy.high,
     int distanceFilter = 10, // Minimum distance (in meters) to trigger updates
-  }) {
-    return Geolocator.getPositionStream(
+  }) => Geolocator.getPositionStream(
       locationSettings: LocationSettings(
         accuracy: accuracy,
         distanceFilter: distanceFilter,
       ),
     );
-  }
 
   /// Convert Position to app Location
-  app_location.Location positionToLocation(Position position) {
-    return app_location.Location(
+  app_location.Location positionToLocation(Position position) => app_location.Location(
       latitude: position.latitude,
       longitude: position.longitude,
     );
-  }
 }
 
 /// Custom exception for location service errors

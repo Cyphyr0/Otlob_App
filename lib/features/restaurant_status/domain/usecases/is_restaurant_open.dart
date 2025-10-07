@@ -5,7 +5,5 @@ class IsRestaurantOpen {
 
   final RestaurantStatusRepository _repository;
 
-  Future<bool> call(String restaurantId) {
-    return _repository.isRestaurantOpen(restaurantId);
-  }
+  Future<bool> call(String restaurantId) => _repository.isRestaurantOpen(restaurantId);
 }

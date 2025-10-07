@@ -1,4 +1,4 @@
-import "package:flutter/material.dart";
+import 'package:flutter/material.dart';
 
 /// Otlob Design System
 /// Foundation for consistent UI/UX across the app

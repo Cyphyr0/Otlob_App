@@ -1,7 +1,7 @@
-import '../../../user_preferences/domain/entities/user_preferences.dart';
-import '../../../home/domain/entities/restaurant.dart';
 import '../../../favorites/domain/entities/favorite.dart';
+import '../../../home/domain/entities/restaurant.dart';
 import '../../../tawseya/domain/entities/tawseya_item.dart';
+import '../../../user_preferences/domain/entities/user_preferences.dart';
 
 class SmartSuggestionService {
   static const double _favoriteCuisineWeight = 0.4;
@@ -48,7 +48,7 @@ class SmartSuggestionService {
     required List<Favorite> userFavorites,
     required List<TawseyaItem> tawseyaItems,
   }) {
-    double score = 0.0;
+    var score = 0;
 
     // Favorite cuisine match (40% weight)
     if (userPreferences.favoriteCuisines.contains(restaurant.cuisine)) {
@@ -130,13 +130,11 @@ class SmartSuggestionService {
     return false;
   }
 
-  bool _matchesPriceRange(double restaurantPriceLevel, PriceRange preferredRange) {
-    return switch (preferredRange) {
+  bool _matchesPriceRange(double restaurantPriceLevel, PriceRange preferredRange) => switch (preferredRange) {
       PriceRange.budget => restaurantPriceLevel <= 1.5,
       PriceRange.medium => restaurantPriceLevel > 1.5 && restaurantPriceLevel <= 3.0,
       PriceRange.premium => restaurantPriceLevel > 3.0,
     };
-  }
 
   bool _meetsDietaryRestrictions(Restaurant restaurant, List<DietaryRestriction> restrictions) {
     // This would need to be enhanced based on actual restaurant data
@@ -169,12 +167,10 @@ class SmartSuggestionService {
     return preferences.willingToTry;
   }
 
-  List<String> _getDefaultCuisineRecommendations() {
-    return [
+  List<String> _getDefaultCuisineRecommendations() => [
       'Try something new!',
       'Explore different cuisines',
       'Discover hidden gems',
       'Experience local favorites',
     ];
-  }
 }

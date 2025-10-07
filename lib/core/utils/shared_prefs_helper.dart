@@ -1,8 +1,8 @@
-import "package:shared_preferences/shared_preferences.dart";
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPrefsHelper {
-  static const String _onboardingCompletedKey = "onboarding_completed";
-  static const String _authenticatedKey = "is_authenticated";
+  static const String _onboardingCompletedKey = 'onboarding_completed';
+  static const String _authenticatedKey = 'is_authenticated';
 
   static Future<bool> isOnboardingCompleted() async {
     var prefs = await SharedPreferences.getInstance();

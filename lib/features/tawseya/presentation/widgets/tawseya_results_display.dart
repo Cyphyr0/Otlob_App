@@ -100,16 +100,13 @@ class _TawseyaResultsDisplayState extends ConsumerState<TawseyaResultsDisplay> {
 }
 
 class TawseyaResultCard extends StatelessWidget {
+
+  const TawseyaResultCard({
+    required this.resultItem, required this.rank, required this.totalVotes, super.key,
+  });
   final VotingResultItem resultItem;
   final int rank;
   final int totalVotes;
-
-  const TawseyaResultCard({
-    super.key,
-    required this.resultItem,
-    required this.rank,
-    required this.totalVotes,
-  });
 
   @override
   Widget build(BuildContext context) {
@@ -259,5 +256,13 @@ class TawseyaResultCard extends StatelessWidget {
       default:
         return Colors.grey[400]!;
     }
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<VotingResultItem>('resultItem', resultItem));
+    properties.add(IntProperty('rank', rank));
+    properties.add(IntProperty('totalVotes', totalVotes));
   }
 }

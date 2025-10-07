@@ -1,8 +1,8 @@
 /// Service for handling location permissions across the app
+library;
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart' as perm_handler;
-import '../config/app_config.dart';
 
 /// Service for managing location permissions
 class LocationPermissionsService {
@@ -10,19 +10,13 @@ class LocationPermissionsService {
   static LocationPermissionsService get instance => _instance ??= LocationPermissionsService();
 
   /// Check if location services are enabled
-  Future<bool> isLocationServiceEnabled() async {
-    return Geolocator.isLocationServiceEnabled();
-  }
+  Future<bool> isLocationServiceEnabled() async => Geolocator.isLocationServiceEnabled();
 
   /// Check current location permission status
-  Future<LocationPermission> checkPermission() async {
-    return Geolocator.checkPermission();
-  }
+  Future<LocationPermission> checkPermission() async => Geolocator.checkPermission();
 
   /// Request location permission
-  Future<LocationPermission> requestPermission() async {
-    return Geolocator.requestPermission();
-  }
+  Future<LocationPermission> requestPermission() async => Geolocator.requestPermission();
 
   /// Check and request location permission with detailed handling
   Future<PermissionStatus> checkAndRequestLocationPermission() async {
@@ -34,7 +28,7 @@ class LocationPermissionsService {
       }
 
       // Check current permission status
-      LocationPermission permission = await checkPermission();
+      var permission = await checkPermission();
 
       if (permission == LocationPermission.denied) {
         // Request permission
@@ -91,7 +85,7 @@ class LocationPermissionsService {
         canRequest: false,
         message: 'Location services are disabled. Please enable them in your device settings.',
         actionText: 'Open Settings',
-        action: () => openLocationSettings(),
+        action: openLocationSettings,
       );
     }
 
@@ -102,7 +96,7 @@ class LocationPermissionsService {
           canRequest: true,
           message: 'Location permission is required to show nearby restaurants and delivery areas.',
           actionText: 'Grant Permission',
-          action: () => requestPermission(),
+          action: requestPermission,
         );
 
       case LocationPermission.deniedForever:
@@ -111,12 +105,12 @@ class LocationPermissionsService {
           canRequest: false,
           message: 'Location permission is permanently denied. Please enable it in app settings.',
           actionText: 'Open Settings',
-          action: () => openAppSettings(),
+          action: openAppSettings,
         );
 
       case LocationPermission.whileInUse:
       case LocationPermission.always:
-        return LocationPermissionResult(
+        return const LocationPermissionResult(
           status: PermissionStatus.granted,
           canRequest: false,
           message: 'Location permission granted.',
@@ -128,14 +122,13 @@ class LocationPermissionsService {
           canRequest: true,
           message: 'Location permission is required.',
           actionText: 'Grant Permission',
-          action: () => requestPermission(),
+          action: requestPermission,
         );
     }
   }
 
   /// Show permission rationale dialog
-  Future<bool?> showPermissionRationale(BuildContext context) async {
-    return showDialog<bool>(
+  Future<bool?> showPermissionRationale(BuildContext context) async => showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Location Permission Required'),
@@ -156,7 +149,6 @@ class LocationPermissionsService {
         ],
       ),
     );
-  }
 
   /// Handle location permission flow with user feedback
   Future<LocationPermissionResult> handlePermissionFlow(BuildContext context) async {

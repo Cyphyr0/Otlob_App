@@ -1,12 +1,14 @@
 /// Google Maps widget for displaying restaurants with location-based features
+library;
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart' as gmaps;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart' as gmaps;
+
 import '../../../../core/config/app_config.dart';
+import '../../../home/domain/entities/restaurant.dart';
 import '../../domain/entities/location.dart';
 import '../../domain/entities/map_marker.dart' as app_marker;
 import '../providers/map_provider.dart';
-import '../../../home/domain/entities/restaurant.dart';
 
 /// Main map widget for restaurant discovery
 class RestaurantMapWidget extends ConsumerStatefulWidget {
@@ -27,6 +29,16 @@ class RestaurantMapWidget extends ConsumerStatefulWidget {
 
   @override
   ConsumerState<RestaurantMapWidget> createState() => _RestaurantMapWidgetState();
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<Location?>('initialLocation', initialLocation));
+    properties.add(DoubleProperty('initialZoom', initialZoom));
+    properties.add(ObjectFlagProperty<Function(Restaurant p1)?>.has('onRestaurantTap', onRestaurantTap));
+    properties.add(DiagnosticsProperty<bool>('showUserLocation', showUserLocation));
+    properties.add(DiagnosticsProperty<bool>('showDeliveryAreas', showDeliveryAreas));
+  }
 }
 
 class _RestaurantMapWidgetState extends ConsumerState<RestaurantMapWidget> {
@@ -86,7 +98,7 @@ class _RestaurantMapWidgetState extends ConsumerState<RestaurantMapWidget> {
     } else {
       await mapNotifier.loadRestaurantsInRadius(
         center: widget.initialLocation!,
-        radiusKm: 5.0, // Default 5km radius
+        radiusKm: 5, // Default 5km radius
       );
     }
 
@@ -196,8 +208,7 @@ class _RestaurantMapWidgetState extends ConsumerState<RestaurantMapWidget> {
   }
 
   /// Create Google Maps marker from app MapMarker
-  gmaps.Marker _createGoogleMarker(app_marker.MapMarker marker) {
-    return gmaps.Marker(
+  gmaps.Marker _createGoogleMarker(app_marker.MapMarker marker) => gmaps.Marker(
       markerId: gmaps.MarkerId(marker.id),
       position: gmaps.LatLng(marker.position.latitude, marker.position.longitude),
       icon: _getMarkerIcon(marker.markerType),
@@ -212,7 +223,6 @@ class _RestaurantMapWidgetState extends ConsumerState<RestaurantMapWidget> {
       ),
       onTap: marker.onTap,
     );
-  }
 
   /// Get appropriate marker icon based on type
   gmaps.BitmapDescriptor _getMarkerIcon(app_marker.MarkerType type) {
@@ -234,7 +244,7 @@ class _RestaurantMapWidgetState extends ConsumerState<RestaurantMapWidget> {
 
     // This is a simplified calculation
     // In a real implementation, you'd calculate the actual viewport bounds
-    const double offset = 0.01; // Approximate offset for zoom level 15
+    const offset = 0.01; // Approximate offset for zoom level 15
     return gmaps.LatLngBounds(
       northeast: gmaps.LatLng(
         position.target.latitude + offset,
@@ -270,9 +280,7 @@ class _RestaurantMapWidgetState extends ConsumerState<RestaurantMapWidget> {
 /// Floating action button for location-related actions
 class MapActionButton extends ConsumerWidget {
   const MapActionButton({
-    super.key,
-    required this.icon,
-    required this.onPressed,
+    required this.icon, required this.onPressed, super.key,
     this.tooltip,
   });
 
@@ -281,13 +289,19 @@ class MapActionButton extends ConsumerWidget {
   final String? tooltip;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return FloatingActionButton(
+  Widget build(BuildContext context, WidgetRef ref) => FloatingActionButton(
       mini: true,
       onPressed: onPressed,
       tooltip: tooltip,
       child: Icon(icon),
     );
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<IconData>('icon', icon));
+    properties.add(ObjectFlagProperty<VoidCallback>.has('onPressed', onPressed));
+    properties.add(StringProperty('tooltip', tooltip));
   }
 }
 
@@ -323,8 +337,8 @@ class MapFilterControls extends ConsumerWidget {
               Expanded(
                 child: Slider(
                   value: mapState.selectedRadius,
-                  min: 1.0,
-                  max: 20.0,
+                  min: 1,
+                  max: 20,
                   divisions: 19,
                   onChanged: (value) {
                     ref.read(mapProvider.notifier).updateFilters(radius: value);
@@ -353,8 +367,7 @@ class MapFilterControls extends ConsumerWidget {
 /// Restaurant info card for map overlay
 class RestaurantMapCard extends StatelessWidget {
   const RestaurantMapCard({
-    super.key,
-    required this.restaurant,
+    required this.restaurant, super.key,
     this.onTap,
   });
 
@@ -362,8 +375,7 @@ class RestaurantMapCard extends StatelessWidget {
   final VoidCallback? onTap;
 
   @override
-  Widget build(BuildContext context) {
-    return Card(
+  Widget build(BuildContext context) => Card(
       margin: const EdgeInsets.all(8),
       child: InkWell(
         onTap: onTap,
@@ -416,7 +428,7 @@ class RestaurantMapCard extends StatelessWidget {
                     ),
                     Row(
                       children: [
-                        Icon(Icons.star, size: 16, color: Colors.amber),
+                        const Icon(Icons.star, size: 16, color: Colors.amber),
                         Text(
                           '${restaurant.rating}',
                           style: const TextStyle(fontSize: 14),
@@ -437,7 +449,7 @@ class RestaurantMapCard extends StatelessWidget {
 
               // Favorite indicator
               if (restaurant.isFavorite)
-                Icon(
+                const Icon(
                   Icons.favorite,
                   color: Colors.red,
                 ),
@@ -446,5 +458,11 @@ class RestaurantMapCard extends StatelessWidget {
         ),
       ),
     );
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<Restaurant>('restaurant', restaurant));
+    properties.add(ObjectFlagProperty<VoidCallback?>.has('onTap', onTap));
   }
 }

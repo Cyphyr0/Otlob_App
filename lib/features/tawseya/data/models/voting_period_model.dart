@@ -1,14 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class VotingPeriodModel {
-  final String id;
-  final int month;
-  final int year;
-  final DateTime startDate;
-  final DateTime endDate;
-  final bool isActive;
-  final DateTime createdAt;
-  final int totalVotes;
 
   VotingPeriodModel({
     required this.id,
@@ -22,7 +14,7 @@ class VotingPeriodModel {
   });
 
   factory VotingPeriodModel.fromFirestore(DocumentSnapshot doc) {
-    Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+    var data = doc.data() as Map<String, dynamic>;
     return VotingPeriodModel(
       id: doc.id,
       month: data['month'] ?? 1,
@@ -34,9 +26,16 @@ class VotingPeriodModel {
       totalVotes: data['totalVotes'] ?? 0,
     );
   }
+  final String id;
+  final int month;
+  final int year;
+  final DateTime startDate;
+  final DateTime endDate;
+  final bool isActive;
+  final DateTime createdAt;
+  final int totalVotes;
 
-  Map<String, dynamic> toFirestore() {
-    return {
+  Map<String, dynamic> toFirestore() => {
       'month': month,
       'year': year,
       'startDate': Timestamp.fromDate(startDate),
@@ -45,24 +44,19 @@ class VotingPeriodModel {
       'createdAt': Timestamp.fromDate(createdAt),
       'totalVotes': totalVotes,
     };
-  }
 
   // Helper method to get current voting period ID
   static String getCurrentPeriodId() {
-    DateTime now = DateTime.now();
+    var now = DateTime.now();
     return '${now.year}_${now.month.toString().padLeft(2, '0')}';
   }
 
   // Helper method to check if a date falls within this voting period
-  bool isDateInPeriod(DateTime date) {
-    return date.isAfter(startDate.subtract(const Duration(days: 1))) &&
+  bool isDateInPeriod(DateTime date) => date.isAfter(startDate.subtract(const Duration(days: 1))) &&
            date.isBefore(endDate.add(const Duration(days: 1)));
-  }
 
   // Helper method to get period display name
-  String getDisplayName() {
-    return '${_getMonthName(month)} $year';
-  }
+  String getDisplayName() => '${_getMonthName(month)} $year';
 
   String _getMonthName(int month) {
     const monthNames = [
@@ -81,8 +75,7 @@ class VotingPeriodModel {
     bool? isActive,
     DateTime? createdAt,
     int? totalVotes,
-  }) {
-    return VotingPeriodModel(
+  }) => VotingPeriodModel(
       id: id ?? this.id,
       month: month ?? this.month,
       year: year ?? this.year,
@@ -92,5 +85,4 @@ class VotingPeriodModel {
       createdAt: createdAt ?? this.createdAt,
       totalVotes: totalVotes ?? this.totalVotes,
     );
-  }
 }

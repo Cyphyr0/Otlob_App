@@ -12,13 +12,11 @@ class UpdateRestaurantStatus {
     String? reason,
     DateTime? estimatedReopening,
     String? updatedBy,
-  }) {
-    return _repository.updateRestaurantStatus(
+  }) => _repository.updateRestaurantStatus(
       restaurantId: restaurantId,
       statusType: statusType,
       reason: reason,
       estimatedReopening: estimatedReopening,
       updatedBy: updatedBy,
     );
-  }
 }

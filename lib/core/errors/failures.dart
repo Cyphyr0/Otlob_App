@@ -25,7 +25,7 @@ class ValidationFailure extends Failure {
 
 class UnauthorizedFailure extends Failure {
   const UnauthorizedFailure({
-    super.message = "Unauthorized access",
+    super.message = 'Unauthorized access',
     super.error,
   });
 }

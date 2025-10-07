@@ -1,12 +1,15 @@
-import "dart:async";
-import "package:flutter/material.dart";
-import "package:flutter_screenutil/flutter_screenutil.dart";
-import "../../theme/app_colors.dart";
-import "../../theme/app_typography.dart";
-import "../../theme/app_radius.dart";
-import "../../theme/app_spacing.dart";
-import "../../theme/app_shadows.dart";
-import "../../theme/app_animations.dart";
+import 'dart:async';
+
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import '../../theme/app_animations.dart';
+import '../../theme/app_colors.dart';
+import '../../theme/app_radius.dart';
+import '../../theme/app_shadows.dart';
+import '../../theme/app_spacing.dart';
+import '../../theme/app_typography.dart';
 
 /// Search Bar Widget Component
 ///
@@ -151,7 +154,7 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
       widget.onClear!();
     }
     if (widget.onSearch != null) {
-      widget.onSearch!("");
+      widget.onSearch!('');
     }
   }
 

@@ -1,18 +1,19 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:collection/collection.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../../domain/entities/favorite.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../../../core/providers.dart';
 import '../../../../core/services/firebase/firebase_firestore_service.dart';
-import '../../../auth/presentation/providers/auth_provider.dart';
+import '../../domain/entities/favorite.dart';
 
 class FavoritesNotifier extends StateNotifier<AsyncValue<List<Favorite>>> {
-  final FirebaseFirestoreService _firestoreService;
-  final FirebaseAuth _auth;
 
   FavoritesNotifier(this._firestoreService, this._auth)
       : super(const AsyncValue.loading()) {
     _initializeFavorites();
   }
+  final FirebaseFirestoreService _firestoreService;
+  final FirebaseAuth _auth;
 
   String get _userId => _auth.currentUser?.uid ?? '';
 
@@ -104,19 +105,15 @@ class FavoritesNotifier extends StateNotifier<AsyncValue<List<Favorite>>> {
     }
   }
 
-  bool isFavorite(String restaurantId) {
-    return state.maybeWhen(
+  bool isFavorite(String restaurantId) => state.maybeWhen(
       data: (favorites) => favorites.any((fav) => fav.restaurantId == restaurantId),
       orElse: () => false,
     );
-  }
 
-  Favorite? getFavorite(String restaurantId) {
-    return state.maybeWhen(
+  Favorite? getFavorite(String restaurantId) => state.maybeWhen(
       data: (favorites) => favorites.firstWhereOrNull((fav) => fav.restaurantId == restaurantId),
       orElse: () => null,
     );
-  }
 
   List<Favorite> get favorites => state.maybeWhen(
         data: (favorites) => favorites,
@@ -136,19 +133,15 @@ final favoritesProvider = StateNotifierProvider<FavoritesNotifier, AsyncValue<Li
 });
 
 // Convenience providers for common operations
-final isFavoriteProvider = Provider.family<bool, String>((ref, restaurantId) {
-  return ref.watch(favoritesProvider).maybeWhen(
+final isFavoriteProvider = Provider.family<bool, String>((ref, restaurantId) => ref.watch(favoritesProvider).maybeWhen(
     data: (favorites) => favorites.any((fav) => fav.restaurantId == restaurantId),
     orElse: () => false,
-  );
-});
+  ));
 
-final favoriteByIdProvider = Provider.family<Favorite?, String>((ref, restaurantId) {
-  return ref.watch(favoritesProvider).maybeWhen(
+final favoriteByIdProvider = Provider.family<Favorite?, String>((ref, restaurantId) => ref.watch(favoritesProvider).maybeWhen(
     data: (favorites) => favorites.firstWhereOrNull((fav) => fav.restaurantId == restaurantId),
     orElse: () => null,
-  );
-});
+  ));
 
 // Stream provider for real-time updates
 final favoritesStreamProvider = StreamProvider<List<Favorite>>((ref) {

@@ -30,6 +30,35 @@ class Subscription {
     this.updatedAt,
   });
 
+  factory Subscription.fromJson(Map<String, dynamic> json) => Subscription(
+      id: json['id'] as String,
+      userId: json['userId'] as String,
+      walletId: json['walletId'] as String,
+      type: SubscriptionType.values.firstWhere(
+        (e) => e.name == json['type'] as String,
+      ),
+      status: SubscriptionStatus.values.firstWhere(
+        (e) => e.name == json['status'] as String,
+      ),
+      amount: (json['amount'] as num).toDouble(),
+      currency: json['currency'] as String,
+      startDate: DateTime.parse(json['startDate'] as String),
+      endDate: DateTime.parse(json['endDate'] as String),
+      nextBillingDate: json['nextBillingDate'] != null
+          ? DateTime.parse(json['nextBillingDate'] as String)
+          : null,
+      cancelledAt: json['cancelledAt'] != null
+          ? DateTime.parse(json['cancelledAt'] as String)
+          : null,
+      metadata: json['metadata'] as Map<String, dynamic>?,
+      createdAt: json['createdAt'] != null
+          ? DateTime.parse(json['createdAt'] as String)
+          : null,
+      updatedAt: json['updatedAt'] != null
+          ? DateTime.parse(json['updatedAt'] as String)
+          : null,
+    );
+
   final String id;
   final String userId;
   final String walletId;
@@ -60,8 +89,7 @@ class Subscription {
     Map<String, dynamic>? metadata,
     DateTime? createdAt,
     DateTime? updatedAt,
-  }) {
-    return Subscription(
+  }) => Subscription(
       id: id ?? this.id,
       userId: userId ?? this.userId,
       walletId: walletId ?? this.walletId,
@@ -77,10 +105,8 @@ class Subscription {
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );
-  }
 
-  Map<String, dynamic> toJson() {
-    return {
+  Map<String, dynamic> toJson() => {
       'id': id,
       'userId': userId,
       'walletId': walletId,
@@ -96,38 +122,6 @@ class Subscription {
       'createdAt': createdAt?.toIso8601String(),
       'updatedAt': updatedAt?.toIso8601String(),
     };
-  }
-
-  factory Subscription.fromJson(Map<String, dynamic> json) {
-    return Subscription(
-      id: json['id'] as String,
-      userId: json['userId'] as String,
-      walletId: json['walletId'] as String,
-      type: SubscriptionType.values.firstWhere(
-        (e) => e.name == json['type'] as String,
-      ),
-      status: SubscriptionStatus.values.firstWhere(
-        (e) => e.name == json['status'] as String,
-      ),
-      amount: (json['amount'] as num).toDouble(),
-      currency: json['currency'] as String,
-      startDate: DateTime.parse(json['startDate'] as String),
-      endDate: DateTime.parse(json['endDate'] as String),
-      nextBillingDate: json['nextBillingDate'] != null
-          ? DateTime.parse(json['nextBillingDate'] as String)
-          : null,
-      cancelledAt: json['cancelledAt'] != null
-          ? DateTime.parse(json['cancelledAt'] as String)
-          : null,
-      metadata: json['metadata'] as Map<String, dynamic>?,
-      createdAt: json['createdAt'] != null
-          ? DateTime.parse(json['createdAt'] as String)
-          : null,
-      updatedAt: json['updatedAt'] != null
-          ? DateTime.parse(json['updatedAt'] as String)
-          : null,
-    );
-  }
 
   bool get isActive => status == SubscriptionStatus.active;
   bool get isExpired => endDate.isBefore(DateTime.now());
@@ -143,7 +137,5 @@ class Subscription {
   int get hashCode => id.hashCode;
 
   @override
-  String toString() {
-    return 'Subscription(id: $id, type: $type, status: $status, amount: $amount $currency)';
-  }
+  String toString() => 'Subscription(id: $id, type: $type, status: $status, amount: $amount $currency)';
 }

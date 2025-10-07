@@ -1,6 +1,6 @@
-import "package:firebase_auth/firebase_auth.dart";
-import "package:google_sign_in/google_sign_in.dart";
-import "../../../features/auth/domain/entities/user.dart" as app_user;
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import '../../../features/auth/domain/entities/user.dart' as app_user;
 
 class FirebaseAuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -18,7 +18,7 @@ class FirebaseAuthService {
   Future<UserCredential> signInWithEmailAndPassword(
     String email,
     String password,
-  ) async => await _auth.signInWithEmailAndPassword(
+  ) async => _auth.signInWithEmailAndPassword(
       email: email,
       password: password,
     );
@@ -27,7 +27,7 @@ class FirebaseAuthService {
   Future<UserCredential> createUserWithEmailAndPassword(
     String email,
     String password,
-  ) async => await _auth.createUserWithEmailAndPassword(
+  ) async => _auth.createUserWithEmailAndPassword(
       email: email,
       password: password,
     );
@@ -50,12 +50,12 @@ class FirebaseAuthService {
 
       return await _auth.signInWithCredential(credential);
     } catch (e) {
-      throw Exception("Google sign in failed: $e");
+      throw Exception('Google sign in failed: $e');
     }
   }
 
   // Sign in anonymously
-  Future<UserCredential> signInAnonymously() async => await _auth.signInAnonymously();
+  Future<UserCredential> signInAnonymously() async => _auth.signInAnonymously();
 
   // Send password reset email
   Future<void> sendPasswordResetEmail(String email) async {
@@ -109,11 +109,11 @@ class FirebaseAuthService {
 
     return app_user.User(
       id: firebaseUser.uid,
-      email: firebaseUser.email ?? "",
+      email: firebaseUser.email ?? '',
       name:
           firebaseUser.displayName ??
-          firebaseUser.email?.split("@")[0] ??
-          "User",
+          firebaseUser.email?.split('@')[0] ??
+          'User',
       phone: firebaseUser.phoneNumber,
       createdAt: firebaseUser.metadata.creationTime ?? DateTime.now(),
       isVerified: firebaseUser.emailVerified,
@@ -138,10 +138,10 @@ class FirebaseAuthService {
       phoneNumber: phoneNumber,
       verificationCompleted: (PhoneAuthCredential credential) async {
         await _auth.signInWithCredential(credential);
-        onVerificationCompleted("Verification completed");
+        onVerificationCompleted('Verification completed');
       },
       verificationFailed: (FirebaseAuthException e) {
-        onVerificationFailed(e.message ?? "Verification failed");
+        onVerificationFailed(e.message ?? 'Verification failed');
       },
       codeSent: (String verificationId, int? resendToken) {
         onCodeSent(verificationId);

@@ -1,22 +1,24 @@
-import "package:flutter/material.dart";
-import "package:flutter_riverpod/flutter_riverpod.dart";
-import "package:flutter_screenutil/flutter_screenutil.dart";
-import "package:go_router/go_router.dart";
-import "../../../../core/theme/app_colors.dart";
-import "../../../../core/theme/app_typography.dart";
-import "../../../../core/theme/app_spacing.dart";
-import "../../../../core/theme/app_radius.dart";
-import "../../../../core/theme/app_shadows.dart";
-import "../../../../core/widgets/branding/otlob_logo.dart";
-import "../../../../core/widgets/badges/tawseya_badge.dart";
-import "../../../../core/providers.dart";
-import "../../domain/entities/restaurant.dart";
-import "../../../cart/domain/entities/cart_item.dart";
-import "pdf_viewer_screen.dart";
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+
+import '../../../../core/providers.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_radius.dart';
+import '../../../../core/theme/app_shadows.dart';
+import '../../../../core/theme/app_spacing.dart';
+import '../../../../core/theme/app_typography.dart';
+import '../../../../core/widgets/badges/tawseya_badge.dart';
+import '../../../../core/widgets/branding/otlob_logo.dart';
+import '../../../cart/domain/entities/cart_item.dart';
+import '../../domain/entities/restaurant.dart';
+import 'pdf_viewer_screen.dart';
 
 class RestaurantDetailScreen extends ConsumerWidget {
 
-  const RestaurantDetailScreen({super.key, required this.id});
+  const RestaurantDetailScreen({required this.id, super.key});
   final String id;
 
   @override
@@ -29,32 +31,36 @@ class RestaurantDetailScreen extends ConsumerWidget {
       loading: () =>
           const Scaffold(body: Center(child: CircularProgressIndicator())),
       error: (error, stack) => Scaffold(
-        body: Center(child: Text("Error loading restaurant: $error")),
+        body: Center(child: Text('Error loading restaurant: $error')),
       ),
       data: (restaurants) {
         var restaurant = restaurants.firstWhere(
           (r) => r.id == id,
           orElse: () => const Restaurant(
-            id: "",
-            name: "Not Found",
+            id: '',
+            name: 'Not Found',
             rating: 0,
-            imageUrl: "",
+            imageUrl: '',
             tawseyaCount: 0,
-            cuisine: "",
-            description: "Restaurant not found.",
+            cuisine: '',
+            description: 'Restaurant not found.',
             menuCategories: [],
             isOpen: false,
             distance: 0,
-            address: "",
+            address: '',
             priceLevel: 0,
+            latitude: 0,
+            longitude: 0,
             isFavorite: false,
           ),
         );
 
         var favoritesNotifier = ref.read(favoritesProvider.notifier);
-        var isFavorite = ref
-            .watch(favoritesProvider)
-            .any((r) => r.id == restaurant.id);
+        var favoritesAsync = ref.watch(favoritesProvider);
+        var isFavorite = favoritesAsync.maybeWhen(
+          data: (favorites) => favorites.any((r) => r.id == restaurant.id),
+          orElse: () => false,
+        );
 
         // Use menuCategories from restaurant entity
 
@@ -99,13 +105,13 @@ class RestaurantDetailScreen extends ConsumerWidget {
         padding: EdgeInsets.all(AppSpacing.sm),
         child: GestureDetector(
           onTap: () => context.go('/home'),
-          child: Container(
+          child: DecoratedBox(
             decoration: BoxDecoration(
               color: AppColors.white,
               shape: BoxShape.circle,
               boxShadow: AppShadows.md,
             ),
-            child: Icon(Icons.arrow_back, color: AppColors.primaryBlack),
+            child: const Icon(Icons.arrow_back, color: AppColors.primaryBlack),
           ),
         ),
       ),
@@ -135,14 +141,12 @@ class RestaurantDetailScreen extends ConsumerWidget {
           fit: StackFit.expand,
           children: [
             // Restaurant image
-            restaurant.imageUrl != null && restaurant.imageUrl!.isNotEmpty
-                ? (restaurant.imageUrl!.startsWith('assets/')
+            if (restaurant.imageUrl != null && restaurant.imageUrl!.isNotEmpty) restaurant.imageUrl!.startsWith('assets/')
                       ? Image.asset(
                           restaurant.imageUrl!.replaceFirst('assets/', ''),
                           fit: BoxFit.cover,
                         )
-                      : Image.network(restaurant.imageUrl!, fit: BoxFit.cover))
-                : Container(
+                      : Image.network(restaurant.imageUrl!, fit: BoxFit.cover) else Container(
                     color: AppColors.lightGray,
                     child: Icon(
                       Icons.restaurant,
@@ -354,11 +358,11 @@ class RestaurantDetailScreen extends ConsumerWidget {
     var mockMenu = menuCategories
         .map(
           (category) => {
-            "category": category,
-            "dishes": [
-              {"name": "Grilled Chicken", "price": 15.99, "imageUrl": null},
-              {"name": "Beef Burger", "price": 12.99, "imageUrl": null},
-              {"name": "Caesar Salad", "price": 8.99, "imageUrl": null},
+            'category': category,
+            'dishes': [
+              {'name': 'Grilled Chicken', 'price': 15.99, 'imageUrl': null},
+              {'name': 'Beef Burger', 'price': 12.99, 'imageUrl': null},
+              {'name': 'Caesar Salad', 'price': 8.99, 'imageUrl': null},
             ],
           },
         )
@@ -370,7 +374,7 @@ class RestaurantDetailScreen extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "Menu",
+            'Menu',
             style: AppTypography.headlineMedium.copyWith(
               fontWeight: FontWeight.w700,
             ),
@@ -389,7 +393,7 @@ class RestaurantDetailScreen extends ConsumerWidget {
                   children: [
                     // Category Header
                     Text(
-                      category["category"] as String,
+                      category['category'] as String,
                       style: AppTypography.titleLarge.copyWith(
                         fontWeight: FontWeight.w600,
                       ),
@@ -399,14 +403,14 @@ class RestaurantDetailScreen extends ConsumerWidget {
                     ListView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
-                      itemCount: (category["dishes"] as List).length,
+                      itemCount: (category['dishes'] as List).length,
                       itemBuilder: (context, dishIndex) {
-                        var dish = (category["dishes"] as List)[dishIndex];
+                        var dish = (category['dishes'] as List)[dishIndex];
                         return Padding(
                           padding: EdgeInsets.only(
                             bottom:
                                 dishIndex <
-                                    (category["dishes"] as List).length - 1
+                                    (category['dishes'] as List).length - 1
                                 ? AppSpacing.md
                                 : 0,
                           ),
@@ -439,7 +443,7 @@ class RestaurantDetailScreen extends ConsumerWidget {
     CartItem? cartItem;
     try {
       cartItem = cartState.firstWhere(
-        (item) => item.name == dish["name"] && item.price == dish["price"],
+        (item) => item.name == dish['name'] && item.price == dish['price'],
       );
     } catch (_) {
       cartItem = null;
@@ -473,7 +477,7 @@ class RestaurantDetailScreen extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    dish["name"],
+                    dish['name'],
                     style: AppTypography.titleMedium.copyWith(
                       fontWeight: FontWeight.w600,
                     ),

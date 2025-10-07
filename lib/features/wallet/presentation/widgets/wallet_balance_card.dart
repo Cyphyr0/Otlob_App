@@ -4,15 +4,13 @@ import '../../domain/entities/wallet.dart';
 
 class WalletBalanceCard extends StatelessWidget {
   const WalletBalanceCard({
-    super.key,
-    required this.wallet,
+    required this.wallet, super.key,
   });
 
   final Wallet wallet;
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
+  Widget build(BuildContext context) => Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
@@ -88,5 +86,10 @@ class WalletBalanceCard extends StatelessWidget {
         ],
       ),
     );
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<Wallet>('wallet', wallet));
   }
 }

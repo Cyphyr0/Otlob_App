@@ -25,8 +25,7 @@ class WorkingHours {
     );
   }
 
-  factory WorkingHours.fromJson(Map<String, dynamic> json) {
-    return WorkingHours(
+  factory WorkingHours.fromJson(Map<String, dynamic> json) => WorkingHours(
       monday: TimeSlot.fromJson(json['monday'] ?? {}),
       tuesday: TimeSlot.fromJson(json['tuesday'] ?? {}),
       wednesday: TimeSlot.fromJson(json['wednesday'] ?? {}),
@@ -36,7 +35,6 @@ class WorkingHours {
       sunday: TimeSlot.fromJson(json['sunday'] ?? {}),
       timezone: json['timezone'] ?? 'Africa/Cairo',
     );
-  }
 
   final TimeSlot monday;
   final TimeSlot tuesday;
@@ -111,23 +109,17 @@ class TimeSlot {
     this.breakEnd,
   });
 
-  factory TimeSlot.closed() {
-    return const TimeSlot(isOpen: false);
-  }
+  factory TimeSlot.closed() => const TimeSlot(isOpen: false);
 
-  factory TimeSlot.open24Hours() {
-    return const TimeSlot(isOpen: true, openTime: '00:00', closeTime: '23:59');
-  }
+  factory TimeSlot.open24Hours() => const TimeSlot(isOpen: true, openTime: '00:00', closeTime: '23:59');
 
-  factory TimeSlot.fromJson(Map<String, dynamic> json) {
-    return TimeSlot(
+  factory TimeSlot.fromJson(Map<String, dynamic> json) => TimeSlot(
       isOpen: json['isOpen'] ?? false,
       openTime: json['openTime'],
       closeTime: json['closeTime'],
       breakStart: json['breakStart'],
       breakEnd: json['breakEnd'],
     );
-  }
 
   final bool isOpen;
   final String? openTime;

@@ -1,13 +1,18 @@
-import "package:cloud_firestore/cloud_firestore.dart";
-import "package:firebase_auth/firebase_auth.dart";
-import "../../domain/entities/payment.dart";
-import "../../domain/repositories/payment_repository.dart";
-import "../services/stripe_payment_service.dart";
-import "../services/fawry_payment_service.dart";
-import "../services/vodafone_cash_payment_service.dart";
-import "../services/meeza_payment_service.dart";
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+import '../../domain/entities/payment.dart';
+import '../../domain/repositories/payment_repository.dart';
+import '../services/fawry_payment_service.dart';
+import '../services/meeza_payment_service.dart';
+import '../services/stripe_payment_service.dart';
+import '../services/vodafone_cash_payment_service.dart';
 
 class FirebasePaymentRepository implements PaymentRepository {
+
+  FirebasePaymentRepository() {
+    _initializePaymentServices();
+  }
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -17,22 +22,18 @@ class FirebasePaymentRepository implements PaymentRepository {
   late final VodafoneCashPaymentService _vodafoneService;
   late final MeezaPaymentService _meezaService;
 
-  FirebasePaymentRepository() {
-    _initializePaymentServices();
-  }
-
   void _initializePaymentServices() {
     // These would typically come from environment variables or secure config
-    const String stripeSecretKey = "sk_test_your_stripe_secret_key";
-    const String fawryMerchantCode = "your_fawry_merchant_code";
-    const String fawrySecurityKey = "your_fawry_security_key";
-    const String vodafoneMerchantId = "your_vodafone_merchant_id";
-    const String vodafoneApiKey = "your_vodafone_api_key";
-    const String vodafoneSecretKey = "your_vodafone_secret_key";
-    const String meezaMerchantId = "your_meeza_merchant_id";
-    const String meezaTerminalId = "your_meeza_terminal_id";
-    const String meezaApiKey = "your_meeza_api_key";
-    const String meezaSecretKey = "your_meeza_secret_key";
+    const stripeSecretKey = 'sk_test_your_stripe_secret_key';
+    const fawryMerchantCode = 'your_fawry_merchant_code';
+    const fawrySecurityKey = 'your_fawry_security_key';
+    const vodafoneMerchantId = 'your_vodafone_merchant_id';
+    const vodafoneApiKey = 'your_vodafone_api_key';
+    const vodafoneSecretKey = 'your_vodafone_secret_key';
+    const meezaMerchantId = 'your_meeza_merchant_id';
+    const meezaTerminalId = 'your_meeza_terminal_id';
+    const meezaApiKey = 'your_meeza_api_key';
+    const meezaSecretKey = 'your_meeza_secret_key';
 
     _stripeService = StripePaymentService(stripeSecretKey);
     _fawryService = FawryPaymentService(fawryMerchantCode, fawrySecurityKey);
@@ -58,7 +59,7 @@ class FirebasePaymentRepository implements PaymentRepository {
     Map<String, dynamic>? metadata,
   }) async {
     try {
-      final String userId = _auth.currentUser?.uid ?? "";
+      final userId = _auth.currentUser?.uid ?? '';
 
       switch (provider) {
         case PaymentProvider.stripe:
@@ -66,8 +67,8 @@ class FirebasePaymentRepository implements PaymentRepository {
             amount: amount,
             currency: currency,
             orderId: orderId,
-            customerEmail: metadata?["customerEmail"],
-            customerPhone: metadata?["customerPhone"],
+            customerEmail: metadata?['customerEmail'],
+            customerPhone: metadata?['customerPhone'],
           );
 
           // Save payment intent to Firestore
@@ -79,10 +80,10 @@ class FirebasePaymentRepository implements PaymentRepository {
             orderId: orderId,
             amount: amount,
             currency: currency,
-            customerName: metadata?["customerName"] ?? "Customer",
-            customerEmail: metadata?["customerEmail"] ?? "",
-            customerMobile: metadata?["customerMobile"] ?? "",
-            description: metadata?["description"],
+            customerName: metadata?['customerName'] ?? 'Customer',
+            customerEmail: metadata?['customerEmail'] ?? '',
+            customerMobile: metadata?['customerMobile'] ?? '',
+            description: metadata?['description'],
           );
 
           // Save payment intent to Firestore
@@ -94,9 +95,9 @@ class FirebasePaymentRepository implements PaymentRepository {
             orderId: orderId,
             amount: amount,
             currency: currency,
-            subscriberNumber: metadata?["subscriberNumber"] ?? "",
-            subscriberName: metadata?["subscriberName"],
-            description: metadata?["description"],
+            subscriberNumber: metadata?['subscriberNumber'] ?? '',
+            subscriberName: metadata?['subscriberName'],
+            description: metadata?['description'],
           );
 
           // Save payment intent to Firestore
@@ -108,10 +109,10 @@ class FirebasePaymentRepository implements PaymentRepository {
             orderId: orderId,
             amount: amount,
             currency: currency,
-            cardToken: metadata?["cardToken"] ?? "",
-            customerEmail: metadata?["customerEmail"],
-            customerPhone: metadata?["customerPhone"],
-            description: metadata?["description"],
+            cardToken: metadata?['cardToken'] ?? '',
+            customerEmail: metadata?['customerEmail'],
+            customerPhone: metadata?['customerPhone'],
+            description: metadata?['description'],
           );
 
           // Save payment intent to Firestore
@@ -119,7 +120,7 @@ class FirebasePaymentRepository implements PaymentRepository {
           return intent;
       }
     } catch (e) {
-      throw PaymentRepositoryException("Failed to create payment intent: $e");
+      throw PaymentRepositoryException('Failed to create payment intent: $e');
     }
   }
 
@@ -129,21 +130,21 @@ class FirebasePaymentRepository implements PaymentRepository {
     required dynamic paymentData,
   }) async {
     try {
-      final String userId = _auth.currentUser?.uid ?? "";
+      final userId = _auth.currentUser?.uid ?? '';
 
       // Get payment intent from Firestore to determine provider
       final intentDoc = await _firestore
-          .collection("payment_intents")
+          .collection('payment_intents')
           .doc(paymentIntentId)
           .get();
 
       if (!intentDoc.exists) {
-        throw PaymentRepositoryException("Payment intent not found");
+        throw PaymentRepositoryException('Payment intent not found');
       }
 
       final intentData = intentDoc.data()!;
-      final PaymentProvider provider = PaymentProvider.values.firstWhere(
-        (p) => p.toString() == intentData["provider"],
+      final provider = PaymentProvider.values.firstWhere(
+        (p) => p.toString() == intentData['provider'],
       );
 
       Payment payment;
@@ -172,7 +173,7 @@ class FirebasePaymentRepository implements PaymentRepository {
           payment = await _meezaService.processTokenPayment(
             transactionId: paymentIntentId,
             cardToken: meezaData.cardToken,
-            cvv: "123", // This would come from user input
+            cvv: '123', // This would come from user input
           );
           break;
       }
@@ -181,21 +182,21 @@ class FirebasePaymentRepository implements PaymentRepository {
       await _savePayment(payment, userId);
       return payment;
     } catch (e) {
-      throw PaymentRepositoryException("Failed to process payment: $e");
+      throw PaymentRepositoryException('Failed to process payment: $e');
     }
   }
 
   @override
   Future<Payment?> getPaymentById(String paymentId) async {
     try {
-      final doc = await _firestore.collection("payments").doc(paymentId).get();
+      final doc = await _firestore.collection('payments').doc(paymentId).get();
 
       if (doc.exists) {
         return Payment.fromJson(doc.data()!);
       }
       return null;
     } catch (e) {
-      throw PaymentRepositoryException("Failed to get payment: $e");
+      throw PaymentRepositoryException('Failed to get payment: $e');
     }
   }
 
@@ -203,16 +204,16 @@ class FirebasePaymentRepository implements PaymentRepository {
   Future<List<Payment>> getPaymentsByOrderId(String orderId) async {
     try {
       final snapshot = await _firestore
-          .collection("payments")
-          .where("orderId", isEqualTo: orderId)
-          .orderBy("createdAt", descending: true)
+          .collection('payments')
+          .where('orderId', isEqualTo: orderId)
+          .orderBy('createdAt', descending: true)
           .get();
 
       return snapshot.docs
           .map((doc) => Payment.fromJson(doc.data()))
           .toList();
     } catch (e) {
-      throw PaymentRepositoryException("Failed to get payments by order: $e");
+      throw PaymentRepositoryException('Failed to get payments by order: $e');
     }
   }
 
@@ -221,7 +222,7 @@ class FirebasePaymentRepository implements PaymentRepository {
     try {
       final payment = await getPaymentById(paymentId);
       if (payment == null) {
-        throw PaymentRepositoryException("Payment not found");
+        throw PaymentRepositoryException('Payment not found');
       }
 
       // Update payment status to completed
@@ -233,7 +234,7 @@ class FirebasePaymentRepository implements PaymentRepository {
       await _updatePayment(confirmedPayment);
       return confirmedPayment;
     } catch (e) {
-      throw PaymentRepositoryException("Failed to confirm payment: $e");
+      throw PaymentRepositoryException('Failed to confirm payment: $e');
     }
   }
 
@@ -242,7 +243,7 @@ class FirebasePaymentRepository implements PaymentRepository {
     try {
       final payment = await getPaymentById(paymentId);
       if (payment == null) {
-        throw PaymentRepositoryException("Payment not found");
+        throw PaymentRepositoryException('Payment not found');
       }
 
       Payment cancelledPayment;
@@ -266,7 +267,7 @@ class FirebasePaymentRepository implements PaymentRepository {
       await _updatePayment(cancelledPayment);
       return cancelledPayment;
     } catch (e) {
-      throw PaymentRepositoryException("Failed to cancel payment: $e");
+      throw PaymentRepositoryException('Failed to cancel payment: $e');
     }
   }
 
@@ -275,7 +276,7 @@ class FirebasePaymentRepository implements PaymentRepository {
     try {
       final payment = await getPaymentById(paymentId);
       if (payment == null) {
-        throw PaymentRepositoryException("Payment not found");
+        throw PaymentRepositoryException('Payment not found');
       }
 
       Payment refundedPayment;
@@ -311,7 +312,7 @@ class FirebasePaymentRepository implements PaymentRepository {
       await _updatePayment(refundedPayment);
       return refundedPayment;
     } catch (e) {
-      throw PaymentRepositoryException("Failed to refund payment: $e");
+      throw PaymentRepositoryException('Failed to refund payment: $e');
     }
   }
 
@@ -322,32 +323,32 @@ class FirebasePaymentRepository implements PaymentRepository {
   }
 
   Future<void> _savePaymentIntent(PaymentIntent intent, String userId) async {
-    await _firestore.collection("payment_intents").doc(intent.id).set({
-      "id": intent.id,
-      "orderId": intent.orderId,
-      "provider": intent.provider.toString(),
-      "amount": intent.amount,
-      "currency": intent.currency,
-      "clientSecret": intent.clientSecret,
-      "customerId": intent.customerId,
-      "metadata": intent.metadata,
-      "userId": userId,
-      "createdAt": FieldValue.serverTimestamp(),
+    await _firestore.collection('payment_intents').doc(intent.id).set({
+      'id': intent.id,
+      'orderId': intent.orderId,
+      'provider': intent.provider.toString(),
+      'amount': intent.amount,
+      'currency': intent.currency,
+      'clientSecret': intent.clientSecret,
+      'customerId': intent.customerId,
+      'metadata': intent.metadata,
+      'userId': userId,
+      'createdAt': FieldValue.serverTimestamp(),
     });
   }
 
   Future<void> _savePayment(Payment payment, String userId) async {
-    await _firestore.collection("payments").doc(payment.id).set({
+    await _firestore.collection('payments').doc(payment.id).set({
       ...payment.toJson(),
-      "userId": userId,
-      "updatedAt": FieldValue.serverTimestamp(),
+      'userId': userId,
+      'updatedAt': FieldValue.serverTimestamp(),
     });
   }
 
   Future<void> _updatePayment(Payment payment) async {
-    await _firestore.collection("payments").doc(payment.id).update({
+    await _firestore.collection('payments').doc(payment.id).update({
       ...payment.toJson(),
-      "updatedAt": FieldValue.serverTimestamp(),
+      'updatedAt': FieldValue.serverTimestamp(),
     });
   }
 
@@ -360,10 +361,10 @@ class FirebasePaymentRepository implements PaymentRepository {
 }
 
 class PaymentRepositoryException implements Exception {
-  final String message;
 
   PaymentRepositoryException(this.message);
+  final String message;
 
   @override
-  String toString() => "PaymentRepositoryException: $message";
+  String toString() => 'PaymentRepositoryException: $message';
 }

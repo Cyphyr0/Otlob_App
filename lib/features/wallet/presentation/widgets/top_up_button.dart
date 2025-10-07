@@ -3,29 +3,30 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 
 class TopUpButton extends StatelessWidget {
   const TopUpButton({
-    super.key,
-    required this.onTopUp,
+    required this.onTopUp, super.key,
   });
 
   final Function(double amount, String paymentMethod) onTopUp;
 
   @override
-  Widget build(BuildContext context) {
-    return ShadButton(
+  Widget build(BuildContext context) => ShadButton(
       onPressed: () {
         _showTopUpDialog(context);
       },
       child: const Text('Top Up'),
     );
-  }
 
   void _showTopUpDialog(BuildContext context) {
     showDialog(
       context: context,
-      builder: (BuildContext context) {
-        return const _TopUpDialog();
-      },
+      builder: (BuildContext context) => const _TopUpDialog(),
     );
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(ObjectFlagProperty<Function(double amount, String paymentMethod)>.has('onTopUp', onTopUp));
   }
 }
 
@@ -37,14 +38,13 @@ class _TopUpDialog extends StatefulWidget {
 }
 
 class _TopUpDialogState extends State<_TopUpDialog> {
-  double selectedAmount = 50.0;
+  double selectedAmount = 50;
   String selectedPaymentMethod = 'card';
 
   final List<double> topUpAmounts = [25.0, 50.0, 100.0, 200.0, 500.0];
 
   @override
-  Widget build(BuildContext context) {
-    return Dialog(
+  Widget build(BuildContext context) => Dialog(
       child: Container(
         padding: const EdgeInsets.all(24),
         child: Column(
@@ -75,16 +75,14 @@ class _TopUpDialogState extends State<_TopUpDialog> {
             Wrap(
               spacing: 8,
               runSpacing: 8,
-              children: topUpAmounts.map((amount) {
-                return ShadButton.outline(
+              children: topUpAmounts.map((amount) => ShadButton.outline(
                   onPressed: () {
                     setState(() {
                       selectedAmount = amount;
                     });
                   },
                   child: Text('${amount.toStringAsFixed(0)} EGP'),
-                );
-              }).toList(),
+                )).toList(),
             ),
 
             const SizedBox(height: 24),
@@ -162,6 +160,13 @@ class _TopUpDialogState extends State<_TopUpDialog> {
         ),
       ),
     );
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DoubleProperty('selectedAmount', selectedAmount));
+    properties.add(StringProperty('selectedPaymentMethod', selectedPaymentMethod));
+    properties.add(IterableProperty<double>('topUpAmounts', topUpAmounts));
   }
 }
 
@@ -181,8 +186,7 @@ class _PaymentMethodOption extends StatelessWidget {
   final Function(String?) onChanged;
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
+  Widget build(BuildContext context) => Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         border: Border.all(
@@ -222,5 +226,14 @@ class _PaymentMethodOption extends StatelessWidget {
         ],
       ),
     );
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(StringProperty('title', title));
+    properties.add(StringProperty('subtitle', subtitle));
+    properties.add(StringProperty('value', value));
+    properties.add(StringProperty('selectedValue', selectedValue));
+    properties.add(ObjectFlagProperty<Function(String? p1)>.has('onChanged', onChanged));
   }
 }

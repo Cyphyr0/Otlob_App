@@ -1,13 +1,15 @@
 /// Map screen for restaurant discovery with location-based features
+library;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../providers/map_provider.dart';
-import '../widgets/restaurant_map_widget.dart';
-import '../widgets/location_filter_widget.dart';
-import '../widgets/delivery_area_visualization.dart';
-import '../widgets/location_selection_widget.dart';
-import '../../domain/entities/location.dart';
+
 import '../../../home/domain/entities/restaurant.dart';
+import '../../domain/entities/location.dart';
+import '../providers/map_provider.dart';
+import '../widgets/delivery_area_visualization.dart';
+import '../widgets/location_filter_widget.dart';
+import '../widgets/location_selection_widget.dart';
+import '../widgets/restaurant_map_widget.dart';
 
 /// Main map screen for restaurant discovery
 class MapScreen extends ConsumerStatefulWidget {
@@ -201,8 +203,7 @@ class _ActionButton extends StatelessWidget {
   final bool isSelected;
 
   @override
-  Widget build(BuildContext context) {
-    return Material(
+  Widget build(BuildContext context) => Material(
       color: isSelected ? Colors.blue : Colors.white,
       borderRadius: BorderRadius.circular(8),
       child: InkWell(
@@ -219,6 +220,14 @@ class _ActionButton extends StatelessWidget {
         ),
       ),
     );
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<IconData>('icon', icon));
+    properties.add(ObjectFlagProperty<VoidCallback>.has('onTap', onTap));
+    properties.add(StringProperty('tooltip', tooltip));
+    properties.add(DiagnosticsProperty<bool>('isSelected', isSelected));
   }
 }
 
@@ -233,8 +242,7 @@ class _ErrorBanner extends StatelessWidget {
   final VoidCallback onDismiss;
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
+  Widget build(BuildContext context) => Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: Colors.red,
@@ -259,6 +267,12 @@ class _ErrorBanner extends StatelessWidget {
         ],
       ),
     );
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(StringProperty('error', error));
+    properties.add(ObjectFlagProperty<VoidCallback>.has('onDismiss', onDismiss));
   }
 }
 
@@ -271,8 +285,7 @@ class _FilterBottomSheet extends ConsumerWidget {
   final VoidCallback onClose;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Container(
+  Widget build(BuildContext context, WidgetRef ref) => Container(
       height: 260,
       decoration: const BoxDecoration(
         color: Colors.white,
@@ -333,7 +346,11 @@ class _FilterBottomSheet extends ConsumerWidget {
                   const SizedBox(height: 16),
 
                   // Quick radius filters
-                  const QuickRadiusFilters(),
+                  QuickRadiusFilters(
+                    onRadiusSelected: (radius) {
+                      ref.read(mapProvider.notifier).updateFilters(radius: radius);
+                    },
+                  ),
 
                   const SizedBox(height: 16),
 
@@ -347,6 +364,11 @@ class _FilterBottomSheet extends ConsumerWidget {
         ],
       ),
     );
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(ObjectFlagProperty<VoidCallback>.has('onClose', onClose));
   }
 }
 
@@ -361,8 +383,7 @@ class _RestaurantListOverlay extends StatelessWidget {
   final Function(Restaurant) onRestaurantTap;
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
+  Widget build(BuildContext context) => Container(
       height: 200,
       decoration: BoxDecoration(
         color: Colors.white,
@@ -395,12 +416,12 @@ class _RestaurantListOverlay extends StatelessWidget {
                   onPressed: () {
                     // Navigate to list view
                   },
-                  child: const Text('View All'),
                   style: TextButton.styleFrom(
                     padding: EdgeInsets.zero,
                     minimumSize: const Size(0, 0),
                     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   ),
+                  child: const Text('View All'),
                 ),
               ],
             ),
@@ -428,6 +449,12 @@ class _RestaurantListOverlay extends StatelessWidget {
         ],
       ),
     );
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(IterableProperty<Restaurant>('restaurants', restaurants));
+    properties.add(ObjectFlagProperty<Function(Restaurant p1)>.has('onRestaurantTap', onRestaurantTap));
   }
 }
 
@@ -436,16 +463,14 @@ class MapLocationButton extends ConsumerWidget {
   const MapLocationButton({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return FloatingActionButton(
+  Widget build(BuildContext context, WidgetRef ref) => FloatingActionButton(
       onPressed: () {
         // Center map on current location
         ref.read(mapProvider.notifier).centerOnCurrentLocation();
       },
-      child: const Icon(Icons.my_location),
       tooltip: 'Go to current location',
+      child: const Icon(Icons.my_location),
     );
-  }
 }
 
 /// Map screen with all features integrated
@@ -453,8 +478,7 @@ class MapDiscoveryScreen extends StatelessWidget {
   const MapDiscoveryScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  Widget build(BuildContext context) => Scaffold(
       appBar: AppBar(
         title: const Text('Restaurant Discovery'),
         backgroundColor: Colors.white,
@@ -478,7 +502,6 @@ class MapDiscoveryScreen extends StatelessWidget {
       body: const MapScreen(),
       floatingActionButton: const MapLocationButton(),
     );
-  }
 }
 
 /// Compact map view for embedding in other screens
@@ -493,8 +516,7 @@ class CompactMapView extends ConsumerWidget {
   final Function(Restaurant)? onRestaurantTap;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Container(
+  Widget build(BuildContext context, WidgetRef ref) => Container(
       height: height,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
@@ -513,11 +535,17 @@ class CompactMapView extends ConsumerWidget {
             latitude: 30.0444,
             longitude: 31.2357,
           ),
-          initialZoom: 13.0,
+          initialZoom: 13,
           showUserLocation: true,
           onRestaurantTap: onRestaurantTap,
         ),
       ),
     );
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DoubleProperty('height', height));
+    properties.add(ObjectFlagProperty<Function(Restaurant p1)?>.has('onRestaurantTap', onRestaurantTap));
   }
 }

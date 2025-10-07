@@ -1,12 +1,4 @@
 class VotingPeriod {
-  final String id;
-  final int month;
-  final int year;
-  final DateTime startDate;
-  final DateTime endDate;
-  final bool isActive;
-  final DateTime createdAt;
-  final int totalVotes;
 
   const VotingPeriod({
     required this.id,
@@ -18,6 +10,14 @@ class VotingPeriod {
     required this.createdAt,
     this.totalVotes = 0,
   });
+  final String id;
+  final int month;
+  final int year;
+  final DateTime startDate;
+  final DateTime endDate;
+  final bool isActive;
+  final DateTime createdAt;
+  final int totalVotes;
 
   VotingPeriod copyWith({
     String? id,
@@ -28,8 +28,7 @@ class VotingPeriod {
     bool? isActive,
     DateTime? createdAt,
     int? totalVotes,
-  }) {
-    return VotingPeriod(
+  }) => VotingPeriod(
       id: id ?? this.id,
       month: month ?? this.month,
       year: year ?? this.year,
@@ -39,20 +38,15 @@ class VotingPeriod {
       createdAt: createdAt ?? this.createdAt,
       totalVotes: totalVotes ?? this.totalVotes,
     );
-  }
 
   bool get isCurrentPeriod {
-    DateTime now = DateTime.now();
+    var now = DateTime.now();
     return now.isAfter(startDate) && now.isBefore(endDate);
   }
 
-  bool get hasEnded {
-    return DateTime.now().isAfter(endDate);
-  }
+  bool get hasEnded => DateTime.now().isAfter(endDate);
 
-  bool get isUpcoming {
-    return DateTime.now().isBefore(startDate);
-  }
+  bool get isUpcoming => DateTime.now().isBefore(startDate);
 
   String get displayName {
     const monthNames = [
@@ -63,7 +57,7 @@ class VotingPeriod {
   }
 
   static String getCurrentPeriodId() {
-    DateTime now = DateTime.now();
+    var now = DateTime.now();
     return '${now.year}_${now.month.toString().padLeft(2, '0')}';
   }
 

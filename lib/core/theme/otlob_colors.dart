@@ -1,4 +1,4 @@
-import "package:flutter/material.dart";
+import 'package:flutter/material.dart';
 
 /// Otlob App Color Palette
 /// Based on the curated color scheme for modern food delivery UI
@@ -172,20 +172,20 @@ class OtlobColors {
   /// Get color for cuisine type
   static Color getCuisineColor(String cuisine) {
     switch (cuisine.toLowerCase()) {
-      case "egyptian":
+      case 'egyptian':
         return egyptian;
-      case "street food":
+      case 'street food':
         return streetFood;
-      case "grill":
-      case "bbq":
+      case 'grill':
+      case 'bbq':
         return grill;
-      case "seafood":
+      case 'seafood':
         return seafood;
-      case "vegetarian":
-      case "vegan":
+      case 'vegetarian':
+      case 'vegan':
         return vegetarian;
-      case "desserts":
-      case "bakery":
+      case 'desserts':
+      case 'bakery':
         return desserts;
       default:
         return primary;

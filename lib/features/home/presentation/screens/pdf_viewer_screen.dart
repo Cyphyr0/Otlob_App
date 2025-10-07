@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/theme/app_typography.dart';
 import '../../../../core/theme/app_spacing.dart';
+import '../../../../core/theme/app_typography.dart';
 
 class PDFViewerScreen extends StatefulWidget {
   const PDFViewerScreen({
-    super.key,
-    required this.pdfUrl,
-    required this.title,
+    required this.pdfUrl, required this.title, super.key,
   });
 
   final String pdfUrl;
@@ -17,6 +16,13 @@ class PDFViewerScreen extends StatefulWidget {
 
   @override
   State<PDFViewerScreen> createState() => _PDFViewerScreenState();
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(StringProperty('pdfUrl', pdfUrl));
+    properties.add(StringProperty('title', title));
+  }
 }
 
 class _PDFViewerScreenState extends State<PDFViewerScreen> {
@@ -26,14 +32,13 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
   PDFViewController? _pdfViewController;
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  Widget build(BuildContext context) => Scaffold(
       backgroundColor: AppColors.white,
       appBar: AppBar(
         backgroundColor: AppColors.white,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: AppColors.primaryBlack),
+          icon: const Icon(Icons.arrow_back, color: AppColors.primaryBlack),
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Text(
@@ -91,9 +96,9 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
             pageFling: true,
             pageSnap: true,
             fitEachPage: true,
-            onRender: (_pages) {
+            onRender: (pages) {
               setState(() {
-                _totalPages = _pages!;
+                _totalPages = pages!;
                 _isReady = true;
               });
             },
@@ -120,7 +125,7 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    CircularProgressIndicator(
+                    const CircularProgressIndicator(
                       valueColor: AlwaysStoppedAnimation<Color>(AppColors.logoRed),
                     ),
                     SizedBox(height: AppSpacing.md),
@@ -137,5 +142,4 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
         ],
       ),
     );
-  }
 }

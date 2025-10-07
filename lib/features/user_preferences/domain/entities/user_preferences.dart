@@ -9,48 +9,7 @@ class UserPreferences {
     this.lastUpdated,
   });
 
-  final String userId;
-  final List<String> favoriteCuisines;
-  final PriceRange preferredPriceRange;
-  final List<DietaryRestriction> dietaryRestrictions;
-  final SpiceLevel spiceLevel;
-  final List<String> willingToTry;
-  final DateTime? lastUpdated;
-
-  UserPreferences copyWith({
-    String? userId,
-    List<String>? favoriteCuisines,
-    PriceRange? preferredPriceRange,
-    List<DietaryRestriction>? dietaryRestrictions,
-    SpiceLevel? spiceLevel,
-    List<String>? willingToTry,
-    DateTime? lastUpdated,
-  }) {
-    return UserPreferences(
-      userId: userId ?? this.userId,
-      favoriteCuisines: favoriteCuisines ?? this.favoriteCuisines,
-      preferredPriceRange: preferredPriceRange ?? this.preferredPriceRange,
-      dietaryRestrictions: dietaryRestrictions ?? this.dietaryRestrictions,
-      spiceLevel: spiceLevel ?? this.spiceLevel,
-      willingToTry: willingToTry ?? this.willingToTry,
-      lastUpdated: lastUpdated ?? this.lastUpdated,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'userId': userId,
-      'favoriteCuisines': favoriteCuisines,
-      'preferredPriceRange': preferredPriceRange.name,
-      'dietaryRestrictions': dietaryRestrictions.map((e) => e.name).toList(),
-      'spiceLevel': spiceLevel.name,
-      'willingToTry': willingToTry,
-      'lastUpdated': lastUpdated?.toIso8601String(),
-    };
-  }
-
-  factory UserPreferences.fromJson(Map<String, dynamic> json) {
-    return UserPreferences(
+  factory UserPreferences.fromJson(Map<String, dynamic> json) => UserPreferences(
       userId: json['userId'] as String,
       favoriteCuisines: List<String>.from(json['favoriteCuisines'] ?? []),
       preferredPriceRange: PriceRange.values.firstWhere(
@@ -73,7 +32,42 @@ class UserPreferences {
           ? DateTime.parse(json['lastUpdated'] as String)
           : null,
     );
-  }
+
+  final String userId;
+  final List<String> favoriteCuisines;
+  final PriceRange preferredPriceRange;
+  final List<DietaryRestriction> dietaryRestrictions;
+  final SpiceLevel spiceLevel;
+  final List<String> willingToTry;
+  final DateTime? lastUpdated;
+
+  UserPreferences copyWith({
+    String? userId,
+    List<String>? favoriteCuisines,
+    PriceRange? preferredPriceRange,
+    List<DietaryRestriction>? dietaryRestrictions,
+    SpiceLevel? spiceLevel,
+    List<String>? willingToTry,
+    DateTime? lastUpdated,
+  }) => UserPreferences(
+      userId: userId ?? this.userId,
+      favoriteCuisines: favoriteCuisines ?? this.favoriteCuisines,
+      preferredPriceRange: preferredPriceRange ?? this.preferredPriceRange,
+      dietaryRestrictions: dietaryRestrictions ?? this.dietaryRestrictions,
+      spiceLevel: spiceLevel ?? this.spiceLevel,
+      willingToTry: willingToTry ?? this.willingToTry,
+      lastUpdated: lastUpdated ?? this.lastUpdated,
+    );
+
+  Map<String, dynamic> toJson() => {
+      'userId': userId,
+      'favoriteCuisines': favoriteCuisines,
+      'preferredPriceRange': preferredPriceRange.name,
+      'dietaryRestrictions': dietaryRestrictions.map((e) => e.name).toList(),
+      'spiceLevel': spiceLevel.name,
+      'willingToTry': willingToTry,
+      'lastUpdated': lastUpdated?.toIso8601String(),
+    };
 
   bool get hasPreferences => favoriteCuisines.isNotEmpty;
 
@@ -87,15 +81,13 @@ class UserPreferences {
   int get hashCode => userId.hashCode;
 
   @override
-  String toString() {
-    return 'UserPreferences(userId: $userId, favoriteCuisines: $favoriteCuisines, preferredPriceRange: $preferredPriceRange)';
-  }
+  String toString() => 'UserPreferences(userId: $userId, favoriteCuisines: $favoriteCuisines, preferredPriceRange: $preferredPriceRange)';
 }
 
 enum PriceRange {
-  budget('Budget', '\$', 'Under 100 EGP'),
-  medium('Medium', '\$\$', '100-300 EGP'),
-  premium('Premium', '\$\$\$', '300+ EGP');
+  budget('Budget', r'$', 'Under 100 EGP'),
+  medium('Medium', r'$$', '100-300 EGP'),
+  premium('Premium', r'$$$', '300+ EGP');
 
   const PriceRange(this.displayName, this.symbol, this.range);
   final String displayName;

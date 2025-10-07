@@ -1,18 +1,19 @@
-import "package:dio/dio.dart";
-import "package:firebase_auth/firebase_auth.dart";
-import "package:flutter_riverpod/flutter_riverpod.dart";
-import "config/app_config.dart";
-import "services/database.dart";
-import "services/service_locator.dart";
-import "services/unsplash_service.dart";
-import "services/firebase/firebase_firestore_service.dart";
-import "../features/auth/data/repositories/firebase_auth_repository.dart";
-import "../features/auth/domain/repositories/auth_repository.dart";
+import 'package:dio/dio.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-export "../features/cart/presentation/providers/cart_provider.dart";
-export "../features/favorites/presentation/providers/favorites_provider.dart";
-export "../features/home/presentation/providers/home_provider.dart";
-export "../features/auth/presentation/providers/auth_provider.dart";
+import '../features/auth/data/repositories/firebase_auth_repository.dart';
+import '../features/auth/domain/repositories/auth_repository.dart';
+import 'config/app_config.dart';
+import 'services/database.dart';
+import 'services/firebase/firebase_firestore_service.dart';
+import 'services/service_locator.dart';
+import 'services/unsplash_service.dart';
+
+export '../features/auth/presentation/providers/auth_provider.dart';
+export '../features/cart/presentation/providers/cart_provider.dart';
+export '../features/favorites/presentation/providers/favorites_provider.dart';
+export '../features/home/presentation/providers/home_provider.dart';
 
 final appDatabaseProvider = Provider<AppDatabase>((ref) => AppDatabase());
 

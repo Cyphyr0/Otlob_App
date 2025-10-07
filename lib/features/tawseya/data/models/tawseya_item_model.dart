@@ -1,16 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class TawseyaItemModel {
-  final String id;
-  final String name;
-  final String description;
-  final String imageUrl;
-  final String category;
-  final bool isActive;
-  final DateTime createdAt;
-  final DateTime? expiresAt;
-  final int totalVotes;
-  final double averageRating;
 
   TawseyaItemModel({
     required this.id,
@@ -26,7 +16,7 @@ class TawseyaItemModel {
   });
 
   factory TawseyaItemModel.fromFirestore(DocumentSnapshot doc) {
-    Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+    var data = doc.data() as Map<String, dynamic>;
     return TawseyaItemModel(
       id: doc.id,
       name: data['name'] ?? '',
@@ -40,9 +30,18 @@ class TawseyaItemModel {
       averageRating: (data['averageRating'] ?? 0.0).toDouble(),
     );
   }
+  final String id;
+  final String name;
+  final String description;
+  final String imageUrl;
+  final String category;
+  final bool isActive;
+  final DateTime createdAt;
+  final DateTime? expiresAt;
+  final int totalVotes;
+  final double averageRating;
 
-  Map<String, dynamic> toFirestore() {
-    return {
+  Map<String, dynamic> toFirestore() => {
       'name': name,
       'description': description,
       'imageUrl': imageUrl,
@@ -53,7 +52,6 @@ class TawseyaItemModel {
       'totalVotes': totalVotes,
       'averageRating': averageRating,
     };
-  }
 
   TawseyaItemModel copyWith({
     String? id,
@@ -66,8 +64,7 @@ class TawseyaItemModel {
     DateTime? expiresAt,
     int? totalVotes,
     double? averageRating,
-  }) {
-    return TawseyaItemModel(
+  }) => TawseyaItemModel(
       id: id ?? this.id,
       name: name ?? this.name,
       description: description ?? this.description,
@@ -79,5 +76,4 @@ class TawseyaItemModel {
       totalVotes: totalVotes ?? this.totalVotes,
       averageRating: averageRating ?? this.averageRating,
     );
-  }
 }

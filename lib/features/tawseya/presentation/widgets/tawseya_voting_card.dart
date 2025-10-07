@@ -5,14 +5,13 @@ import '../../domain/entities/tawseya_item.dart';
 import '../providers/tawseya_provider.dart';
 
 class TawseyaVotingCard extends ConsumerWidget {
-  final TawseyaItem tawseyaItem;
-  final VoidCallback? onVote;
 
   const TawseyaVotingCard({
-    super.key,
-    required this.tawseyaItem,
+    required this.tawseyaItem, super.key,
     this.onVote,
   });
+  final TawseyaItem tawseyaItem;
+  final VoidCallback? onVote;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -115,7 +114,7 @@ class TawseyaVotingCard extends ConsumerWidget {
                       ),
                     ),
                     const SizedBox(width: 16),
-                    Icon(
+                    const Icon(
                       Icons.star,
                       size: 20,
                       color: Colors.amber,
@@ -187,7 +186,7 @@ class TawseyaVotingCard extends ConsumerWidget {
     );
   }
 
-  void _handleVote(BuildContext context, WidgetRef ref) async {
+  Future<void> _handleVote(BuildContext context, WidgetRef ref) async {
     try {
       await ref.read(tawseyaProvider.notifier).castVote(tawseyaItem);
 
@@ -226,5 +225,12 @@ class TawseyaVotingCard extends ConsumerWidget {
       default:
         return Colors.grey;
     }
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<TawseyaItem>('tawseyaItem', tawseyaItem));
+    properties.add(ObjectFlagProperty<VoidCallback?>.has('onVote', onVote));
   }
 }

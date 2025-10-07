@@ -1,4 +1,5 @@
 /// Widget to display delivery area status with visual indicators
+library;
 import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_colors.dart';
@@ -9,8 +10,7 @@ import '../../domain/entities/delivery_area_validation.dart';
 
 class DeliveryAreaStatusWidget extends StatelessWidget {
   const DeliveryAreaStatusWidget({
-    super.key,
-    required this.validation,
+    required this.validation, super.key,
     this.showDetails = true,
     this.compact = false,
     this.onRetry,
@@ -22,8 +22,7 @@ class DeliveryAreaStatusWidget extends StatelessWidget {
   final VoidCallback? onRetry;
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
+  Widget build(BuildContext context) => Container(
       padding: EdgeInsets.all(compact ? AppSpacing.sm : AppSpacing.md),
       decoration: BoxDecoration(
         color: _getBackgroundColor(context),
@@ -95,10 +94,8 @@ class DeliveryAreaStatusWidget extends StatelessWidget {
         ],
       ),
     );
-  }
 
-  Widget _buildDeliveryDetails(BuildContext context) {
-    return Wrap(
+  Widget _buildDeliveryDetails(BuildContext context) => Wrap(
       spacing: AppSpacing.md,
       runSpacing: AppSpacing.xs,
       children: [
@@ -122,10 +119,8 @@ class DeliveryAreaStatusWidget extends StatelessWidget {
           ),
       ],
     );
-  }
 
-  Widget _buildOutsideAreaDetails(BuildContext context) {
-    return Container(
+  Widget _buildOutsideAreaDetails(BuildContext context) => Container(
       padding: EdgeInsets.all(AppSpacing.sm),
       decoration: BoxDecoration(
         color: AppColors.error.withOpacity(0.1),
@@ -133,7 +128,7 @@ class DeliveryAreaStatusWidget extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Icon(
+          const Icon(
             Icons.location_off,
             size: 16,
             color: AppColors.error,
@@ -151,10 +146,8 @@ class DeliveryAreaStatusWidget extends StatelessWidget {
         ],
       ),
     );
-  }
 
-  Widget _buildDetailChip(BuildContext context, {required IconData icon, required String text}) {
-    return Container(
+  Widget _buildDetailChip(BuildContext context, {required IconData icon, required String text}) => Container(
       padding: EdgeInsets.symmetric(
         horizontal: AppSpacing.sm,
         vertical: AppSpacing.xs,
@@ -182,7 +175,6 @@ class DeliveryAreaStatusWidget extends StatelessWidget {
         ],
       ),
     );
-  }
 
   Color _getBackgroundColor(BuildContext context) {
     switch (validation.status) {
@@ -215,5 +207,14 @@ class DeliveryAreaStatusWidget extends StatelessWidget {
       case DeliveryAreaStatus.error:
         return Icons.error;
     }
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<DeliveryAreaValidation>('validation', validation));
+    properties.add(DiagnosticsProperty<bool>('showDetails', showDetails));
+    properties.add(DiagnosticsProperty<bool>('compact', compact));
+    properties.add(ObjectFlagProperty<VoidCallback?>.has('onRetry', onRetry));
   }
 }

@@ -1,18 +1,15 @@
-import "package:cached_network_image/cached_network_image.dart";
-import "package:flutter/foundation.dart";
-import "package:flutter/material.dart";
-import "../../theme/otlob_design_system.dart";
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import '../../theme/otlob_design_system.dart';
 
 /// Modern Restaurant Card Component
 /// Uses Shadcn UI inspired design with clean, modern aesthetics
 class RestaurantCard extends StatefulWidget {
 
   const RestaurantCard({
-    super.key,
-    required this.restaurantId,
-    required this.name,
+    required this.restaurantId, required this.name, required this.rating, super.key,
     this.cuisine,
-    required this.rating,
     this.deliveryTime,
     this.reviewCount,
     this.imageUrl = '',
@@ -113,8 +110,7 @@ class _RestaurantCardState extends State<RestaurantCard>
   @override
   Widget build(BuildContext context) => AnimatedBuilder(
       animation: _scaleAnimation,
-      builder: (context, child) {
-        return Transform.scale(
+      builder: (context, child) => Transform.scale(
           scale: _scaleAnimation.value,
           child: GestureDetector(
             onTap: _handleTap,
@@ -145,8 +141,7 @@ class _RestaurantCardState extends State<RestaurantCard>
               ),
             ),
           ),
-        );
-      },
+        ),
     );
 }
 
@@ -192,7 +187,7 @@ class _ImageSection extends StatelessWidget {
               ),
               errorWidget: (context, url, error) => Container(
                 color: OtlobDesignSystem.background,
-                child: Icon(
+                child: const Icon(
                   Icons.restaurant,
                   color: OtlobDesignSystem.textLight,
                   size: 40,
@@ -346,10 +341,8 @@ class _TawseyaBadge extends StatelessWidget {
 class ContentSection extends StatelessWidget {
 
   const ContentSection({
-    super.key,
-    required this.name,
+    required this.name, required this.rating, super.key,
     this.cuisine,
-    required this.rating,
     this.deliveryTime,
     this.reviewCount,
   });
@@ -393,7 +386,7 @@ class ContentSection extends StatelessWidget {
               // Star Rating
               Row(
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.star,
                     color: OtlobDesignSystem.accent,
                     size: 16,
@@ -411,7 +404,7 @@ class ContentSection extends StatelessWidget {
               // Delivery Time (only if provided)
               if (deliveryTime != null) ...[
                 const SizedBox(width: OtlobDesignSystem.md),
-                Icon(
+                const Icon(
                   Icons.access_time,
                   color: OtlobDesignSystem.success,
                   size: 14,
@@ -431,7 +424,7 @@ class ContentSection extends StatelessWidget {
               if (reviewCount != null) ...[
                 Row(
                   children: [
-                    Icon(
+                    const Icon(
                       Icons.people,
                       color: OtlobDesignSystem.textLight,
                       size: 12,

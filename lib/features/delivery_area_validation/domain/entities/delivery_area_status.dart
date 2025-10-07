@@ -1,4 +1,5 @@
 /// Delivery area status enumeration for different validation states
+library;
 import 'package:flutter/material.dart';
 
 enum DeliveryAreaStatus {

@@ -69,7 +69,7 @@ class OrderNotificationService {
     required double totalAmount,
     String? imageUrl,
   }) async {
-    final title = 'طلب جديد تم تقديمه';
+    const title = 'طلب جديد تم تقديمه';
     final body = 'تم تقديم طلب بقيمة ${totalAmount.toStringAsFixed(2)} جنيه من $restaurantName';
 
     await FirebaseMessagingService.showOrderNotification(
@@ -93,7 +93,7 @@ class OrderNotificationService {
     required int estimatedMinutes,
     String? imageUrl,
   }) async {
-    final title = 'وقت التوصيل المتوقع';
+    const title = 'وقت التوصيل المتوقع';
     final body = 'سيتم توصيل طلبك خلال $estimatedMinutes دقيقة تقريباً';
 
     await FirebaseMessagingService.showOrderNotification(

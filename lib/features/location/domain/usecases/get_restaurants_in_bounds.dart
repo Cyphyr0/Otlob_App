@@ -1,8 +1,9 @@
 /// Use case for getting restaurants within map bounds (viewport)
+library;
 import '../../../../core/errors/failures.dart';
-import '../entities/location.dart';
-import '../../data/repositories/map_repository.dart';
 import '../../../home/domain/entities/restaurant.dart';
+import '../../data/repositories/map_repository.dart';
+import '../entities/location.dart';
 
 class GetRestaurantsInBounds {
   const GetRestaurantsInBounds(this._repository);

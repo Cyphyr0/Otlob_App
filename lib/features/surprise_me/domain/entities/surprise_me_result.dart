@@ -21,7 +21,5 @@ class SurpriseMeResult {
   }
 
   @override
-  String toString() {
-    return 'SurpriseMeResult(restaurant: ${restaurant.name}, confidence: ${confidence.toStringAsFixed(2)})';
-  }
+  String toString() => 'SurpriseMeResult(restaurant: ${restaurant.name}, confidence: ${confidence.toStringAsFixed(2)})';
 }

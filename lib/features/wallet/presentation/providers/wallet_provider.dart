@@ -1,13 +1,14 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../domain/entities/wallet.dart';
-import '../../domain/entities/transaction.dart';
+
 import '../../domain/entities/subscription.dart';
+import '../../domain/entities/transaction.dart';
+import '../../domain/entities/wallet.dart';
 import '../../domain/repositories/wallet_repository.dart';
-import '../../domain/usecases/get_wallet.dart';
-import '../../domain/usecases/process_top_up.dart';
-import '../../domain/usecases/process_payment.dart';
 import '../../domain/usecases/get_transactions.dart';
+import '../../domain/usecases/get_wallet.dart';
 import '../../domain/usecases/manage_subscription.dart';
+import '../../domain/usecases/process_payment.dart';
+import '../../domain/usecases/process_top_up.dart';
 
 final walletProvider = StateNotifierProvider<WalletNotifier, WalletState>((ref) {
   final getWallet = GetWallet(ref.watch(walletRepositoryProvider));
@@ -51,23 +52,16 @@ class WalletState {
     List<Subscription>? subscriptions,
     bool? isLoading,
     String? error,
-  }) {
-    return WalletState(
+  }) => WalletState(
       wallet: wallet ?? this.wallet,
       transactions: transactions ?? this.transactions,
       subscriptions: subscriptions ?? this.subscriptions,
       isLoading: isLoading ?? this.isLoading,
       error: error ?? this.error,
     );
-  }
 }
 
 class WalletNotifier extends StateNotifier<WalletState> {
-  final GetWallet _getWallet;
-  final ProcessTopUp _processTopUp;
-  final ProcessPayment _processPayment;
-  final GetTransactions _getTransactions;
-  final ManageSubscription _manageSubscription;
 
   WalletNotifier({
     required GetWallet getWallet,
@@ -81,6 +75,11 @@ class WalletNotifier extends StateNotifier<WalletState> {
         _getTransactions = getTransactions,
         _manageSubscription = manageSubscription,
         super(const WalletState());
+  final GetWallet _getWallet;
+  final ProcessTopUp _processTopUp;
+  final ProcessPayment _processPayment;
+  final GetTransactions _getTransactions;
+  final ManageSubscription _manageSubscription;
 
   Future<void> loadWallet() async {
     state = state.copyWith(isLoading: true, error: null);

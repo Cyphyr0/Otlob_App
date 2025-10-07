@@ -6,11 +6,7 @@ class GetFavorites {
 
   final FavoritesRepository repository;
 
-  Future<List<Favorite>> call() async {
-    return repository.getFavorites();
-  }
+  Future<List<Favorite>> call() async => repository.getFavorites();
 
-  Stream<List<Favorite>> watch() {
-    return repository.watchFavorites();
-  }
+  Stream<List<Favorite>> watch() => repository.watchFavorites();
 }

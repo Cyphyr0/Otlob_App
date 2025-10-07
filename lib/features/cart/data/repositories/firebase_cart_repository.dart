@@ -1,6 +1,6 @@
-import "../../../../core/services/firebase/firebase_firestore_service.dart";
-import "../../domain/entities/cart_item.dart";
-import "../../domain/repositories/cart_repository.dart";
+import '../../../../core/services/firebase/firebase_firestore_service.dart';
+import '../../domain/entities/cart_item.dart';
+import '../../domain/repositories/cart_repository.dart';
 
 class FirebaseCartRepository implements CartRepository {
 
@@ -8,7 +8,7 @@ class FirebaseCartRepository implements CartRepository {
   final FirebaseFirestoreService _firestoreService;
 
   @override
-  Future<List<CartItem>> getCartItems(String userId) async => await _firestoreService.getCartItems(userId);
+  Future<List<CartItem>> getCartItems(String userId) async => _firestoreService.getCartItems(userId);
 
   @override
   Future<void> addToCart(String userId, CartItem item) async {

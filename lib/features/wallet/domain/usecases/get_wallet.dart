@@ -6,16 +6,12 @@ class GetWallet {
 
   final WalletRepository repository;
 
-  Future<Wallet?> call() async {
-    return repository.getWallet();
-  }
+  Future<Wallet?> call() async => repository.getWallet();
 
-  Stream<double> watchBalance() {
-    return repository.watchBalance('').asyncExpand((_) async* {
+  Stream<double> watchBalance() => repository.watchBalance('').asyncExpand((_) async* {
       final wallet = await repository.getWallet();
       if (wallet != null) {
         yield* repository.watchBalance(wallet.id);
       }
     });
-  }
 }

@@ -1,8 +1,9 @@
-import "package:cloud_firestore/cloud_firestore.dart" as firestore;
-import "../../../features/auth/domain/entities/user.dart";
-import "../../../features/home/domain/entities/restaurant.dart";
-import "../../../features/cart/domain/entities/cart_item.dart";
-import "../../../features/cart/domain/entities/order.dart";
+import 'package:cloud_firestore/cloud_firestore.dart' as firestore;
+
+import '../../../features/auth/domain/entities/user.dart';
+import '../../../features/cart/domain/entities/cart_item.dart';
+import '../../../features/cart/domain/entities/order.dart';
+import '../../../features/home/domain/entities/restaurant.dart';
 
 class FirebaseFirestoreService {
   final firestore.FirebaseFirestore _firestore = firestore.FirebaseFirestore.instance;
@@ -10,18 +11,18 @@ class FirebaseFirestoreService {
   firestore.FirebaseFirestore get firestoreInstance => _firestore;
 
   // Collections
-  static const String usersCollection = "users";
-  static const String restaurantsCollection = "restaurants";
-  static const String ordersCollection = "orders";
-  static const String cartCollection = "cart";
-  static const String favoritesCollection = "favorites";
-  static const String reviewsCollection = "reviews";
+  static const String usersCollection = 'users';
+  static const String restaurantsCollection = 'restaurants';
+  static const String ordersCollection = 'orders';
+  static const String cartCollection = 'cart';
+  static const String favoritesCollection = 'favorites';
+  static const String reviewsCollection = 'reviews';
 
   // Users
   Future<void> createUser(User user) async {
     await _firestore.collection(usersCollection).doc(user.id).set({
       ...user.toJson(),
-      "updatedAt": firestore.FieldValue.serverTimestamp(),
+      'updatedAt': firestore.FieldValue.serverTimestamp(),
     });
   }
 
@@ -34,7 +35,7 @@ class FirebaseFirestoreService {
   Future<void> updateUser(String userId, Map<String, dynamic> updates) async {
     await _firestore.collection(usersCollection).doc(userId).update({
       ...updates,
-      "updatedAt": firestore.FieldValue.serverTimestamp(),
+      'updatedAt': firestore.FieldValue.serverTimestamp(),
     });
   }
 
@@ -46,8 +47,8 @@ class FirebaseFirestoreService {
   Future<void> createRestaurant(Restaurant restaurant) async {
     await _firestore.collection(restaurantsCollection).doc(restaurant.id).set({
       ...restaurant.toJson(),
-      "createdAt": firestore.FieldValue.serverTimestamp(),
-      "updatedAt": firestore.FieldValue.serverTimestamp(),
+      'createdAt': firestore.FieldValue.serverTimestamp(),
+      'updatedAt': firestore.FieldValue.serverTimestamp(),
     });
   }
 
@@ -66,36 +67,36 @@ class FirebaseFirestoreService {
     String? cuisine,
     double? minRating,
     double? maxDistance,
-    String? sortBy = "rating", // rating, distance, priceLevel, tawseyaCount
+    String? sortBy = 'rating', // rating, distance, priceLevel, tawseyaCount
     bool descending = true,
   }) async {
     firestore.Query query = _firestore.collection(restaurantsCollection);
 
     // Apply filters
     if (cuisine != null && cuisine.isNotEmpty) {
-      query = query.where("cuisine", isEqualTo: cuisine);
+      query = query.where('cuisine', isEqualTo: cuisine);
     }
     if (minRating != null) {
-      query = query.where("rating", isGreaterThanOrEqualTo: minRating);
+      query = query.where('rating', isGreaterThanOrEqualTo: minRating);
     }
     if (maxDistance != null) {
-      query = query.where("distance", isLessThanOrEqualTo: maxDistance);
+      query = query.where('distance', isLessThanOrEqualTo: maxDistance);
     }
 
     // Apply sorting
     switch (sortBy) {
-      case "distance":
-        query = query.orderBy("distance", descending: descending);
+      case 'distance':
+        query = query.orderBy('distance', descending: descending);
         break;
-      case "priceLevel":
-        query = query.orderBy("priceLevel", descending: descending);
+      case 'priceLevel':
+        query = query.orderBy('priceLevel', descending: descending);
         break;
-      case "tawseyaCount":
-        query = query.orderBy("tawseyaCount", descending: descending);
+      case 'tawseyaCount':
+        query = query.orderBy('tawseyaCount', descending: descending);
         break;
-      case "rating":
+      case 'rating':
       default:
-        query = query.orderBy("rating", descending: descending);
+        query = query.orderBy('rating', descending: descending);
         break;
     }
 
@@ -122,7 +123,7 @@ class FirebaseFirestoreService {
     // This is a basic implementation using array-contains for tags
     var snapshot = await _firestore
         .collection(restaurantsCollection)
-        .where("searchKeywords", arrayContains: query.toLowerCase())
+        .where('searchKeywords', arrayContains: query.toLowerCase())
         .limit(limit)
         .get();
 
@@ -134,7 +135,7 @@ class FirebaseFirestoreService {
     Map<String, dynamic> updates,
   ) async {
     await _firestore.collection(restaurantsCollection).doc(restaurantId).update(
-      {...updates, "updatedAt": firestore.FieldValue.serverTimestamp()},
+      {...updates, 'updatedAt': firestore.FieldValue.serverTimestamp()},
     );
   }
 
@@ -153,8 +154,8 @@ class FirebaseFirestoreService {
         .collection(favoritesCollection)
         .doc(restaurantId)
         .set({
-          "restaurantId": restaurantId,
-          "addedAt": firestore.FieldValue.serverTimestamp(),
+          'restaurantId': restaurantId,
+          'addedAt': firestore.FieldValue.serverTimestamp(),
         });
   }
 
@@ -195,7 +196,7 @@ class FirebaseFirestoreService {
         .doc(userId)
         .collection(cartCollection)
         .doc(item.id)
-        .set({...item.toJson(), "addedAt": firestore.FieldValue.serverTimestamp()});
+        .set({...item.toJson(), 'addedAt': firestore.FieldValue.serverTimestamp()});
   }
 
   Future<void> updateCartItem(
@@ -212,8 +213,8 @@ class FirebaseFirestoreService {
           .collection(cartCollection)
           .doc(itemId)
           .update({
-            "quantity": quantity,
-            "updatedAt": firestore.FieldValue.serverTimestamp(),
+            'quantity': quantity,
+            'updatedAt': firestore.FieldValue.serverTimestamp(),
           });
     }
   }
@@ -245,7 +246,7 @@ class FirebaseFirestoreService {
         .collection(cartCollection)
         .get();
 
-    for (var doc in snapshot.docs) {
+    for (final doc in snapshot.docs) {
       batch.delete(doc.reference);
     }
 
@@ -260,10 +261,10 @@ class FirebaseFirestoreService {
     var docRef = _firestore.collection(ordersCollection).doc();
     await docRef.set({
       ...orderData,
-      "id": docRef.id,
-      "userId": userId,
-      "createdAt": firestore.FieldValue.serverTimestamp(),
-      "updatedAt": firestore.FieldValue.serverTimestamp(),
+      'id': docRef.id,
+      'userId': userId,
+      'createdAt': firestore.FieldValue.serverTimestamp(),
+      'updatedAt': firestore.FieldValue.serverTimestamp(),
     });
     return docRef.id;
   }
@@ -283,8 +284,8 @@ class FirebaseFirestoreService {
   }) async {
     firestore.Query query = _firestore
         .collection(ordersCollection)
-        .where("userId", isEqualTo: userId)
-        .orderBy("createdAt", descending: true)
+        .where('userId', isEqualTo: userId)
+        .orderBy('createdAt', descending: true)
         .limit(limit);
 
     if (startAfter != null) {
@@ -300,7 +301,7 @@ class FirebaseFirestoreService {
   Future<void> updateOrder(String orderId, Map<String, dynamic> updates) async {
     await _firestore.collection(ordersCollection).doc(orderId).update({
       ...updates,
-      "updatedAt": firestore.FieldValue.serverTimestamp(),
+      'updatedAt': firestore.FieldValue.serverTimestamp(),
     });
   }
 
@@ -308,8 +309,8 @@ class FirebaseFirestoreService {
   Future<void> placeOrder(Order order) async {
     await _firestore.collection(ordersCollection).doc(order.id).set({
       ...order.toJson(),
-      "createdAt": firestore.FieldValue.serverTimestamp(),
-      "updatedAt": firestore.FieldValue.serverTimestamp(),
+      'createdAt': firestore.FieldValue.serverTimestamp(),
+      'updatedAt': firestore.FieldValue.serverTimestamp(),
     });
   }
 
@@ -322,8 +323,8 @@ class FirebaseFirestoreService {
   Future<List<Order>> getUserOrdersList(String userId) async {
     var snapshot = await _firestore
         .collection(ordersCollection)
-        .where("userId", isEqualTo: userId)
-        .orderBy("createdAt", descending: true)
+        .where('userId', isEqualTo: userId)
+        .orderBy('createdAt', descending: true)
         .get();
 
     return snapshot.docs.map((doc) => Order.fromJson(doc.data())).toList();
@@ -331,17 +332,17 @@ class FirebaseFirestoreService {
 
   Future<void> updateOrderStatus(String orderId, OrderStatus status) async {
     await _firestore.collection(ordersCollection).doc(orderId).update({
-      "status": status.name,
-      "updatedAt": firestore.FieldValue.serverTimestamp(),
+      'status': status.name,
+      'updatedAt': firestore.FieldValue.serverTimestamp(),
     });
   }
 
   Future<List<Order>> getOrdersByStatus(String userId, OrderStatus status) async {
     var snapshot = await _firestore
         .collection(ordersCollection)
-        .where("userId", isEqualTo: userId)
-        .where("status", isEqualTo: status.name)
-        .orderBy("createdAt", descending: true)
+        .where('userId', isEqualTo: userId)
+        .where('status', isEqualTo: status.name)
+        .orderBy('createdAt', descending: true)
         .get();
 
     return snapshot.docs.map((doc) => Order.fromJson(doc.data())).toList();
@@ -350,8 +351,8 @@ class FirebaseFirestoreService {
   Future<List<Order>> getRestaurantOrders(String restaurantId) async {
     var snapshot = await _firestore
         .collection(ordersCollection)
-        .where("items", arrayContains: {"restaurantId": restaurantId})
-        .orderBy("createdAt", descending: true)
+        .where('items', arrayContains: {'restaurantId': restaurantId})
+        .orderBy('createdAt', descending: true)
         .get();
 
     return snapshot.docs.map((doc) => Order.fromJson(doc.data())).toList();
@@ -366,10 +367,10 @@ class FirebaseFirestoreService {
     firestore.Query query = _firestore.collection(restaurantsCollection).limit(limit);
 
     if (cuisine != null && cuisine.isNotEmpty) {
-      query = query.where("cuisine", isEqualTo: cuisine);
+      query = query.where('cuisine', isEqualTo: cuisine);
     }
     if (minRating != null) {
-      query = query.where("rating", isGreaterThanOrEqualTo: minRating);
+      query = query.where('rating', isGreaterThanOrEqualTo: minRating);
     }
 
     return query.snapshots().map(
@@ -398,21 +399,19 @@ class FirebaseFirestoreService {
         .map((snapshot) => snapshot.docs.map((doc) => doc.id).toList());
 
   // Generic document methods
-  Future<firestore.DocumentSnapshot> getDocument(String path) async {
-    return await _firestore.doc(path).get();
-  }
+  Future<firestore.DocumentSnapshot> getDocument(String path) async => _firestore.doc(path).get();
 
   Future<void> setDocument(String path, Map<String, dynamic> data) async {
     await _firestore.doc(path).set({
       ...data,
-      "updatedAt": firestore.FieldValue.serverTimestamp(),
+      'updatedAt': firestore.FieldValue.serverTimestamp(),
     });
   }
 
   Future<void> updateDocument(String path, Map<String, dynamic> updates) async {
     await _firestore.doc(path).update({
       ...updates,
-      "updatedAt": firestore.FieldValue.serverTimestamp(),
+      'updatedAt': firestore.FieldValue.serverTimestamp(),
     });
   }
 
@@ -420,14 +419,12 @@ class FirebaseFirestoreService {
     await _firestore.doc(path).delete();
   }
 
-  Future<firestore.QuerySnapshot> getCollection(String path) async {
-    return await _firestore.collection(path).get();
-  }
+  Future<firestore.QuerySnapshot> getCollection(String path) async => _firestore.collection(path).get();
 
   // Utility methods
   Future<void> batchWrite(List<firestore.WriteBatch> operations) async {
     var batch = _firestore.batch();
-    for (var operation in operations) {
+    for (final operation in operations) {
       // Apply operations to batch
     }
     await batch.commit();
@@ -447,19 +444,19 @@ class FirebaseFirestoreService {
           .collection(cartCollection)
           .get();
 
-      for (var doc in cartSnapshot.docs) {
+      for (final doc in cartSnapshot.docs) {
         transaction.delete(doc.reference);
       }
 
       // Create order
       var orderRef = _firestore.collection(ordersCollection).doc();
       transaction.set(orderRef, {
-        "id": orderRef.id,
-        "userId": userId,
-        "items": items.map((item) => item.toJson()).toList(),
-        "total": total,
-        "status": "pending",
-        "createdAt": firestore.FieldValue.serverTimestamp(),
+        'id': orderRef.id,
+        'userId': userId,
+        'items': items.map((item) => item.toJson()).toList(),
+        'total': total,
+        'status': 'pending',
+        'createdAt': firestore.FieldValue.serverTimestamp(),
       });
     });
   }

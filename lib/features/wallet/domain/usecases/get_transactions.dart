@@ -20,8 +20,7 @@ class GetTransactions {
     );
   }
 
-  Stream<List<Transaction>> watch() {
-    return repository.watchTransactions('').asyncExpand((_) async* {
+  Stream<List<Transaction>> watch() => repository.watchTransactions('').asyncExpand((_) async* {
       final wallet = await repository.getWallet();
       if (wallet != null) {
         yield* repository.watchTransactions(wallet.id);
@@ -29,5 +28,4 @@ class GetTransactions {
         yield* Stream.value([]);
       }
     });
-  }
 }

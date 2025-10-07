@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart' as gmaps;
-import '../providers/map_provider.dart';
+
 import '../../domain/entities/location.dart';
+import '../providers/map_provider.dart';
 
 /// Widget for manual location selection with visual feedback
 class LocationSelectionWidget extends ConsumerWidget {
@@ -45,8 +46,7 @@ class _LocationSelectionOverlay extends StatelessWidget {
   final VoidCallback onConfirm;
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
+  Widget build(BuildContext context) => Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -66,7 +66,7 @@ class _LocationSelectionOverlay extends StatelessWidget {
           // Header
           Row(
             children: [
-              Icon(
+              const Icon(
                 Icons.location_on,
                 color: Colors.blue,
                 size: 24,
@@ -193,6 +193,14 @@ class _LocationSelectionOverlay extends StatelessWidget {
         ],
       ),
     );
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<Location?>('selectedLocation', selectedLocation));
+    properties.add(StringProperty('selectedAddress', selectedAddress));
+    properties.add(ObjectFlagProperty<VoidCallback>.has('onCancel', onCancel));
+    properties.add(ObjectFlagProperty<VoidCallback>.has('onConfirm', onConfirm));
   }
 }
 
@@ -214,10 +222,10 @@ class ManualLocationSelectionButton extends ConsumerWidget {
         }
       },
       backgroundColor: isSelectionMode ? Colors.orange : Colors.blue,
+      tooltip: isSelectionMode ? 'Cancel location selection' : 'Select location manually',
       child: Icon(
         isSelectionMode ? Icons.close : Icons.location_on,
       ),
-      tooltip: isSelectionMode ? 'Cancel location selection' : 'Select location manually',
     );
   }
 }

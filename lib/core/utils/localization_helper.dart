@@ -1,5 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/material.dart';
+
 import '../theme/app_typography.dart';
 
 /// Localization Helper
@@ -15,14 +16,12 @@ import '../theme/app_typography.dart';
 /// )
 /// ```
 class LocalizationHelper {
-  final BuildContext context;
 
   const LocalizationHelper._(this.context);
+  final BuildContext context;
 
   /// Get the LocalizationHelper instance for the current context
-  static LocalizationHelper of(BuildContext context) {
-    return LocalizationHelper._(context);
-  }
+  static LocalizationHelper of(BuildContext context) => LocalizationHelper._(context);
 
   // ============================================================================
   // APP INFO STRINGS
@@ -44,9 +43,7 @@ class LocalizationHelper {
   TextTheme get textTheme => AppTypography.getResponsiveTextTheme(context);
 
   /// Get appropriate text style based on current locale
-  TextStyle getResponsiveStyle(TextStyle englishStyle, TextStyle arabicStyle) {
-    return AppTypography.getResponsiveTextStyle(englishStyle, arabicStyle, context);
-  }
+  TextStyle getResponsiveStyle(TextStyle englishStyle, TextStyle arabicStyle) => AppTypography.getResponsiveTextStyle(englishStyle, arabicStyle, context);
 
   // ============================================================================
   // NAVIGATION STRINGS

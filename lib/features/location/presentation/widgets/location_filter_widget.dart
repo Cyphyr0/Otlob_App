@@ -1,8 +1,10 @@
 /// Location filter widget for radius/distance filtering and location-based search
+library;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../providers/map_provider.dart';
+
 import '../../domain/entities/location.dart';
+import '../providers/map_provider.dart';
 
 /// Main location filter widget with radius slider and search
 class LocationFilterWidget extends ConsumerStatefulWidget {
@@ -23,11 +25,21 @@ class LocationFilterWidget extends ConsumerStatefulWidget {
 
   @override
   ConsumerState<LocationFilterWidget> createState() => _LocationFilterWidgetState();
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DoubleProperty('initialRadius', initialRadius));
+    properties.add(ObjectFlagProperty<Function(Location p1)?>.has('onLocationChanged', onLocationChanged));
+    properties.add(ObjectFlagProperty<Function(double p1)?>.has('onRadiusChanged', onRadiusChanged));
+    properties.add(DiagnosticsProperty<bool>('showSearchBar', showSearchBar));
+    properties.add(DiagnosticsProperty<bool>('showCurrentLocationButton', showCurrentLocationButton));
+  }
 }
 
 class _LocationFilterWidgetState extends ConsumerState<LocationFilterWidget> {
   final TextEditingController _searchController = TextEditingController();
-  double _currentRadius = 5.0;
+  double _currentRadius = 5;
 
   @override
   void initState() {
@@ -154,8 +166,7 @@ class _SearchBar extends StatelessWidget {
   final VoidCallback onLocationTap;
 
   @override
-  Widget build(BuildContext context) {
-    return Row(
+  Widget build(BuildContext context) => Row(
       children: [
         Expanded(
           child: TextField(
@@ -179,6 +190,13 @@ class _SearchBar extends StatelessWidget {
         ),
       ],
     );
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<TextEditingController>('controller', controller));
+    properties.add(ObjectFlagProperty<Function(String p1)>.has('onSearch', onSearch));
+    properties.add(ObjectFlagProperty<VoidCallback>.has('onLocationTap', onLocationTap));
   }
 }
 
@@ -193,8 +211,7 @@ class _RadiusFilter extends StatelessWidget {
   final Function(double) onRadiusChanged;
 
   @override
-  Widget build(BuildContext context) {
-    return Column(
+  Widget build(BuildContext context) => Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Header
@@ -230,8 +247,8 @@ class _RadiusFilter extends StatelessWidget {
         // Slider
         Slider(
           value: currentRadius,
-          min: 1.0,
-          max: 20.0,
+          min: 1,
+          max: 20,
           divisions: 19,
           label: '${currentRadius.toStringAsFixed(1)} km',
           onChanged: onRadiusChanged,
@@ -266,6 +283,12 @@ class _RadiusFilter extends StatelessWidget {
         ),
       ],
     );
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DoubleProperty('currentRadius', currentRadius));
+    properties.add(ObjectFlagProperty<Function(double p1)>.has('onRadiusChanged', onRadiusChanged));
   }
 }
 
@@ -278,8 +301,7 @@ class _CurrentLocationButton extends ConsumerWidget {
   final Function(Location) onLocationFound;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return SizedBox(
+  Widget build(BuildContext context, WidgetRef ref) => SizedBox(
       width: double.infinity,
       child: ElevatedButton.icon(
         onPressed: () => _handleCurrentLocation(ref, context),
@@ -293,7 +315,6 @@ class _CurrentLocationButton extends ConsumerWidget {
         ),
       ),
     );
-  }
 
   Future<void> _handleCurrentLocation(WidgetRef ref, BuildContext context) async {
     try {
@@ -329,6 +350,12 @@ class _CurrentLocationButton extends ConsumerWidget {
       country: 'Egypt',
     );
   }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(ObjectFlagProperty<Function(Location p1)>.has('onLocationFound', onLocationFound));
+  }
 }
 
 /// Filter summary showing active filters
@@ -344,8 +371,7 @@ class _FilterSummary extends StatelessWidget {
   final VoidCallback onClearFilters;
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
+  Widget build(BuildContext context) => Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: Colors.grey[50],
@@ -367,12 +393,12 @@ class _FilterSummary extends StatelessWidget {
               ),
               TextButton(
                 onPressed: onClearFilters,
-                child: const Text('Clear All'),
                 style: TextButton.styleFrom(
                   padding: EdgeInsets.zero,
                   minimumSize: const Size(0, 0),
                   tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                 ),
+                child: const Text('Clear All'),
               ),
             ],
           ),
@@ -404,6 +430,13 @@ class _FilterSummary extends StatelessWidget {
         ],
       ),
     );
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(IterableProperty<String>('selectedCuisines', selectedCuisines));
+    properties.add(DoubleProperty('minRating', minRating));
+    properties.add(ObjectFlagProperty<VoidCallback>.has('onClearFilters', onClearFilters));
   }
 }
 
@@ -418,8 +451,7 @@ class _FilterChip extends StatelessWidget {
   final VoidCallback onRemove;
 
   @override
-  Widget build(BuildContext context) {
-    return Chip(
+  Widget build(BuildContext context) => Chip(
       label: Text(
         label,
         style: const TextStyle(fontSize: 12),
@@ -431,14 +463,19 @@ class _FilterChip extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
       ),
     );
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(StringProperty('label', label));
+    properties.add(ObjectFlagProperty<VoidCallback>.has('onRemove', onRemove));
   }
 }
 
 /// Quick filter buttons for common radius values
 class QuickRadiusFilters extends StatelessWidget {
   const QuickRadiusFilters({
-    super.key,
-    required this.onRadiusSelected,
+    required this.onRadiusSelected, super.key,
     this.selectedRadius = 5.0,
   });
 
@@ -446,36 +483,41 @@ class QuickRadiusFilters extends StatelessWidget {
   final double selectedRadius;
 
   @override
-  Widget build(BuildContext context) {
-    return Row(
+  Widget build(BuildContext context) => Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         _QuickFilterButton(
           label: '1 km',
-          value: 1.0,
+          value: 1,
           isSelected: selectedRadius == 1.0,
-          onTap: () => onRadiusSelected(1.0),
+          onTap: () => onRadiusSelected(1),
         ),
         _QuickFilterButton(
           label: '3 km',
-          value: 3.0,
+          value: 3,
           isSelected: selectedRadius == 3.0,
-          onTap: () => onRadiusSelected(3.0),
+          onTap: () => onRadiusSelected(3),
         ),
         _QuickFilterButton(
           label: '5 km',
-          value: 5.0,
+          value: 5,
           isSelected: selectedRadius == 5.0,
-          onTap: () => onRadiusSelected(5.0),
+          onTap: () => onRadiusSelected(5),
         ),
         _QuickFilterButton(
           label: '10 km',
-          value: 10.0,
+          value: 10,
           isSelected: selectedRadius == 10.0,
-          onTap: () => onRadiusSelected(10.0),
+          onTap: () => onRadiusSelected(10),
         ),
       ],
     );
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(ObjectFlagProperty<Function(double p1)>.has('onRadiusSelected', onRadiusSelected));
+    properties.add(DoubleProperty('selectedRadius', selectedRadius));
   }
 }
 
@@ -494,8 +536,7 @@ class _QuickFilterButton extends StatelessWidget {
   final VoidCallback onTap;
 
   @override
-  Widget build(BuildContext context) {
-    return InkWell(
+  Widget build(BuildContext context) => InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(20),
       child: Container(
@@ -517,5 +558,13 @@ class _QuickFilterButton extends StatelessWidget {
         ),
       ),
     );
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(StringProperty('label', label));
+    properties.add(DoubleProperty('value', value));
+    properties.add(DiagnosticsProperty<bool>('isSelected', isSelected));
+    properties.add(ObjectFlagProperty<VoidCallback>.has('onTap', onTap));
   }
 }

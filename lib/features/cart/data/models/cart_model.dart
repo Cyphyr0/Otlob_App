@@ -1,7 +1,7 @@
-import "package:freezed_annotation/freezed_annotation.dart";
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-part "cart_model.freezed.dart";
-part "cart_model.g.dart";
+part 'cart_model.freezed.dart';
+part 'cart_model.g.dart';
 
 @freezed
 abstract class CartModel with _$CartModel {
@@ -19,7 +19,7 @@ abstract class CartModel with _$CartModel {
     subtotal: 0,
     deliveryFee: 0,
     total: 0,
-    restaurantId: "",
+    restaurantId: '',
     updatedAt: DateTime.now(),
   );
 

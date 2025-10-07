@@ -1,29 +1,36 @@
-import "package:flutter/material.dart";
-import "package:flutter_riverpod/flutter_riverpod.dart";
-import "../../domain/entities/payment.dart";
-import "../providers/payment_provider.dart";
-import "../widgets/payment_method_selector.dart";
-import "../widgets/payment_processing_widget.dart";
-import "../widgets/payment_result_widget.dart";
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../domain/entities/payment.dart';
+import '../providers/payment_provider.dart';
+import '../widgets/payment_method_selector.dart';
+import '../widgets/payment_processing_widget.dart';
+import '../widgets/payment_result_widget.dart';
 
 class PaymentScreen extends ConsumerStatefulWidget {
+
+  const PaymentScreen({
+    required this.orderId, required this.amount, required this.currency, super.key,
+    this.customerEmail,
+    this.customerPhone,
+  });
   final String orderId;
   final double amount;
   final String currency;
   final String? customerEmail;
   final String? customerPhone;
 
-  const PaymentScreen({
-    super.key,
-    required this.orderId,
-    required this.amount,
-    required this.currency,
-    this.customerEmail,
-    this.customerPhone,
-  });
-
   @override
   ConsumerState<PaymentScreen> createState() => _PaymentScreenState();
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(StringProperty('orderId', orderId));
+    properties.add(DoubleProperty('amount', amount));
+    properties.add(StringProperty('currency', currency));
+    properties.add(StringProperty('customerEmail', customerEmail));
+    properties.add(StringProperty('customerPhone', customerPhone));
+  }
 }
 
 class _PaymentScreenState extends ConsumerState<PaymentScreen> {
@@ -63,7 +70,7 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
     // Show payment method selection
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Payment"),
+        title: const Text('Payment'),
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
         elevation: 0,
@@ -114,7 +121,7 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
                         ),
                       )
                     : Text(
-                        "Pay ${widget.amount} ${widget.currency}",
+                        'Pay ${widget.amount} ${widget.currency}',
                         style: const TextStyle(fontSize: 16),
                       ),
               ),
@@ -142,8 +149,7 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
     );
   }
 
-  Widget _buildOrderSummary() {
-    return Container(
+  Widget _buildOrderSummary() => Container(
       margin: const EdgeInsets.all(16),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -162,7 +168,7 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            "Order Summary",
+            'Order Summary',
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
@@ -173,7 +179,7 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text(
-                "Order ID:",
+                'Order ID:',
                 style: TextStyle(color: Colors.grey),
               ),
               Text(
@@ -187,11 +193,11 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text(
-                "Amount:",
+                'Amount:',
                 style: TextStyle(color: Colors.grey),
               ),
               Text(
-                "${widget.amount} ${widget.currency}",
+                '${widget.amount} ${widget.currency}',
                 style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -203,7 +209,6 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
         ],
       ),
     );
-  }
 
   Future<void> _proceedToPayment() async {
     if (_selectedProvider == null) return;
@@ -217,8 +222,8 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
       amount: widget.amount,
       currency: widget.currency,
       metadata: {
-        "customerEmail": widget.customerEmail ?? "customer@example.com",
-        "customerPhone": widget.customerPhone ?? "+20123456789",
+        'customerEmail': widget.customerEmail ?? 'customer@example.com',
+        'customerPhone': widget.customerPhone ?? '+20123456789',
       },
     );
   }

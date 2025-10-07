@@ -1,6 +1,6 @@
-import '../entities/wallet.dart';
-import '../entities/transaction.dart';
 import '../entities/subscription.dart';
+import '../entities/transaction.dart';
+import '../entities/wallet.dart';
 
 abstract class WalletRepository {
   /// Get wallet for the current user

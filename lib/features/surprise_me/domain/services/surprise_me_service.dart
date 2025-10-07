@@ -1,8 +1,8 @@
-import '../entities/surprise_me_result.dart';
-import '../../../user_preferences/domain/entities/user_preferences.dart';
-import '../../../home/domain/entities/restaurant.dart';
 import '../../../favorites/domain/entities/favorite.dart';
+import '../../../home/domain/entities/restaurant.dart';
 import '../../../tawseya/domain/entities/tawseya_item.dart';
+import '../../../user_preferences/domain/entities/user_preferences.dart';
+import '../entities/surprise_me_result.dart';
 import 'smart_suggestion_service.dart';
 
 class SurpriseMeService {
@@ -65,16 +65,16 @@ class SurpriseMeService {
       return "🎉 We know you love ${restaurant.name}! Let's go back to this favorite spot!";
     }
 
-    if (userPreferences?.favoriteCuisines.contains(restaurant.cuisine) == true) {
-      return "🌟 Perfect match! ${restaurant.name} serves your favorite ${restaurant.cuisine} cuisine!";
+    if (userPreferences?.favoriteCuisines.contains(restaurant.cuisine) ?? false) {
+      return '🌟 Perfect match! ${restaurant.name} serves your favorite ${restaurant.cuisine} cuisine!';
     }
 
     if (restaurant.rating >= 4.5) {
-      return "⭐ Highly rated! ${restaurant.name} has excellent reviews (${restaurant.rating}★)";
+      return '⭐ Highly rated! ${restaurant.name} has excellent reviews (${restaurant.rating}★)';
     }
 
     if (restaurant.tawseyaCount > 0) {
-      return "🏆 Community favorite! ${restaurant.name} has ${restaurant.tawseyaCount} Tawseya votes!";
+      return '🏆 Community favorite! ${restaurant.name} has ${restaurant.tawseyaCount} Tawseya votes!';
     }
 
     return "🎲 Surprise! Let's try something new at ${restaurant.name}!";
@@ -91,23 +91,23 @@ class SurpriseMeService {
       reasons.add("You've marked this as a favorite restaurant");
     }
 
-    if (userPreferences?.favoriteCuisines.contains(restaurant.cuisine) == true) {
-      reasons.add("Matches your preferred ${restaurant.cuisine} cuisine");
+    if (userPreferences?.favoriteCuisines.contains(restaurant.cuisine) ?? false) {
+      reasons.add('Matches your preferred ${restaurant.cuisine} cuisine');
     }
 
     if (restaurant.rating >= 4.0) {
-      reasons.add("High rating (${restaurant.rating}★) from other users");
+      reasons.add('High rating (${restaurant.rating}★) from other users');
     }
 
     if (restaurant.tawseyaCount > 0) {
-      reasons.add("Popular in the community (${restaurant.tawseyaCount} Tawseya votes)");
+      reasons.add('Popular in the community (${restaurant.tawseyaCount} Tawseya votes)');
     }
 
     if (reasons.isEmpty) {
-      reasons.add("A great restaurant worth trying");
+      reasons.add('A great restaurant worth trying');
     }
 
-    return reasons.join(" • ");
+    return reasons.join(' • ');
   }
 
   double _calculateConfidence({
@@ -115,7 +115,7 @@ class SurpriseMeService {
     required UserPreferences? userPreferences,
     required List<Favorite> userFavorites,
   }) {
-    double confidence = 0.5; // Base confidence
+    var confidence = 0.5; // Base confidence
 
     // Boost confidence for favorites
     if (userFavorites.any((fav) => fav.restaurantId == restaurant.id)) {
@@ -123,7 +123,7 @@ class SurpriseMeService {
     }
 
     // Boost confidence for preferred cuisines
-    if (userPreferences?.favoriteCuisines.contains(restaurant.cuisine) == true) {
+    if (userPreferences?.favoriteCuisines.contains(restaurant.cuisine) ?? false) {
       confidence += 0.2;
     }
 

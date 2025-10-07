@@ -1,8 +1,9 @@
-import "package:logger/logger.dart";
-import "../../../../core/errors/failures.dart";
-import "../datasources/firebase_auth_datasource.dart";
-import "../../domain/entities/user.dart";
-import "../../domain/repositories/auth_repository.dart";
+import 'package:logger/logger.dart';
+
+import '../../../../core/errors/failures.dart';
+import '../../domain/entities/user.dart';
+import '../../domain/repositories/auth_repository.dart';
+import '../datasources/firebase_auth_datasource.dart';
 
 class FirebaseAuthRepository implements AuthRepository {
 
@@ -19,7 +20,7 @@ class FirebaseAuthRepository implements AuthRepository {
     try {
       await _dataSource.sendOTP(phoneNumber);
     } catch (e) {
-      throw AuthFailure(message: "Failed to send OTP: $e");
+      throw AuthFailure(message: 'Failed to send OTP: $e');
     }
   }
 
@@ -30,7 +31,7 @@ class FirebaseAuthRepository implements AuthRepository {
       await saveUser(user); // Save after verification
       return user;
     } catch (e) {
-      throw AuthFailure(message: "Verification failed: $e");
+      throw AuthFailure(message: 'Verification failed: $e');
     }
   }
 
@@ -41,7 +42,7 @@ class FirebaseAuthRepository implements AuthRepository {
       await saveUser(user);
       return user;
     } catch (e) {
-      throw AuthFailure(message: "Google sign-in failed: $e");
+      throw AuthFailure(message: 'Google sign-in failed: $e');
     }
   }
 
@@ -52,7 +53,7 @@ class FirebaseAuthRepository implements AuthRepository {
       await saveUser(user);
       return user;
     } catch (e) {
-      throw AuthFailure(message: "Facebook sign-in failed: $e");
+      throw AuthFailure(message: 'Facebook sign-in failed: $e');
     }
   }
 
@@ -63,7 +64,7 @@ class FirebaseAuthRepository implements AuthRepository {
       await saveUser(user);
       return user;
     } catch (e) {
-      throw AuthFailure(message: "Email sign-in failed: $e");
+      throw AuthFailure(message: 'Email sign-in failed: $e');
     }
   }
 
@@ -78,7 +79,7 @@ class FirebaseAuthRepository implements AuthRepository {
       await saveUser(user);
       return user;
     } catch (e) {
-      throw AuthFailure(message: "Email sign-up failed: $e");
+      throw AuthFailure(message: 'Email sign-up failed: $e');
     }
   }
 
@@ -133,7 +134,7 @@ class FirebaseAuthRepository implements AuthRepository {
     try {
       await _dataSource.logout();
     } catch (e) {
-      throw AuthFailure(message: "Logout failed: $e");
+      throw AuthFailure(message: 'Logout failed: $e');
     }
   }
 
@@ -142,7 +143,7 @@ class FirebaseAuthRepository implements AuthRepository {
     try {
       return _dataSource.getCurrentUser();
     } catch (e) {
-      throw AuthFailure(message: "Failed to get current user: $e");
+      throw AuthFailure(message: 'Failed to get current user: $e');
     }
   }
 
@@ -150,7 +151,7 @@ class FirebaseAuthRepository implements AuthRepository {
   Future<void> saveUser(User user) async {
     // Mock save - in real, use Firestore or Drift
     // For now, print to console
-    Logger().i("Mock saving user to local DB: ${user.name} (${user.email})");
+    Logger().i('Mock saving user to local DB: ${user.name} (${user.email})');
     // To avoid type conflict, skip actual DB insert for mock
   }
 
@@ -159,7 +160,7 @@ class FirebaseAuthRepository implements AuthRepository {
     try {
       await _dataSource.sendEmailVerification();
     } catch (e) {
-      throw AuthFailure(message: "Failed to send email verification: $e");
+      throw AuthFailure(message: 'Failed to send email verification: $e');
     }
   }
 }

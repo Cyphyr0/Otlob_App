@@ -1,7 +1,7 @@
-import "../../../../core/services/firebase/firebase_firestore_service.dart";
-import "../../domain/entities/order.dart";
-import "../../domain/repositories/order_repository.dart";
-import "../../domain/services/order_notification_service.dart";
+import '../../../../core/services/firebase/firebase_firestore_service.dart';
+import '../../domain/entities/order.dart';
+import '../../domain/repositories/order_repository.dart';
+import '../../domain/services/order_notification_service.dart';
 
 class FirebaseOrderRepository implements OrderRepository {
   FirebaseOrderRepository(this._firestoreService);
@@ -14,14 +14,10 @@ class FirebaseOrderRepository implements OrderRepository {
   }
 
   @override
-  Future<Order?> getOrderById(String orderId) async {
-    return await _firestoreService.getOrderById(orderId);
-  }
+  Future<Order?> getOrderById(String orderId) async => _firestoreService.getOrderById(orderId);
 
   @override
-  Future<List<Order>> getUserOrders(String userId) async {
-    return await _firestoreService.getUserOrdersList(userId);
-  }
+  Future<List<Order>> getUserOrders(String userId) async => _firestoreService.getUserOrdersList(userId);
 
   @override
   Future<void> updateOrderStatus(String orderId, OrderStatus status) async {
@@ -54,12 +50,8 @@ class FirebaseOrderRepository implements OrderRepository {
   }
 
   @override
-  Future<List<Order>> getOrdersByStatus(String userId, OrderStatus status) async {
-    return await _firestoreService.getOrdersByStatus(userId, status);
-  }
+  Future<List<Order>> getOrdersByStatus(String userId, OrderStatus status) async => _firestoreService.getOrdersByStatus(userId, status);
 
   @override
-  Future<List<Order>> getRestaurantOrders(String restaurantId) async {
-    return await _firestoreService.getRestaurantOrders(restaurantId);
-  }
+  Future<List<Order>> getRestaurantOrders(String restaurantId) async => _firestoreService.getRestaurantOrders(restaurantId);
 }

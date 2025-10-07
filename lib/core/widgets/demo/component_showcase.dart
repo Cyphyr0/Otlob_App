@@ -1,26 +1,28 @@
-import "package:flutter/material.dart";
-import "package:flutter/foundation.dart";
-import "../branding/otlob_logo.dart";
-import "../buttons/primary_button.dart";
-import "../buttons/secondary_button.dart";
-import "../buttons/icon_button_custom.dart";
-import "../cards/restaurant_card.dart";
-import "../cards/dish_card.dart";
-import "../badges/tawseya_badge.dart";
-import "../badges/cuisine_tag.dart";
-import "../inputs/search_bar_widget.dart";
-import "../inputs/custom_text_field.dart";
-import "../states/loading_indicator.dart";
-import "../states/empty_state.dart";
-import "ui_libraries/shadcn_auth_demo.dart";
-import "ui_libraries/getwidget_auth_demo.dart";
-import "ui_libraries/prime_flutter_auth_demo.dart";
-import "ui_libraries/prokit_auth_demo.dart";
-import "ui_libraries/prokit_home_demo.dart";
-import "ui_libraries/modern_home_demo.dart";
-import "../../theme/app_colors.dart";
-import "../../theme/app_spacing.dart";
-import "../../theme/app_typography.dart";
+import 'package:flutter/foundation.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+
+import '../../theme/app_colors.dart';
+import '../../theme/app_spacing.dart';
+import '../../theme/app_typography.dart';
+import '../badges/cuisine_tag.dart';
+import '../badges/tawseya_badge.dart';
+import '../branding/otlob_logo.dart';
+import '../buttons/icon_button_custom.dart';
+import '../buttons/primary_button.dart';
+import '../buttons/secondary_button.dart';
+import '../cards/dish_card.dart';
+import '../cards/restaurant_card.dart';
+import '../inputs/custom_text_field.dart';
+import '../inputs/search_bar_widget.dart';
+import '../states/empty_state.dart';
+import '../states/loading_indicator.dart';
+import 'ui_libraries/getwidget_auth_demo.dart';
+import 'ui_libraries/modern_home_demo.dart';
+import 'ui_libraries/prime_flutter_auth_demo.dart';
+import 'ui_libraries/prokit_auth_demo.dart';
+import 'ui_libraries/prokit_home_demo.dart';
+import 'ui_libraries/shadcn_auth_demo.dart';
 
 class _SocialLoginButton extends StatelessWidget {
 
@@ -547,16 +549,14 @@ class _ComponentShowcaseScreenState extends State<ComponentShowcaseScreen> {
                     const Text('Restaurant Card'),
                     SizedBox(height: AppSpacing.xs),
                     RestaurantCard(
-                      imageUrl: 'https://via.placeholder.com/400x200',
+                      restaurantId: 'demo-restaurant-1',
                       name: 'Al Tazaj Restaurant',
-                      cuisines: const ['Saudi Arabian', 'Grill'],
-                      distance: '2.5 km',
+                      cuisine: 'Saudi Arabian, Grill',
                       rating: 4.5,
-                      hasTawseya: true,
                       tawseyaCount: 156,
                       isFavorite: false,
                       onTap: () {},
-                      onFavoritePressed: () {},
+                      onFavoriteTap: () {},
                     ),
                     SizedBox(height: AppSpacing.md),
                     const Text('Restaurant Card (Loading)'),
@@ -568,7 +568,7 @@ class _ComponentShowcaseScreenState extends State<ComponentShowcaseScreen> {
                     DishCard(
                       imageUrl: 'https://via.placeholder.com/300x200',
                       name: 'Grilled Chicken',
-                      price: 45.00,
+                      price: 45,
                       specialTag: 'Popular',
                       onTap: () {},
                       onAddToCart: () {},

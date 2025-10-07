@@ -1,8 +1,8 @@
-import "package:flutter/material.dart";
-import "package:flutter_screenutil/flutter_screenutil.dart";
-import "../../../theme/app_colors.dart";
-import "../../../theme/app_spacing.dart";
-import "../../../theme/app_typography.dart";
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../theme/app_colors.dart';
+import '../../../theme/app_spacing.dart';
+import '../../../theme/app_typography.dart';
 
 class PrimeFlutterAuthDemo extends StatefulWidget {
   const PrimeFlutterAuthDemo({super.key});
@@ -41,8 +41,8 @@ class _PrimeFlutterAuthDemoState extends State<PrimeFlutterAuthDemo> {
           SnackBar(
             content: Text(
               _isLogin
-                  ? "Prime Flutter Login Successful"
-                  : "Prime Flutter Account Created",
+                  ? 'Prime Flutter Login Successful'
+                  : 'Prime Flutter Account Created',
             ),
             backgroundColor: AppColors.logoRed,
           ),
@@ -72,7 +72,7 @@ class _PrimeFlutterAuthDemoState extends State<PrimeFlutterAuthDemo> {
                 Container(
                   padding: EdgeInsets.all(AppSpacing.md),
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(
+                    gradient: const LinearGradient(
                       colors: [AppColors.logoRed, AppColors.primaryGold],
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
@@ -133,7 +133,7 @@ class _PrimeFlutterAuthDemoState extends State<PrimeFlutterAuthDemo> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   if (!_isLogin) ...[
-                    Container(
+                    DecoratedBox(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12.r),
                         border: Border.all(color: AppColors.lightGray),
@@ -155,7 +155,7 @@ class _PrimeFlutterAuthDemoState extends State<PrimeFlutterAuthDemo> {
                     SizedBox(height: AppSpacing.md),
                   ],
 
-                  Container(
+                  DecoratedBox(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12.r),
                       border: Border.all(color: AppColors.lightGray),
@@ -178,7 +178,7 @@ class _PrimeFlutterAuthDemoState extends State<PrimeFlutterAuthDemo> {
 
                   SizedBox(height: AppSpacing.md),
 
-                  Container(
+                  DecoratedBox(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12.r),
                       border: Border.all(color: AppColors.lightGray),
@@ -204,7 +204,7 @@ class _PrimeFlutterAuthDemoState extends State<PrimeFlutterAuthDemo> {
                   Container(
                     height: 50,
                     decoration: BoxDecoration(
-                      gradient: LinearGradient(
+                      gradient: const LinearGradient(
                         colors: [AppColors.logoRed, AppColors.primaryGold],
                       ),
                       borderRadius: BorderRadius.circular(12.r),
@@ -254,7 +254,7 @@ class _PrimeFlutterAuthDemoState extends State<PrimeFlutterAuthDemo> {
                       Text(
                         _isLogin
                             ? "Don't have an account? "
-                            : "Already have an account? ",
+                            : 'Already have an account? ',
                         style: AppTypography.bodyMedium.copyWith(
                           color: AppColors.gray,
                         ),
@@ -298,7 +298,7 @@ class _PrimeFlutterAuthDemoState extends State<PrimeFlutterAuthDemo> {
 
                 SizedBox(height: AppSpacing.md),
 
-                Container(
+                DecoratedBox(
                   decoration: BoxDecoration(
                     border: Border.all(color: AppColors.lightGray),
                     borderRadius: BorderRadius.circular(12.r),
@@ -321,7 +321,7 @@ class _PrimeFlutterAuthDemoState extends State<PrimeFlutterAuthDemo> {
 
                 SizedBox(height: AppSpacing.sm),
 
-                Container(
+                DecoratedBox(
                   decoration: BoxDecoration(
                     border: Border.all(color: AppColors.lightGray),
                     borderRadius: BorderRadius.circular(12.r),

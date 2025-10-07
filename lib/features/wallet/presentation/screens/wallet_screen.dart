@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
+
 import '../providers/wallet_provider.dart';
-import '../widgets/wallet_balance_card.dart';
-import '../widgets/transaction_list.dart';
-import '../widgets/top_up_button.dart';
 import '../widgets/subscription_card.dart';
+import '../widgets/top_up_button.dart';
+import '../widgets/transaction_list.dart';
+import '../widgets/wallet_balance_card.dart';
 
 class WalletScreen extends ConsumerStatefulWidget {
   const WalletScreen({super.key});
@@ -192,8 +193,7 @@ class _CreateWalletCard extends StatelessWidget {
   const _CreateWalletCard();
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
+  Widget build(BuildContext context) => Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
@@ -235,15 +235,13 @@ class _CreateWalletCard extends StatelessWidget {
         ],
       ),
     );
-  }
 }
 
 class _EmptyTransactionsCard extends StatelessWidget {
   const _EmptyTransactionsCard();
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
+  Widget build(BuildContext context) => Container(
       padding: const EdgeInsets.all(32),
       decoration: BoxDecoration(
         color: Colors.grey.shade50,
@@ -274,5 +272,4 @@ class _EmptyTransactionsCard extends StatelessWidget {
         ],
       ),
     );
-  }
 }

@@ -1,23 +1,23 @@
-import "package:flutter_riverpod/flutter_riverpod.dart";
-import "package:uuid/uuid.dart";
-import "../../../../core/services/service_locator.dart";
-import "../../../auth/presentation/providers/auth_provider.dart";
-import "../../../payment/domain/entities/payment.dart";
-import "../../domain/entities/cart_item.dart";
-import "../../domain/entities/order.dart";
-import "../../domain/repositories/order_repository.dart";
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:uuid/uuid.dart';
+import '../../../../core/services/service_locator.dart';
+import '../../../auth/presentation/providers/auth_provider.dart';
+import '../../../payment/domain/entities/payment.dart';
+import '../../domain/entities/cart_item.dart';
+import '../../domain/entities/order.dart';
+import '../../domain/repositories/order_repository.dart';
 
 final orderProvider = StateNotifierProvider<OrderNotifier, OrderState>(
-  (ref) => OrderNotifier(ref),
+  OrderNotifier.new,
 );
 
 class OrderNotifier extends StateNotifier<OrderState> {
-  final Ref ref;
-  final Uuid _uuid = const Uuid();
 
   OrderNotifier(this.ref) : super(const OrderState.initial()) {
     _orderRepository = getIt<OrderRepository>();
   }
+  final Ref ref;
+  final Uuid _uuid = const Uuid();
 
   late final OrderRepository _orderRepository;
 
@@ -90,7 +90,7 @@ class OrderNotifier extends StateNotifier<OrderState> {
       } else {
         state = state.copyWith(
           isLoading: false,
-          error: "User must be authenticated to place an order",
+          error: 'User must be authenticated to place an order',
         );
       }
     } catch (e) {
@@ -146,7 +146,7 @@ class OrderNotifier extends StateNotifier<OrderState> {
       } else {
         state = state.copyWith(
           isLoading: false,
-          error: "User must be authenticated",
+          error: 'User must be authenticated',
         );
         return [];
       }
@@ -160,12 +160,12 @@ class OrderNotifier extends StateNotifier<OrderState> {
   }
 
   double _calculateDiscount(double subtotal, String? promoCode) {
-    if (promoCode == "SAVE10") {
+    if (promoCode == 'SAVE10') {
       return subtotal * 0.1;
-    } else if (promoCode == "NEWUSER") {
+    } else if (promoCode == 'NEWUSER') {
       return subtotal * 0.15;
     }
-    return 0.0;
+    return 0;
   }
 
   Future<void> processOrderWithPayment({
@@ -237,7 +237,7 @@ class OrderNotifier extends StateNotifier<OrderState> {
       } else {
         state = state.copyWith(
           isLoading: false,
-          error: "User must be authenticated to place an order",
+          error: 'User must be authenticated to place an order',
         );
       }
     } catch (e) {
@@ -296,10 +296,6 @@ class OrderNotifier extends StateNotifier<OrderState> {
 }
 
 class OrderState {
-  final bool isLoading;
-  final Order? order;
-  final List<Order> userOrders;
-  final String? error;
 
   const OrderState({
     required this.isLoading,
@@ -313,18 +309,20 @@ class OrderState {
         order = null,
         userOrders = const [],
         error = null;
+  final bool isLoading;
+  final Order? order;
+  final List<Order> userOrders;
+  final String? error;
 
   OrderState copyWith({
     bool? isLoading,
     Order? order,
     List<Order>? userOrders,
     String? error,
-  }) {
-    return OrderState(
+  }) => OrderState(
       isLoading: isLoading ?? this.isLoading,
       order: order ?? this.order,
       userOrders: userOrders ?? this.userOrders,
       error: error ?? this.error,
     );
-  }
 }

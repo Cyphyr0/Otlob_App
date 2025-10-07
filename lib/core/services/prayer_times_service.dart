@@ -1,8 +1,7 @@
-import 'dart:convert';
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
-import 'package:flutter/material.dart';
 
 /// Islamic prayer times service for Egyptian market
 class PrayerTimesService {
@@ -13,7 +12,7 @@ class PrayerTimesService {
   Future<PrayerTimesModel?> getPrayerTimesForCurrentLocation() async {
     try {
       // Get current location
-      Position position = await Geolocator.getCurrentPosition(
+      var position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high,
       );
 
@@ -24,7 +23,7 @@ class PrayerTimesService {
     } catch (e) {
       debugPrint('Error getting current location: $e');
       // Fallback to Cairo coordinates if location fails
-      return await getPrayerTimesForLocation(30.0444, 31.2357);
+      return getPrayerTimesForLocation(30.0444, 31.2357);
     }
   }
 
@@ -149,9 +148,6 @@ class PrayerTimesService {
 
 /// Prayer times data model
 class PrayerTimesModel {
-  final Timings timings;
-  final Date date;
-  final Meta meta;
 
   PrayerTimesModel({
     required this.timings,
@@ -159,25 +155,17 @@ class PrayerTimesModel {
     required this.meta,
   });
 
-  factory PrayerTimesModel.fromJson(Map<String, dynamic> json) {
-    return PrayerTimesModel(
+  factory PrayerTimesModel.fromJson(Map<String, dynamic> json) => PrayerTimesModel(
       timings: Timings.fromJson(json['timings']),
       date: Date.fromJson(json['date']),
       meta: Meta.fromJson(json['meta']),
     );
-  }
+  final Timings timings;
+  final Date date;
+  final Meta meta;
 }
 
 class Timings {
-  final String fajr;
-  final String sunrise;
-  final String dhuhr;
-  final String asr;
-  final String sunset;
-  final String maghrib;
-  final String isha;
-  final String imsak;
-  final String midnight;
 
   Timings({
     required this.fajr,
@@ -191,8 +179,7 @@ class Timings {
     required this.midnight,
   });
 
-  factory Timings.fromJson(Map<String, dynamic> json) {
-    return Timings(
+  factory Timings.fromJson(Map<String, dynamic> json) => Timings(
       fajr: json['Fajr'],
       sunrise: json['Sunrise'],
       dhuhr: json['Dhuhr'],
@@ -203,14 +190,18 @@ class Timings {
       imsak: json['Imsak'],
       midnight: json['Midnight'],
     );
-  }
+  final String fajr;
+  final String sunrise;
+  final String dhuhr;
+  final String asr;
+  final String sunset;
+  final String maghrib;
+  final String isha;
+  final String imsak;
+  final String midnight;
 }
 
 class Date {
-  final String readable;
-  final String timestamp;
-  final Hijri hijri;
-  final Gregorian gregorian;
 
   Date({
     required this.readable,
@@ -219,25 +210,19 @@ class Date {
     required this.gregorian,
   });
 
-  factory Date.fromJson(Map<String, dynamic> json) {
-    return Date(
+  factory Date.fromJson(Map<String, dynamic> json) => Date(
       readable: json['readable'],
       timestamp: json['timestamp'],
       hijri: Hijri.fromJson(json['hijri']),
       gregorian: Gregorian.fromJson(json['gregorian']),
     );
-  }
+  final String readable;
+  final String timestamp;
+  final Hijri hijri;
+  final Gregorian gregorian;
 }
 
 class Hijri {
-  final String date;
-  final String format;
-  final String day;
-  final String weekday;
-  final String month;
-  final String year;
-  final String designation;
-  final List<String> holidays;
 
   Hijri({
     required this.date,
@@ -250,8 +235,7 @@ class Hijri {
     required this.holidays,
   });
 
-  factory Hijri.fromJson(Map<String, dynamic> json) {
-    return Hijri(
+  factory Hijri.fromJson(Map<String, dynamic> json) => Hijri(
       date: json['date'],
       format: json['format'],
       day: json['day'],
@@ -261,10 +245,6 @@ class Hijri {
       designation: json['designation'],
       holidays: List<String>.from(json['holidays'] ?? []),
     );
-  }
-}
-
-class Gregorian {
   final String date;
   final String format;
   final String day;
@@ -272,6 +252,10 @@ class Gregorian {
   final String month;
   final String year;
   final String designation;
+  final List<String> holidays;
+}
+
+class Gregorian {
 
   Gregorian({
     required this.date,
@@ -283,8 +267,7 @@ class Gregorian {
     required this.designation,
   });
 
-  factory Gregorian.fromJson(Map<String, dynamic> json) {
-    return Gregorian(
+  factory Gregorian.fromJson(Map<String, dynamic> json) => Gregorian(
       date: json['date'],
       format: json['format'],
       day: json['day'],
@@ -293,18 +276,16 @@ class Gregorian {
       year: json['year'],
       designation: json['designation'],
     );
-  }
+  final String date;
+  final String format;
+  final String day;
+  final String weekday;
+  final String month;
+  final String year;
+  final String designation;
 }
 
 class Meta {
-  final double latitude;
-  final double longitude;
-  final String timezone;
-  final String method;
-  final String latitudeAdjustmentMethod;
-  final String midnightMode;
-  final String school;
-  final Map<String, double> offset;
 
   Meta({
     required this.latitude,
@@ -317,8 +298,7 @@ class Meta {
     required this.offset,
   });
 
-  factory Meta.fromJson(Map<String, dynamic> json) {
-    return Meta(
+  factory Meta.fromJson(Map<String, dynamic> json) => Meta(
       latitude: double.parse(json['latitude']),
       longitude: double.parse(json['longitude']),
       timezone: json['timezone'],
@@ -328,20 +308,27 @@ class Meta {
       school: json['school'],
       offset: Map<String, double>.from(json['offset'] ?? {}),
     );
-  }
+  final double latitude;
+  final double longitude;
+  final String timezone;
+  final String method;
+  final String latitudeAdjustmentMethod;
+  final String midnightMode;
+  final String school;
+  final Map<String, double> offset;
 }
 
 /// Model for time until next prayer
 class TimeUntilNextPrayer {
-  final String prayerName;
-  final Duration timeUntil;
-  final DateTime nextPrayerTime;
 
   TimeUntilNextPrayer({
     required this.prayerName,
     required this.timeUntil,
     required this.nextPrayerTime,
   });
+  final String prayerName;
+  final Duration timeUntil;
+  final DateTime nextPrayerTime;
 
   String get formattedTimeUntil {
     if (timeUntil.inHours > 0) {

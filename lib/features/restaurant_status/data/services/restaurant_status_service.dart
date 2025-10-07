@@ -40,14 +40,10 @@ class RestaurantStatusService {
   }
 
   /// Get restaurants that are currently open
-  Future<List<String>> getCurrentlyOpenRestaurants() async {
-    return _repository.getCurrentlyOpenRestaurants();
-  }
+  Future<List<String>> getCurrentlyOpenRestaurants() async => _repository.getCurrentlyOpenRestaurants();
 
   /// Get restaurants by status type
-  Future<List<String>> getRestaurantsByStatusType(RestaurantStatusType statusType) async {
-    return _repository.getRestaurantsByStatusType(statusType);
-  }
+  Future<List<String>> getRestaurantsByStatusType(RestaurantStatusType statusType) async => _repository.getRestaurantsByStatusType(statusType);
 
   /// Update restaurant status
   Future<void> updateRestaurantStatus({
@@ -176,9 +172,7 @@ class RestaurantStatusService {
   }
 
   /// Get status update history for a restaurant
-  Future<List<RestaurantStatus>> getStatusHistory(String restaurantId) async {
-    return _repository.getStatusHistory(restaurantId);
-  }
+  Future<List<RestaurantStatus>> getStatusHistory(String restaurantId) async => _repository.getStatusHistory(restaurantId);
 
   /// Clean up resources
   void dispose() {
@@ -237,7 +231,7 @@ class RestaurantStatusService {
     });
   }
 
-  void _autoReopenRestaurant(String restaurantId) async {
+  Future<void> _autoReopenRestaurant(String restaurantId) async {
     try {
       await updateRestaurantStatus(
         restaurantId: restaurantId,

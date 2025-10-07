@@ -1,4 +1,4 @@
-ï»¿import "package:flutter/material.dart";
+import "package:flutter/material.dart";
 import "../../../theme/app_spacing.dart";
 import "../../../theme/app_typography.dart";
 
@@ -99,7 +99,7 @@ class _ModernHomeDemoState extends State<ModernHomeDemo>
   final List<Map<String, dynamic>> _restaurants = [
     {
       "name": "Pizza Palace",
-      "cuisine": "Italian â€¢ Pizza",
+      "cuisine": "Italian • Pizza",
       "rating": 4.5,
       "deliveryTime": "25-35 min",
       "priceRange": "\$\$\$",
@@ -108,7 +108,7 @@ class _ModernHomeDemoState extends State<ModernHomeDemo>
     },
     {
       "name": "Burger Barn",
-      "cuisine": "American â€¢ Burgers",
+      "cuisine": "American • Burgers",
       "rating": 4.2,
       "deliveryTime": "20-30 min",
       "priceRange": "\$\$",
@@ -117,7 +117,7 @@ class _ModernHomeDemoState extends State<ModernHomeDemo>
     },
     {
       "name": "Sushi Spot",
-      "cuisine": "Japanese â€¢ Sushi",
+      "cuisine": "Japanese • Sushi",
       "rating": 4.7,
       "deliveryTime": "30-40 min",
       "priceRange": "\$\$\$\$",
@@ -126,7 +126,7 @@ class _ModernHomeDemoState extends State<ModernHomeDemo>
     },
     {
       "name": "Taco Town",
-      "cuisine": "Mexican â€¢ Tacos",
+      "cuisine": "Mexican • Tacos",
       "rating": 4.3,
       "deliveryTime": "15-25 min",
       "priceRange": "\$\$",

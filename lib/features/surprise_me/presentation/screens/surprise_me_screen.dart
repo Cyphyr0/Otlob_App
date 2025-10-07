@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_typography.dart';
 import '../../../../core/widgets/buttons/primary_button.dart';
 import '../../../../core/widgets/buttons/secondary_button.dart';
-import '../widgets/animated_dice_roll.dart';
+import '../../../favorites/domain/entities/favorite.dart';
+import '../../../home/domain/entities/restaurant.dart';
+import '../../../tawseya/domain/entities/tawseya_item.dart';
+import '../../../user_preferences/domain/entities/user_preferences.dart';
 import '../../domain/entities/surprise_me_result.dart';
 import '../../domain/services/surprise_me_service.dart';
-import '../../../home/domain/entities/restaurant.dart';
-import '../../../user_preferences/domain/entities/user_preferences.dart';
-import '../../../favorites/domain/entities/favorite.dart';
-import '../../../tawseya/domain/entities/tawseya_item.dart';
+import '../widgets/animated_dice_roll.dart';
 
 class SurpriseMeScreen extends ConsumerStatefulWidget {
   const SurpriseMeScreen({
-    super.key,
-    required this.restaurants,
+    required this.restaurants, super.key,
     this.userPreferences,
     this.userFavorites = const [],
     this.tawseyaItems = const [],
@@ -30,6 +30,15 @@ class SurpriseMeScreen extends ConsumerStatefulWidget {
 
   @override
   ConsumerState<SurpriseMeScreen> createState() => _SurpriseMeScreenState();
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(IterableProperty<Restaurant>('restaurants', restaurants));
+    properties.add(DiagnosticsProperty<UserPreferences?>('userPreferences', userPreferences));
+    properties.add(IterableProperty<Favorite>('userFavorites', userFavorites));
+    properties.add(IterableProperty<TawseyaItem>('tawseyaItems', tawseyaItems));
+  }
 }
 
 class _SurpriseMeScreenState extends ConsumerState<SurpriseMeScreen> {
@@ -80,8 +89,7 @@ class _SurpriseMeScreenState extends ConsumerState<SurpriseMeScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  Widget build(BuildContext context) => Scaffold(
       appBar: AppBar(
         title: Text(
           'Surprise Me!',
@@ -98,7 +106,7 @@ class _SurpriseMeScreenState extends ConsumerState<SurpriseMeScreen> {
           onPressed: () => context.pop(),
         ),
       ),
-      body: Container(
+      body: DecoratedBox(
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [AppColors.logoRed.withOpacity(0.05), Colors.white],
@@ -185,7 +193,7 @@ class _SurpriseMeScreenState extends ConsumerState<SurpriseMeScreen> {
                   ),
                   child: Column(
                     children: [
-                      Icon(
+                      const Icon(
                         Icons.lightbulb_outline,
                         color: AppColors.logoRed,
                         size: 24,
@@ -207,7 +215,6 @@ class _SurpriseMeScreenState extends ConsumerState<SurpriseMeScreen> {
         ),
       ),
     );
-  }
 
   Widget _buildResultCard() {
     if (_result == null) return const SizedBox.shrink();
@@ -235,7 +242,7 @@ class _SurpriseMeScreenState extends ConsumerState<SurpriseMeScreen> {
               color: AppColors.lightGray,
               borderRadius: BorderRadius.circular(12),
             ),
-            child: Icon(
+            child: const Icon(
               Icons.restaurant,
               size: 40,
               color: AppColors.gray,
@@ -267,7 +274,7 @@ class _SurpriseMeScreenState extends ConsumerState<SurpriseMeScreen> {
                 ),
               ),
               SizedBox(width: AppSpacing.sm),
-              Icon(Icons.star, size: 16, color: Colors.amber),
+              const Icon(Icons.star, size: 16, color: Colors.amber),
               Text(
                 ' ${_result!.restaurant.rating.toStringAsFixed(1)}',
                 style: AppTypography.bodyMedium.copyWith(

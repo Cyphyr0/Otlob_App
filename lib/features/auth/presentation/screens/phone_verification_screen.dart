@@ -1,14 +1,15 @@
-import "package:flutter/material.dart";
-import "package:flutter_riverpod/flutter_riverpod.dart";
-import "package:flutter_screenutil/flutter_screenutil.dart";
-import "package:go_router/go_router.dart";
-import "../../../../core/errors/failures.dart";
-import "../../../../core/theme/app_theme.dart";
-import "../providers/auth_provider.dart";
-import "../widgets/why_otlob_section.dart";
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+import '../../../../core/errors/failures.dart';
+import '../../../../core/theme/app_theme.dart';
+import '../providers/auth_provider.dart';
+import '../widgets/why_otlob_section.dart';
 
 class PhoneVerificationScreen extends ConsumerStatefulWidget {
-  const PhoneVerificationScreen({super.key, required this.phoneNumber});
+  const PhoneVerificationScreen({required this.phoneNumber, super.key});
   final String phoneNumber;
 
   @override
@@ -33,7 +34,7 @@ class _PhoneVerificationScreenState
   final TextEditingController _otpController4 = TextEditingController();
   final TextEditingController _otpController5 = TextEditingController();
   final TextEditingController _otpController6 = TextEditingController();
-  String otp = "";
+  String otp = '';
   int resendTime = 60;
   bool canResend = false;
 
@@ -113,9 +114,9 @@ class _PhoneVerificationScreenState
       await authNotifier.verifyOTP(otp, widget.phoneNumber);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Verification successful!")),
+          const SnackBar(content: Text('Verification successful!')),
         );
-        context.go("/address");
+        context.go('/address');
       }
     } on AuthFailure catch (e) {
       if (mounted) {
@@ -129,7 +130,7 @@ class _PhoneVerificationScreenState
       if (mounted) {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(const SnackBar(content: Text("An error occurred")));
+        ).showSnackBar(const SnackBar(content: Text('An error occurred')));
       }
     }
   }
@@ -141,7 +142,7 @@ class _PhoneVerificationScreenState
     _otpController4.clear();
     _otpController5.clear();
     _otpController6.clear();
-    otp = "";
+    otp = '';
     FocusScope.of(context).requestFocus(FocusNode());
   }
 
@@ -158,7 +159,7 @@ class _PhoneVerificationScreenState
     if (mounted) {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(const SnackBar(content: Text("OTP resent!")));
+      ).showSnackBar(const SnackBar(content: Text('OTP resent!')));
     }
   }
 
@@ -194,17 +195,17 @@ class _PhoneVerificationScreenState
               children: [
                 SizedBox(height: 50.h),
                 Text(
-                  "Verify your phone",
+                  'Verify your phone',
                   style: TextStyle(
                     fontSize: 32.sp,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
-                    fontFamily: "TutanoCCV2",
+                    fontFamily: 'TutanoCCV2',
                   ),
                 ),
                 SizedBox(height: 8.h),
                 Text(
-                  "Enter the 6-digit code sent to +20 ${widget.phoneNumber}",
+                  'Enter the 6-digit code sent to +20 ${widget.phoneNumber}',
                   style: TextStyle(
                     fontSize: 16.sp,
                     color: Colors.white.withValues(alpha: 0.8),
@@ -245,7 +246,7 @@ class _PhoneVerificationScreenState
                             ),
                           )
                         : Text(
-                            "Verify",
+                            'Verify',
                             style: TextStyle(
                               fontSize: 18.sp,
                               fontWeight: FontWeight.bold,
@@ -274,7 +275,7 @@ class _PhoneVerificationScreenState
                     GestureDetector(
                       onTap: canResend ? _resendOtp : null,
                       child: Text(
-                        "Resend",
+                        'Resend',
                         style: TextStyle(
                           fontSize: 16.sp,
                           color: canResend

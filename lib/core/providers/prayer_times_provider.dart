@@ -1,7 +1,7 @@
 import 'dart:async';
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/timezone.dart' as tz;
@@ -9,17 +9,10 @@ import 'package:timezone/timezone.dart' as tz;
 import '../services/prayer_times_service.dart';
 
 /// Provider for prayer times state management
-final prayerTimesProvider = StateNotifierProvider<PrayerTimesNotifier, PrayerTimesState>((ref) {
-  return PrayerTimesNotifier();
-});
+final prayerTimesProvider = StateNotifierProvider<PrayerTimesNotifier, PrayerTimesState>((ref) => PrayerTimesNotifier());
 
 /// Prayer times state
 class PrayerTimesState {
-  final PrayerTimesModel? prayerTimes;
-  final bool isLoading;
-  final String? error;
-  final bool notificationsEnabled;
-  final TimeUntilNextPrayer? timeUntilNextPrayer;
 
   const PrayerTimesState({
     this.prayerTimes,
@@ -28,6 +21,11 @@ class PrayerTimesState {
     this.notificationsEnabled = false,
     this.timeUntilNextPrayer,
   });
+  final PrayerTimesModel? prayerTimes;
+  final bool isLoading;
+  final String? error;
+  final bool notificationsEnabled;
+  final TimeUntilNextPrayer? timeUntilNextPrayer;
 
   PrayerTimesState copyWith({
     PrayerTimesModel? prayerTimes,
@@ -35,34 +33,32 @@ class PrayerTimesState {
     String? error,
     bool? notificationsEnabled,
     TimeUntilNextPrayer? timeUntilNextPrayer,
-  }) {
-    return PrayerTimesState(
+  }) => PrayerTimesState(
       prayerTimes: prayerTimes ?? this.prayerTimes,
       isLoading: isLoading ?? this.isLoading,
       error: error ?? this.error,
       notificationsEnabled: notificationsEnabled ?? this.notificationsEnabled,
       timeUntilNextPrayer: timeUntilNextPrayer ?? this.timeUntilNextPrayer,
     );
-  }
 }
 
 /// Prayer times notifier
 class PrayerTimesNotifier extends StateNotifier<PrayerTimesState> {
-  final PrayerTimesService _prayerTimesService = PrayerTimesService();
-  final FlutterLocalNotificationsPlugin _notifications = FlutterLocalNotificationsPlugin();
-  Timer? _timer;
 
   PrayerTimesNotifier() : super(const PrayerTimesState()) {
     _initializeNotifications();
     _loadPrayerTimes();
     _loadNotificationSettings();
   }
+  final PrayerTimesService _prayerTimesService = PrayerTimesService();
+  final FlutterLocalNotificationsPlugin _notifications = FlutterLocalNotificationsPlugin();
+  Timer? _timer;
 
   Future<void> _initializeNotifications() async {
-    const AndroidInitializationSettings initializationSettingsAndroid =
+    const initializationSettingsAndroid =
         AndroidInitializationSettings('@mipmap/ic_launcher');
 
-    const InitializationSettings initializationSettings = InitializationSettings(
+    const initializationSettings = InitializationSettings(
       android: initializationSettingsAndroid,
     );
 

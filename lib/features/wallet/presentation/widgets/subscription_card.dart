@@ -4,20 +4,18 @@ import '../../domain/entities/subscription.dart';
 
 class SubscriptionCard extends StatelessWidget {
   const SubscriptionCard({
-    super.key,
-    required this.subscription,
+    required this.subscription, super.key,
   });
 
   final Subscription subscription;
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
+  Widget build(BuildContext context) => Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: _getStatusColor().withOpacity(0.1),
+        color: _getStatusColor().withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: _getStatusColor().withOpacity(0.3)),
+        border: Border.all(color: _getStatusColor().withValues(alpha: 0.3)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -27,7 +25,7 @@ class SubscriptionCard extends StatelessWidget {
             children: [
               Text(
                 _getSubscriptionTitle(),
-                style: ShadTheme.of(context).textTheme.p?.copyWith(
+                style: ShadTheme.of(context).textTheme.p.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -56,7 +54,7 @@ class SubscriptionCard extends StatelessWidget {
               const SizedBox(width: 4),
               Text(
                 '${subscription.amount.toStringAsFixed(2)} ${subscription.currency}',
-                style: ShadTheme.of(context).textTheme.p?.copyWith(
+                style: ShadTheme.of(context).textTheme.p.copyWith(
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -65,7 +63,7 @@ class SubscriptionCard extends StatelessWidget {
               const SizedBox(width: 4),
               Text(
                 _getBillingCycle(),
-                style: ShadTheme.of(context).textTheme.small?.copyWith(
+                style: ShadTheme.of(context).textTheme.small.copyWith(
                   color: Colors.grey,
                 ),
               ),
@@ -82,7 +80,7 @@ class SubscriptionCard extends StatelessWidget {
                   children: [
                     Text(
                       'Start Date',
-                      style: ShadTheme.of(context).textTheme.small?.copyWith(
+                      style: ShadTheme.of(context).textTheme.small.copyWith(
                         color: Colors.grey,
                       ),
                     ),
@@ -99,7 +97,7 @@ class SubscriptionCard extends StatelessWidget {
                   children: [
                     Text(
                       'Next Billing',
-                      style: ShadTheme.of(context).textTheme.small?.copyWith(
+                      style: ShadTheme.of(context).textTheme.small.copyWith(
                         color: Colors.grey,
                       ),
                     ),
@@ -123,7 +121,7 @@ class SubscriptionCard extends StatelessWidget {
                 const SizedBox(width: 4),
                 Text(
                   'Cancelled on ${_formatDate(subscription.cancelledAt!)}',
-                  style: ShadTheme.of(context).textTheme.small?.copyWith(
+                  style: ShadTheme.of(context).textTheme.small.copyWith(
                     color: Colors.red,
                   ),
                 ),
@@ -139,7 +137,7 @@ class SubscriptionCard extends StatelessWidget {
                 const SizedBox(width: 4),
                 Text(
                   'Expired on ${_formatDate(subscription.endDate)}',
-                  style: ShadTheme.of(context).textTheme.small?.copyWith(
+                  style: ShadTheme.of(context).textTheme.small.copyWith(
                     color: Colors.orange,
                   ),
                 ),
@@ -149,7 +147,6 @@ class SubscriptionCard extends StatelessWidget {
         ],
       ),
     );
-  }
 
   String _getSubscriptionTitle() {
     switch (subscription.type) {
@@ -188,7 +185,11 @@ class SubscriptionCard extends StatelessWidget {
     }
   }
 
-  String _formatDate(DateTime date) {
-    return '${date.day}/${date.month}/${date.year}';
+  String _formatDate(DateTime date) => '${date.day}/${date.month}/${date.year}';
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<Subscription>('subscription', subscription));
   }
 }

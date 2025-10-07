@@ -1,9 +1,9 @@
 /// Use case for getting restaurants within a specific radius from a location
+library;
 import '../../../../core/errors/failures.dart';
-import '../entities/location.dart';
-import '../entities/map_marker.dart';
-import '../../data/repositories/map_repository.dart';
 import '../../../home/domain/entities/restaurant.dart';
+import '../../data/repositories/map_repository.dart';
+import '../entities/location.dart';
 
 /// Use case for getting restaurants within a specific radius
 class GetRestaurantsInRadius {
@@ -153,7 +153,7 @@ class GetRestaurantDeliveryAreas {
 
 /// Custom failure for location-related errors
 class LocationFailure extends Failure {
-  const LocationFailure({required String message}) : super(message: message);
+  const LocationFailure({required super.message});
 
   @override
   List<Object?> get props => [message];

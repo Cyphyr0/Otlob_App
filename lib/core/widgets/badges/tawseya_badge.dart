@@ -1,11 +1,13 @@
-import "package:flutter/material.dart";
-import "package:flutter_screenutil/flutter_screenutil.dart";
-import "../../theme/app_colors.dart";
-import "../../theme/app_typography.dart";
-import "../../theme/app_radius.dart";
-import "../../theme/app_spacing.dart";
-import "../../theme/app_shadows.dart";
-import "../../theme/app_animations.dart";
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import '../../theme/app_animations.dart';
+import '../../theme/app_colors.dart';
+import '../../theme/app_radius.dart';
+import '../../theme/app_shadows.dart';
+import '../../theme/app_spacing.dart';
+import '../../theme/app_typography.dart';
 
 /// Tawseya Badge Component
 ///
@@ -175,7 +177,7 @@ class _TawseyaBadgeState extends State<TawseyaBadge>
 
   String _formatCount(int count) {
     if (count >= 1000) {
-      return "${(count / 1000).toStringAsFixed(1)}k";
+      return '${(count / 1000).toStringAsFixed(1)}k';
     }
     return count.toString();
   }

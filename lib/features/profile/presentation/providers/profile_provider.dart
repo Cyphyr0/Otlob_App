@@ -1,16 +1,12 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter/material.dart';
+
+import '../../../../core/services/service_locator.dart';
 import '../../domain/entities/profile.dart';
 import '../../domain/repositories/profile_repository.dart';
-import '../../../../core/services/service_locator.dart';
 
-final profileRepositoryProvider = Provider<ProfileRepository>((ref) {
-  return getIt<ProfileRepository>();
-});
+final profileRepositoryProvider = Provider<ProfileRepository>((ref) => getIt<ProfileRepository>());
 
-final profileProvider = StateNotifierProvider.family<ProfileNotifier, AsyncValue<Profile?>, String>((ref, userId) {
-  return ProfileNotifier(ref.watch(profileRepositoryProvider), userId);
-});
+final profileProvider = StateNotifierProvider.family<ProfileNotifier, AsyncValue<Profile?>, String>((ref, userId) => ProfileNotifier(ref.watch(profileRepositoryProvider), userId));
 
 final currentUserProfileProvider = Provider<AsyncValue<Profile?>>((ref) {
   // For now, return null - this should be connected to actual auth state
@@ -19,12 +15,12 @@ final currentUserProfileProvider = Provider<AsyncValue<Profile?>>((ref) {
 });
 
 class ProfileNotifier extends StateNotifier<AsyncValue<Profile?>> {
-  final ProfileRepository _repository;
-  final String _userId;
 
   ProfileNotifier(this._repository, this._userId) : super(const AsyncValue.loading()) {
     loadProfile();
   }
+  final ProfileRepository _repository;
+  final String _userId;
 
   Future<void> loadProfile() async {
     state = const AsyncValue.loading();

@@ -1,20 +1,19 @@
 /// Example integration of delivery area validation in restaurant detail screen
+library;
 import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_spacing.dart';
-import '../../domain/entities/delivery_area_status.dart';
 import '../../../../features/home/domain/entities/restaurant.dart';
 import '../../../../features/location/domain/entities/location.dart';
-import '../widgets/delivery_area_status_widget.dart';
+import '../../domain/entities/delivery_area_status.dart';
 import '../../domain/entities/delivery_area_validation.dart';
+import '../widgets/delivery_area_status_widget.dart';
 
 /// Example widget showing how to integrate delivery area validation
 /// into a restaurant detail screen
 class DeliveryAreaIntegrationExample extends StatefulWidget {
   const DeliveryAreaIntegrationExample({
-    super.key,
-    required this.restaurant,
-    required this.userLocation,
+    required this.restaurant, required this.userLocation, super.key,
     this.onValidationComplete,
   });
 
@@ -24,6 +23,14 @@ class DeliveryAreaIntegrationExample extends StatefulWidget {
 
   @override
   State<DeliveryAreaIntegrationExample> createState() => _DeliveryAreaIntegrationExampleState();
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<Restaurant>('restaurant', restaurant));
+    properties.add(DiagnosticsProperty<Location>('userLocation', userLocation));
+    properties.add(ObjectFlagProperty<Function(DeliveryAreaValidation p1)?>.has('onValidationComplete', onValidationComplete));
+  }
 }
 
 class _DeliveryAreaIntegrationExampleState extends State<DeliveryAreaIntegrationExample> {
@@ -61,7 +68,7 @@ class _DeliveryAreaIntegrationExampleState extends State<DeliveryAreaIntegration
           restaurant: widget.restaurant,
           userLocation: widget.userLocation,
           distance: distance,
-          deliveryFee: 15.0, // Example delivery fee
+          deliveryFee: 15, // Example delivery fee
           estimatedDeliveryTime: 25, // Example delivery time
         );
 

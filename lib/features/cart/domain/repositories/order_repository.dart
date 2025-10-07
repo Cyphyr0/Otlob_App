@@ -1,4 +1,4 @@
-import "../entities/order.dart";
+import '../entities/order.dart';
 
 abstract class OrderRepository {
   Future<void> placeOrder(Order order);

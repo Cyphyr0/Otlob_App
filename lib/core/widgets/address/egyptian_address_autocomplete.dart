@@ -2,18 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 
-import '../../services/egyptian_address_service.dart';
 import '../../../utils/localization_helper.dart';
+import '../../services/egyptian_address_service.dart';
 
 /// Egyptian address autocomplete widget
 class EgyptianAddressAutocomplete extends StatefulWidget {
-  final String label;
-  final String hint;
-  final TextEditingController? controller;
-  final Function(EgyptianAddress)? onAddressSelected;
-  final EgyptianAddress? initialAddress;
-  final bool enabled;
-  final bool showSpecialInstructions;
 
   const EgyptianAddressAutocomplete({
     super.key,
@@ -25,9 +18,28 @@ class EgyptianAddressAutocomplete extends StatefulWidget {
     this.enabled = true,
     this.showSpecialInstructions = true,
   });
+  final String label;
+  final String hint;
+  final TextEditingController? controller;
+  final Function(EgyptianAddress)? onAddressSelected;
+  final EgyptianAddress? initialAddress;
+  final bool enabled;
+  final bool showSpecialInstructions;
 
   @override
   State<EgyptianAddressAutocomplete> createState() => _EgyptianAddressAutocompleteState();
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(StringProperty('label', label));
+    properties.add(StringProperty('hint', hint));
+    properties.add(DiagnosticsProperty<TextEditingController?>('controller', controller));
+    properties.add(ObjectFlagProperty<Function(EgyptianAddress p1)?>.has('onAddressSelected', onAddressSelected));
+    properties.add(DiagnosticsProperty<EgyptianAddress?>('initialAddress', initialAddress));
+    properties.add(DiagnosticsProperty<bool>('enabled', enabled));
+    properties.add(DiagnosticsProperty<bool>('showSpecialInstructions', showSpecialInstructions));
+  }
 }
 
 class _EgyptianAddressAutocompleteState extends State<EgyptianAddressAutocomplete> {
@@ -87,8 +99,7 @@ class _EgyptianAddressAutocompleteState extends State<EgyptianAddressAutocomplet
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Column(
+  Widget build(BuildContext context) => Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Location search autocomplete
@@ -105,10 +116,8 @@ class _EgyptianAddressAutocompleteState extends State<EgyptianAddressAutocomplet
         ],
       ],
     );
-  }
 
-  Widget _buildLocationSearch() {
-    return Column(
+  Widget _buildLocationSearch() => Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (widget.label.isNotEmpty) ...[
@@ -174,8 +183,7 @@ class _EgyptianAddressAutocompleteState extends State<EgyptianAddressAutocomplet
             await EgyptianAddressService.initialize();
             return EgyptianAddressService.searchAddresses(pattern);
           },
-          itemBuilder: (context, AddressSearchResult suggestion) {
-            return ListTile(
+          itemBuilder: (context, AddressSearchResult suggestion) => ListTile(
               leading: Icon(
                 suggestion.type == AddressType.governorate
                     ? Icons.location_city
@@ -202,8 +210,7 @@ class _EgyptianAddressAutocompleteState extends State<EgyptianAddressAutocomplet
                   fontFamily: 'Cairo',
                 ),
               ),
-            );
-          },
+            ),
           onSuggestionSelected: (AddressSearchResult suggestion) {
             setState(() {
               if (suggestion.type == AddressType.governorate) {
@@ -232,10 +239,8 @@ class _EgyptianAddressAutocompleteState extends State<EgyptianAddressAutocomplet
         ),
       ],
     );
-  }
 
-  Widget _buildAddressForm() {
-    return Container(
+  Widget _buildAddressForm() => Container(
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surfaceContainerHighest.withOpacity(0.5),
@@ -412,7 +417,6 @@ class _EgyptianAddressAutocompleteState extends State<EgyptianAddressAutocomplet
         ],
       ),
     );
-  }
 
   Widget _buildTextField({
     required TextEditingController controller,
@@ -420,8 +424,7 @@ class _EgyptianAddressAutocompleteState extends State<EgyptianAddressAutocomplet
     required String hint,
     required bool enabled,
     TextInputType? keyboardType,
-  }) {
-    return Column(
+  }) => Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
@@ -470,10 +473,8 @@ class _EgyptianAddressAutocompleteState extends State<EgyptianAddressAutocomplet
         ),
       ],
     );
-  }
 
-  Widget _buildSpecialInstructions() {
-    return Column(
+  Widget _buildSpecialInstructions() => Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
@@ -526,11 +527,9 @@ class _EgyptianAddressAutocompleteState extends State<EgyptianAddressAutocomplet
         ),
       ],
     );
-  }
 
   /// Get the current address from form fields
-  EgyptianAddress getCurrentAddress() {
-    return EgyptianAddress(
+  EgyptianAddress getCurrentAddress() => EgyptianAddress(
       governorate: _selectedGovernorate?.name ?? '',
       city: _selectedCity ?? '',
       district: _selectedDistrict?.name ?? '',
@@ -541,10 +540,7 @@ class _EgyptianAddressAutocompleteState extends State<EgyptianAddressAutocomplet
       phone: _phoneController.text,
       specialInstructions: _specialInstructionsController.text,
     );
-  }
 
   /// Validate the current address
-  AddressValidationResult validateCurrentAddress() {
-    return EgyptianAddressService.validateAddress(getCurrentAddress());
-  }
+  AddressValidationResult validateCurrentAddress() => EgyptianAddressService.validateAddress(getCurrentAddress());
 }

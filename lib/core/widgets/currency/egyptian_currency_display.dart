@@ -5,22 +5,21 @@ import '../../services/egyptian_currency_service.dart';
 
 /// Widget for displaying Egyptian currency with proper formatting
 class EgyptianCurrencyDisplay extends StatelessWidget {
-  final double amount;
-  final TextStyle? style;
-  final bool useArabicNumerals;
-  final bool compact;
-  final bool showPriceCategory;
-  final double? size;
 
   const EgyptianCurrencyDisplay({
-    super.key,
-    required this.amount,
+    required this.amount, super.key,
     this.style,
     this.useArabicNumerals = true,
     this.compact = false,
     this.showPriceCategory = false,
     this.size,
   });
+  final double amount;
+  final TextStyle? style;
+  final bool useArabicNumerals;
+  final bool compact;
+  final bool showPriceCategory;
+  final double? size;
 
   @override
   Widget build(BuildContext context) {
@@ -88,22 +87,31 @@ class EgyptianCurrencyDisplay extends StatelessWidget {
       return const Color(0xFF6B7280); // Gray for moderate
     }
   }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DoubleProperty('amount', amount));
+    properties.add(DiagnosticsProperty<TextStyle?>('style', style));
+    properties.add(DiagnosticsProperty<bool>('useArabicNumerals', useArabicNumerals));
+    properties.add(DiagnosticsProperty<bool>('compact', compact));
+    properties.add(DiagnosticsProperty<bool>('showPriceCategory', showPriceCategory));
+    properties.add(DoubleProperty('size', size));
+  }
 }
 
 /// Widget for displaying price range (for restaurants)
 class PriceRangeDisplay extends StatelessWidget {
+
+  const PriceRangeDisplay({
+    required this.minPrice, required this.maxPrice, super.key,
+    this.style,
+    this.useArabicNumerals = true,
+  });
   final double minPrice;
   final double maxPrice;
   final TextStyle? style;
   final bool useArabicNumerals;
-
-  const PriceRangeDisplay({
-    super.key,
-    required this.minPrice,
-    required this.maxPrice,
-    this.style,
-    this.useArabicNumerals = true,
-  });
 
   @override
   Widget build(BuildContext context) {
@@ -124,20 +132,28 @@ class PriceRangeDisplay extends StatelessWidget {
       style: style ?? defaultStyle,
     );
   }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DoubleProperty('minPrice', minPrice));
+    properties.add(DoubleProperty('maxPrice', maxPrice));
+    properties.add(DiagnosticsProperty<TextStyle?>('style', style));
+    properties.add(DiagnosticsProperty<bool>('useArabicNumerals', useArabicNumerals));
+  }
 }
 
 /// Widget for displaying delivery fee with Egyptian context
 class DeliveryFeeDisplay extends StatelessWidget {
-  final double fee;
-  final TextStyle? style;
-  final bool useArabicNumerals;
 
   const DeliveryFeeDisplay({
-    super.key,
-    required this.fee,
+    required this.fee, super.key,
     this.style,
     this.useArabicNumerals = true,
   });
+  final double fee;
+  final TextStyle? style;
+  final bool useArabicNumerals;
 
   @override
   Widget build(BuildContext context) {
@@ -167,24 +183,29 @@ class DeliveryFeeDisplay extends StatelessWidget {
       ],
     );
   }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DoubleProperty('fee', fee));
+    properties.add(DiagnosticsProperty<TextStyle?>('style', style));
+    properties.add(DiagnosticsProperty<bool>('useArabicNumerals', useArabicNumerals));
+  }
 }
 
 /// Widget for displaying order total with breakdown
 class OrderTotalDisplay extends StatelessWidget {
+
+  const OrderTotalDisplay({
+    required this.subtotal, required this.deliveryFee, required this.tax, super.key,
+    this.style,
+    this.useArabicNumerals = true,
+  });
   final double subtotal;
   final double deliveryFee;
   final double tax;
   final TextStyle? style;
   final bool useArabicNumerals;
-
-  const OrderTotalDisplay({
-    super.key,
-    required this.subtotal,
-    required this.deliveryFee,
-    required this.tax,
-    this.style,
-    this.useArabicNumerals = true,
-  });
 
   @override
   Widget build(BuildContext context) {
@@ -270,8 +291,7 @@ class OrderTotalDisplay extends StatelessWidget {
     );
   }
 
-  Widget _buildPriceRow(String label, double amount, TextStyle style, bool useArabicNumerals) {
-    return Row(
+  Widget _buildPriceRow(String label, double amount, TextStyle style, bool useArabicNumerals) => Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
@@ -284,22 +304,37 @@ class OrderTotalDisplay extends StatelessWidget {
         ),
       ],
     );
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DoubleProperty('subtotal', subtotal));
+    properties.add(DoubleProperty('deliveryFee', deliveryFee));
+    properties.add(DoubleProperty('tax', tax));
+    properties.add(DiagnosticsProperty<TextStyle?>('style', style));
+    properties.add(DiagnosticsProperty<bool>('useArabicNumerals', useArabicNumerals));
   }
 }
 
 /// Widget for currency converter (for international users)
 class CurrencyConverterWidget extends StatefulWidget {
+
+  const CurrencyConverterWidget({
+    required this.amountInEGP, super.key,
+    this.onCurrencyChanged,
+  });
   final double amountInEGP;
   final Function(double)? onCurrencyChanged;
 
-  const CurrencyConverterWidget({
-    super.key,
-    required this.amountInEGP,
-    this.onCurrencyChanged,
-  });
-
   @override
   State<CurrencyConverterWidget> createState() => _CurrencyConverterWidgetState();
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DoubleProperty('amountInEGP', amountInEGP));
+    properties.add(ObjectFlagProperty<Function(double p1)?>.has('onCurrencyChanged', onCurrencyChanged));
+  }
 }
 
 class _CurrencyConverterWidgetState extends State<CurrencyConverterWidget> {
@@ -310,7 +345,7 @@ class _CurrencyConverterWidgetState extends State<CurrencyConverterWidget> {
     final currencies = ['EGP', 'USD', 'EUR', 'SAR', 'AED'];
     final currencySymbols = {
       'EGP': 'ج.م',
-      'USD': '\$',
+      'USD': r'$',
       'EUR': '€',
       'SAR': 'ر.س',
       'AED': 'د.إ',

@@ -1,10 +1,11 @@
 /// Repository for location-based restaurant queries and map operations
+library;
 import 'dart:math';
-import 'package:cloud_firestore/cloud_firestore.dart';
+
 import '../../../../core/services/firebase/firebase_firestore_service.dart';
+import '../../../../features/home/domain/entities/restaurant.dart';
 import '../../domain/entities/location.dart';
 import '../../domain/entities/map_marker.dart';
-import '../../../../features/home/domain/entities/restaurant.dart';
 
 /// Repository interface for map operations
 abstract class MapRepository {
@@ -54,9 +55,9 @@ abstract class MapRepository {
 
 /// Firebase implementation of MapRepository
 class FirebaseMapRepository implements MapRepository {
-  final FirebaseFirestoreService _firestoreService;
 
   FirebaseMapRepository(this._firestoreService);
+  final FirebaseFirestoreService _firestoreService;
 
   @override
   Future<List<Restaurant>> getRestaurantsInRadius({
@@ -208,16 +209,12 @@ class FirebaseMapRepository implements MapRepository {
   }
 
   @override
-  List<MapMarker> restaurantsToMarkers(List<Restaurant> restaurants) {
-    return restaurants.map((restaurant) {
-      return MapMarker.restaurant(
+  List<MapMarker> restaurantsToMarkers(List<Restaurant> restaurants) => restaurants.map((restaurant) => MapMarker.restaurant(
         restaurant: restaurant,
         onTap: () {
           // Handle marker tap - could navigate to restaurant details
         },
-      );
-    }).toList();
-  }
+      )).toList();
 
   @override
   Future<List<DeliveryArea>> getRestaurantDeliveryAreas(String restaurantId) async {
@@ -316,12 +313,10 @@ class FirebaseMapRepository implements MapRepository {
     double lon,
     Location northeast,
     Location southwest,
-  ) {
-    return lat <= northeast.latitude &&
+  ) => lat <= northeast.latitude &&
         lat >= southwest.latitude &&
         lon <= northeast.longitude &&
         lon >= southwest.longitude;
-  }
 }
 
 /// Custom exception for map repository errors

@@ -9,8 +9,8 @@ import '../../domain/repositories/tawseya_repository.dart';
 import '../../domain/usecases/cast_vote.dart';
 
 class TawseyaValidationException implements Exception {
-  final String message;
   const TawseyaValidationException(this.message);
+  final String message;
 
   @override
   String toString() => message;
@@ -41,13 +41,11 @@ class TawseyaStateNotifier extends AsyncNotifier<TawseyaState> {
     }
   }
 
-  TawseyaState _getInitialState() {
-    return TawseyaState(
+  TawseyaState _getInitialState() => const TawseyaState(
       currentVotingPeriod: null,
       tawseyaItems: [],
       isLoading: true,
     );
-  }
 
   Future<void> castVote(TawseyaItem item, {String? comment}) async {
     if (state.value == null) return;
@@ -111,7 +109,7 @@ class TawseyaStateNotifier extends AsyncNotifier<TawseyaState> {
       // Refresh data after voting
       await _refreshData();
     } catch (e, st) {
-      String errorMessage = 'فشل في تسجيل التصويت';
+      var errorMessage = 'فشل في تسجيل التصويت';
 
       if (e is VoteAlreadyExistsException) {
         errorMessage = 'لقد قمت بالتصويت بالفعل هذا الشهر';
@@ -154,10 +152,6 @@ class TawseyaStateNotifier extends AsyncNotifier<TawseyaState> {
 }
 
 class TawseyaState {
-  final VotingPeriod? currentVotingPeriod;
-  final List<TawseyaItem> tawseyaItems;
-  final bool isLoading;
-  final Vote? userCurrentVote;
 
   const TawseyaState({
     required this.currentVotingPeriod,
@@ -165,25 +159,27 @@ class TawseyaState {
     required this.isLoading,
     this.userCurrentVote,
   });
+  final VotingPeriod? currentVotingPeriod;
+  final List<TawseyaItem> tawseyaItems;
+  final bool isLoading;
+  final Vote? userCurrentVote;
 
   TawseyaState copyWith({
     VotingPeriod? currentVotingPeriod,
     List<TawseyaItem>? tawseyaItems,
     bool? isLoading,
     Vote? userCurrentVote,
-  }) {
-    return TawseyaState(
+  }) => TawseyaState(
       currentVotingPeriod: currentVotingPeriod ?? this.currentVotingPeriod,
       tawseyaItems: tawseyaItems ?? this.tawseyaItems,
       isLoading: isLoading ?? this.isLoading,
       userCurrentVote: userCurrentVote ?? this.userCurrentVote,
     );
-  }
 
   bool get canVote =>
-      currentVotingPeriod?.isCurrentPeriod == true && userCurrentVote == null;
+      currentVotingPeriod?.isCurrentPeriod ?? false && userCurrentVote == null;
   bool get hasVoted => userCurrentVote != null;
-  bool get votingPeriodEnded => currentVotingPeriod?.hasEnded == true;
+  bool get votingPeriodEnded => currentVotingPeriod?.hasEnded ?? false;
 }
 
 // Providers
@@ -192,38 +188,28 @@ final tawseyaProvider =
       TawseyaStateNotifier.new,
     );
 
-final tawseyaRepositoryProvider = Provider<TawseyaRepository>((ref) {
-  return getIt<FirebaseTawseyaRepository>();
-});
+final tawseyaRepositoryProvider = Provider<TawseyaRepository>((ref) => getIt<FirebaseTawseyaRepository>());
 
 // Convenience providers for specific state slices
-final tawseyaItemsProvider = Provider<List<TawseyaItem>>((ref) {
-  return ref
+final tawseyaItemsProvider = Provider<List<TawseyaItem>>((ref) => ref
       .watch(tawseyaProvider)
-      .maybeWhen(data: (state) => state.tawseyaItems, orElse: () => []);
-});
+      .maybeWhen(data: (state) => state.tawseyaItems, orElse: () => []));
 
-final currentVotingPeriodProvider = Provider<VotingPeriod?>((ref) {
-  return ref
+final currentVotingPeriodProvider = Provider<VotingPeriod?>((ref) => ref
       .watch(tawseyaProvider)
       .maybeWhen(
         data: (state) => state.currentVotingPeriod,
         orElse: () => null,
-      );
-});
+      ));
 
-final canVoteProvider = Provider<bool>((ref) {
-  return ref
+final canVoteProvider = Provider<bool>((ref) => ref
       .watch(tawseyaProvider)
-      .maybeWhen(data: (state) => state.canVote, orElse: () => false);
-});
+      .maybeWhen(data: (state) => state.canVote, orElse: () => false));
 
-final tawseyaLoadingProvider = Provider<bool>((ref) {
-  return ref
+final tawseyaLoadingProvider = Provider<bool>((ref) => ref
       .watch(tawseyaProvider)
       .maybeWhen(
         data: (state) => state.isLoading,
         loading: () => true,
         orElse: () => false,
-      );
-});
+      ));

@@ -1,40 +1,44 @@
-import "package:flutter/material.dart";
-import "package:flutter_screenutil/flutter_screenutil.dart";
-import "package:go_router/go_router.dart";
-import "package:shadcn_ui/shadcn_ui.dart";
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 
-import "../../../../core/utils/shared_prefs_helper.dart";
-import "../widgets/onboarding_page.dart";
+import '../../../../core/utils/shared_prefs_helper.dart';
+import '../widgets/auth_options_screen.dart';
+import '../widgets/cuisine_preference_screen.dart';
+import '../widgets/location_permission_screen.dart';
+import '../widgets/tawseya_intro_screen.dart';
+import '../widgets/welcome_screen.dart';
 
-class OnboardingScreen extends StatefulWidget {
+class OnboardingScreen extends ConsumerStatefulWidget {
   const OnboardingScreen({super.key});
 
   @override
-  State<OnboardingScreen> createState() => _OnboardingScreenState();
+  ConsumerState<OnboardingScreen> createState() => _OnboardingScreenState();
 }
 
-class _OnboardingScreenState extends State<OnboardingScreen> {
-  final PageController _pageController = PageController();
-  int _currentPage = 0;
+enum OnboardingStep {
+  welcome,
+  location,
+  cuisine,
+  auth,
+  tawseya,
+}
 
-  final List<Map<String, String>> _pages = [
-    {
-      "title": "Discover Amazing Food",
-      "subtitle": "Explore restaurants and cuisines from local heroes",
-    },
-    {
-      "title": "Lightning Fast Delivery",
-      "subtitle": "Get your order in 30 mins or less with real-time tracking",
-    },
-    {
-      "title": "Safe & Secure",
-      "subtitle": "Contactless delivery and secure payment options",
-    },
-    {
-      "title": "Exclusive Offers",
-      "subtitle": "Daily deals, discounts, and loyalty rewards await",
-    },
-  ];
+class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
+     with TickerProviderStateMixin {
+   final PageController _pageController = PageController();
+   OnboardingStep _currentStep = OnboardingStep.welcome;
+   int _currentPage = 0;
+
+  // User preferences collected during onboarding
+  String? _selectedLocation;
+  List<String> _selectedCuisines = [];
+  String? _authMethod;
+
+  // Animation controllers
+  late AnimationController _fadeController;
+  late AnimationController _slideController;
 
   Widget _buildImageWidget(int index) {
     // Use contextual icons instead of Lottie animations
@@ -97,107 +101,66 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    var theme = Theme.of(context);
-
-    return Scaffold(
-      body: Stack(
+  Widget build(BuildContext context) => Scaffold(
+      body: PageView(
+        controller: _pageController,
+        physics: const BouncingScrollPhysics(),
         children: [
-          PageView.builder(
-            controller: _pageController,
-            onPageChanged: (index) {
-              setState(() {
-                _currentPage = index;
-              });
+          WelcomeScreen(onNext: _nextStep),
+          LocationPermissionScreen(
+            onNext: _nextStep,
+            onLocationSelected: (location) {
+              _selectedLocation = location;
             },
-            itemCount: _pages.length,
-            itemBuilder: (context, index) => OnboardingPage(
-                title: _pages[index]['title']!,
-                subtitle: _pages[index]['subtitle']!,
-                imageWidget: _buildImageWidget(index),
-              ),
           ),
-          // Bottom indicators and buttons
-          Positioned(
-            bottom: 60.h,
-            left: 0,
-            right: 0,
-            child: Column(
-              children: [
-                // Dots indicator
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: List.generate(
-                    _pages.length,
-                    (index) => AnimatedContainer(
-                      duration: const Duration(milliseconds: 300),
-                      margin: EdgeInsets.symmetric(horizontal: 4.w),
-                      height: 8.h,
-                      width: _currentPage == index ? 24.w : 8.w,
-                      decoration: BoxDecoration(
-                        color: _currentPage == index
-                            ? theme.colorScheme.secondary
-                            : Colors.white.withOpacity(0.5),
-                        borderRadius: BorderRadius.circular(4.r),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(height: 40.h),
-                // Buttons
-                Row(
-                  children: [
-                    Expanded(
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: ShadButton.outline(
-                          child: Text(
-                            "Skip",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16.sp,
-                            ),
-                          ),
-                          onPressed: _navigateToAuth,
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: Align(
-                        alignment: Alignment.centerRight,
-                        child: ShadButton(
-                          onPressed: _currentPage == _pages.length - 1
-                              ? _navigateToAuth
-                              : () => _pageController.nextPage(
-                                  duration: const Duration(milliseconds: 300),
-                                  curve: Curves.easeInOut,
-                                ),
-                          child: Text(
-                            _currentPage == _pages.length - 1
-                                ? "Start"
-                                : "Next",
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
+          CuisinePreferenceScreen(
+            onNext: _nextStep,
+            onCuisinesSelected: (cuisines) {
+              _selectedCuisines = cuisines;
+            },
+          ),
+          AuthOptionsScreen(
+            onNext: _nextStep,
+            onAuthMethodSelected: (method) {
+              _authMethod = method;
+            },
+          ),
+          TawseyaIntroScreen(
+            onNext: _completeOnboarding,
+            onTawseyaEnabled: (enabled) {
+              // Handle tawseya preference
+            },
           ),
         ],
       ),
     );
+
+  void _nextStep() {
+    if (_currentStep == OnboardingStep.tawseya) {
+      _completeOnboarding();
+    } else {
+      setState(() {
+        _currentStep = OnboardingStep.values[_currentStep.index + 1];
+      });
+    }
+  }
+
+  Future<void> _completeOnboarding() async {
+    // Save onboarding completion status
+    await SharedPrefsHelper.setOnboardingCompleted(true);
+
+    // TODO: Save user preferences for personalization in a future update
+    // For now, just navigate to home screen
+
+    if (mounted) {
+      context.go('/home');
+    }
   }
 
   Future<void> _navigateToAuth() async {
     await SharedPrefsHelper.setOnboardingCompleted(true);
     if (mounted) {
-      context.go("/auth");
+      context.go('/auth');
     }
   }
 }

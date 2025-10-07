@@ -1,7 +1,7 @@
-import "package:freezed_annotation/freezed_annotation.dart";
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-part "order.freezed.dart";
-part "order.g.dart";
+part 'order.freezed.dart';
+part 'order.g.dart';
 
 enum OrderStatus {
   pending,

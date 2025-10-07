@@ -3,9 +3,9 @@ import '../entities/voting_period.dart';
 import '../repositories/tawseya_repository.dart';
 
 class GetVotingResults {
-  final TawseyaRepository repository;
 
   const GetVotingResults(this.repository);
+  final TawseyaRepository repository;
 
   Future<VotingResults> call({String? votingPeriodId}) async {
     final periodId = votingPeriodId ?? VotingPeriod.getCurrentPeriodId();
@@ -31,10 +31,6 @@ class GetVotingResults {
 }
 
 class VotingResults {
-  final VotingPeriod votingPeriod;
-  final Map<String, int> results;
-  final int totalVotes;
-  final List<TawseyaItem> tawseyaItems;
 
   const VotingResults({
     required this.votingPeriod,
@@ -42,6 +38,10 @@ class VotingResults {
     required this.totalVotes,
     required this.tawseyaItems,
   });
+  final VotingPeriod votingPeriod;
+  final Map<String, int> results;
+  final int totalVotes;
+  final List<TawseyaItem> tawseyaItems;
 
   List<VotingResultItem> getSortedResults() {
     final resultItems = results.entries.map((entry) {
@@ -58,18 +58,17 @@ class VotingResults {
 }
 
 class VotingResultItem {
-  final TawseyaItem? tawseyaItem;
-  final int voteCount;
 
   const VotingResultItem({
-    this.tawseyaItem,
-    required this.voteCount,
+    required this.voteCount, this.tawseyaItem,
   });
+  final TawseyaItem? tawseyaItem;
+  final int voteCount;
 }
 
 class VotingPeriodNotFoundException implements Exception {
-  final String message;
   const VotingPeriodNotFoundException(this.message);
+  final String message;
 }
 
 extension FirstOrNullExtension<T> on Iterable<T> {

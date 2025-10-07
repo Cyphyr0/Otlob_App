@@ -4,8 +4,7 @@ import '../../domain/entities/transaction.dart';
 
 class TransactionList extends StatelessWidget {
   const TransactionList({
-    super.key,
-    required this.transactions,
+    required this.transactions, super.key,
     this.onViewAll,
   });
 
@@ -33,6 +32,13 @@ class TransactionList extends StatelessWidget {
       ],
     );
   }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(IterableProperty<Transaction>('transactions', transactions));
+    properties.add(ObjectFlagProperty<VoidCallback?>.has('onViewAll', onViewAll));
+  }
 }
 
 class _TransactionItem extends StatelessWidget {
@@ -43,8 +49,7 @@ class _TransactionItem extends StatelessWidget {
   final Transaction transaction;
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
+  Widget build(BuildContext context) => Container(
       margin: const EdgeInsets.only(bottom: 8),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -96,7 +101,6 @@ class _TransactionItem extends StatelessWidget {
         ],
       ),
     );
-  }
 
   String _getTransactionTitle() {
     switch (transaction.type) {
@@ -162,5 +166,11 @@ class _TransactionItem extends StatelessWidget {
     } else {
       return '${transaction.createdAt.day}/${transaction.createdAt.month}/${transaction.createdAt.year}';
     }
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<Transaction>('transaction', transaction));
   }
 }

@@ -29,6 +29,27 @@ class Transaction {
     this.metadata,
   });
 
+  factory Transaction.fromJson(Map<String, dynamic> json) => Transaction(
+      id: json['id'] as String,
+      walletId: json['walletId'] as String,
+      userId: json['userId'] as String,
+      type: TransactionType.values.firstWhere(
+        (e) => e.name == json['type'] as String,
+      ),
+      amount: (json['amount'] as num).toDouble(),
+      currency: json['currency'] as String,
+      status: TransactionStatus.values.firstWhere(
+        (e) => e.name == json['status'] as String,
+      ),
+      createdAt: DateTime.parse(json['createdAt'] as String),
+      updatedAt: json['updatedAt'] != null
+          ? DateTime.parse(json['updatedAt'] as String)
+          : null,
+      description: json['description'] as String?,
+      reference: json['reference'] as String?,
+      metadata: json['metadata'] as Map<String, dynamic>?,
+    );
+
   final String id;
   final String walletId;
   final String userId;
@@ -55,8 +76,7 @@ class Transaction {
     String? description,
     String? reference,
     Map<String, dynamic>? metadata,
-  }) {
-    return Transaction(
+  }) => Transaction(
       id: id ?? this.id,
       walletId: walletId ?? this.walletId,
       userId: userId ?? this.userId,
@@ -70,10 +90,8 @@ class Transaction {
       reference: reference ?? this.reference,
       metadata: metadata ?? this.metadata,
     );
-  }
 
-  Map<String, dynamic> toJson() {
-    return {
+  Map<String, dynamic> toJson() => {
       'id': id,
       'walletId': walletId,
       'userId': userId,
@@ -87,30 +105,6 @@ class Transaction {
       'reference': reference,
       'metadata': metadata,
     };
-  }
-
-  factory Transaction.fromJson(Map<String, dynamic> json) {
-    return Transaction(
-      id: json['id'] as String,
-      walletId: json['walletId'] as String,
-      userId: json['userId'] as String,
-      type: TransactionType.values.firstWhere(
-        (e) => e.name == json['type'] as String,
-      ),
-      amount: (json['amount'] as num).toDouble(),
-      currency: json['currency'] as String,
-      status: TransactionStatus.values.firstWhere(
-        (e) => e.name == json['status'] as String,
-      ),
-      createdAt: DateTime.parse(json['createdAt'] as String),
-      updatedAt: json['updatedAt'] != null
-          ? DateTime.parse(json['updatedAt'] as String)
-          : null,
-      description: json['description'] as String?,
-      reference: json['reference'] as String?,
-      metadata: json['metadata'] as Map<String, dynamic>?,
-    );
-  }
 
   @override
   bool operator ==(Object other) {
@@ -122,7 +116,5 @@ class Transaction {
   int get hashCode => id.hashCode;
 
   @override
-  String toString() {
-    return 'Transaction(id: $id, type: $type, amount: $amount $currency, status: $status)';
-  }
+  String toString() => 'Transaction(id: $id, type: $type, amount: $amount $currency, status: $status)';
 }

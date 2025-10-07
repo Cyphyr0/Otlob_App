@@ -1,15 +1,18 @@
 /// Map provider for managing map state and location-based restaurant discovery
-import 'package:flutter/material.dart';
+library;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart' as gmaps;
+
+import '../../../../core/services/firebase/firebase_firestore_service.dart';
 import '../../../../core/services/location_service.dart';
+import '../../../home/domain/entities/restaurant.dart';
+import '../../data/repositories/map_repository.dart';
 import '../../domain/entities/location.dart';
 import '../../domain/entities/map_marker.dart';
+import '../../domain/usecases/get_nearby_restaurants_with_delivery.dart' as delivery_usecase;
+import '../../domain/usecases/get_restaurants_in_bounds.dart' as bounds_usecase;
 import '../../domain/usecases/get_restaurants_in_radius.dart';
-import '../../domain/usecases/get_restaurants_in_bounds.dart';
-import '../../domain/usecases/search_restaurants_by_location.dart';
-import '../../domain/usecases/get_nearby_restaurants_with_delivery.dart';
-import '../../../home/domain/entities/restaurant.dart';
+import '../../domain/usecases/search_restaurants_by_location.dart' as search_usecase;
 
 /// State class for map-related data
 class MapState {
@@ -57,8 +60,7 @@ class MapState {
     bool? isManualLocationSelectionMode,
     Location? selectedLocation,
     String? selectedLocationAddress,
-  }) {
-    return MapState(
+  }) => MapState(
       currentLocation: currentLocation ?? this.currentLocation,
       restaurants: restaurants ?? this.restaurants,
       markers: markers ?? this.markers,
@@ -73,7 +75,6 @@ class MapState {
       selectedLocation: selectedLocation ?? this.selectedLocation,
       selectedLocationAddress: selectedLocationAddress ?? this.selectedLocationAddress,
     );
-  }
 }
 
 /// Map notifier for managing map state
@@ -87,9 +88,9 @@ class MapNotifier extends StateNotifier<MapState> {
   ) : super(const MapState());
 
   final GetRestaurantsInRadius _getRestaurantsInRadius;
-  final GetRestaurantsInBounds _getRestaurantsInBounds;
-  final SearchRestaurantsByLocation _searchRestaurantsByLocation;
-  final GetNearbyRestaurantsWithDelivery _getNearbyRestaurantsWithDelivery;
+  final bounds_usecase.GetRestaurantsInBounds _getRestaurantsInBounds;
+  final search_usecase.SearchRestaurantsByLocation _searchRestaurantsByLocation;
+  final delivery_usecase.GetNearbyRestaurantsWithDelivery _getNearbyRestaurantsWithDelivery;
   final LocationService _locationService;
 
   /// Initialize map with current location or manual selection
@@ -339,17 +340,13 @@ class MapNotifier extends StateNotifier<MapState> {
   }
 
   /// Convert restaurants to map markers
-  List<MapMarker> _restaurantsToMarkers(List<Restaurant> restaurants) {
-    return restaurants.map((restaurant) {
-      return MapMarker.restaurant(
+  List<MapMarker> _restaurantsToMarkers(List<Restaurant> restaurants) => restaurants.map((restaurant) => MapMarker.restaurant(
         restaurant: restaurant,
         onTap: () {
           // Handle marker tap - could navigate to restaurant details
           // This would be implemented based on the app's navigation system
         },
-      );
-    }).toList();
-  }
+      )).toList();
 }
 
 /// Provider for map state
@@ -357,12 +354,14 @@ final mapProvider = StateNotifierProvider<MapNotifier, MapState>((ref) {
   // These would need to be provided by dependency injection
   // For now, creating instances directly
   final locationService = LocationService.instance;
+  final firestoreService = FirebaseFirestoreService(); // Create instance
+  final mapRepository = FirebaseMapRepository(firestoreService);
 
   return MapNotifier(
-    GetRestaurantsInRadius(null), // Would be injected
-    GetRestaurantsInBounds(null), // Would be injected
-    SearchRestaurantsByLocation(null), // Would be injected
-    GetNearbyRestaurantsWithDelivery(null), // Would be injected
+    GetRestaurantsInRadius(mapRepository),
+    bounds_usecase.GetRestaurantsInBounds(mapRepository),
+    search_usecase.SearchRestaurantsByLocation(mapRepository),
+    delivery_usecase.GetNearbyRestaurantsWithDelivery(mapRepository),
     locationService,
   );
 });

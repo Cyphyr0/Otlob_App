@@ -1,9 +1,9 @@
-import "package:flutter_riverpod/flutter_riverpod.dart";
-import "../../../../core/services/service_locator.dart";
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../core/services/service_locator.dart';
 
-import "../../data/repositories/firebase_home_repository.dart";
-import "../../domain/entities/restaurant.dart";
-import "../../domain/repositories/home_repository.dart";
+import '../../data/repositories/firebase_home_repository.dart';
+import '../../domain/entities/restaurant.dart';
+import '../../domain/repositories/home_repository.dart';
 
 // Repository provider - Using Firebase data
 final homeRepositoryProvider = Provider<HomeRepository>((ref) => getIt<FirebaseHomeRepository>());
@@ -19,7 +19,7 @@ final restaurantsProvider = FutureProvider<List<Restaurant>>((ref) async {
   return repository.getRestaurantsPaginated(page: page, limit: 20);
 });
 
-final searchQueryProvider = StateProvider<String>((ref) => "");
+final searchQueryProvider = StateProvider<String>((ref) => '');
 
 // Async provider for paginated filtered restaurants based on search
 final filteredRestaurantsProvider = FutureProvider<List<Restaurant>>((

@@ -1,21 +1,17 @@
-import "package:flutter/material.dart";
-import "package:flutter_riverpod/flutter_riverpod.dart";
-import "package:flutter_screenutil/flutter_screenutil.dart";
-import "package:go_router/go_router.dart";
-import "package:cached_network_image/cached_network_image.dart";
-import "../../../../core/theme/app_colors.dart";
-import "../../../../core/theme/app_typography.dart";
-import "../../../../core/theme/app_spacing.dart";
-import "../../../../core/theme/app_radius.dart";
-import "../../../../core/theme/app_shadows.dart";
-import "../../../../core/widgets/branding/otlob_logo.dart";
-import "../../../../core/widgets/buttons/primary_button.dart";
-import "../../../../core/widgets/buttons/secondary_button.dart";
-import "../../../../core/widgets/states/loading_indicator.dart";
-import "../../../../core/widgets/states/empty_state.dart";
-import "../providers/profile_provider.dart";
-import "../../domain/entities/profile.dart";
-import "notification_settings_screen.dart";
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+
+import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_radius.dart';
+import '../../../../core/theme/app_shadows.dart';
+import '../../../../core/theme/app_spacing.dart';
+import '../../../../core/theme/app_typography.dart';
+import '../../../../core/widgets/branding/otlob_logo.dart';
+import '../../../../core/widgets/buttons/primary_button.dart';
+import '../../../../core/widgets/buttons/secondary_button.dart';
+import 'notification_settings_screen.dart';
 
 class ProfileScreen extends ConsumerStatefulWidget {
   const ProfileScreen({super.key});
@@ -160,7 +156,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   ),
                 ),
                 IconButton(
-                  icon: Icon(Icons.edit, color: AppColors.logoRed),
+                  icon: const Icon(Icons.edit, color: AppColors.logoRed),
                   onPressed: () {
                     // TODO: Edit profile
                   },

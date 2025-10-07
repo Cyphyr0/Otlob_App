@@ -1,9 +1,11 @@
-import "package:flutter/material.dart";
-import "package:flutter_screenutil/flutter_screenutil.dart";
-import "../../theme/app_colors.dart";
-import "../../theme/app_typography.dart";
-import "../../theme/app_radius.dart";
-import "../../theme/app_spacing.dart";
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import '../../theme/app_colors.dart';
+import '../../theme/app_radius.dart';
+import '../../theme/app_spacing.dart';
+import '../../theme/app_typography.dart';
 
 /// Cuisine Tag Component
 ///
@@ -39,8 +41,7 @@ import "../../theme/app_spacing.dart";
 class CuisineTag extends StatelessWidget {
 
   const CuisineTag({
-    super.key,
-    required this.name,
+    required this.name, super.key,
     this.backgroundColor,
     this.textColor,
   });

@@ -1,110 +1,133 @@
-import "package:easy_localization/easy_localization.dart";
-import "package:firebase_core/firebase_core.dart";
-import "package:flutter/material.dart";
-import "package:flutter_riverpod/flutter_riverpod.dart";
-import "package:flutter_screenutil/flutter_screenutil.dart";
-import "package:go_router/go_router.dart";
-import "package:shadcn_ui/shadcn_ui.dart";
+import 'package:easy_localization/easy_localization.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+import 'package:shadcn_ui/shadcn_ui.dart';
 
-import "core/providers.dart";
-import "core/services/firebase/firebase_data_seeder.dart";
-import "core/services/service_locator.dart";
-import "core/services/firebase/firebase_messaging_service.dart";
-import "core/theme/app_typography.dart";
-import "core/theme/shadcn_theme.dart";
-import "core/utils/localization_helper.dart";
-import "core/widgets/buttons/floating_cart_button.dart";
-import "core/widgets/demo/component_showcase.dart";
-import "features/auth/presentation/screens/auth_wrapper.dart";
-import "features/auth/presentation/screens/forgot_password_screen.dart";
-import "features/auth/presentation/screens/phone_verification_screen.dart";
-import "features/cart/presentation/screens/cart_screen.dart";
-import "features/cart/presentation/screens/order_confirmation_screen.dart";
-import "features/favorites/presentation/screens/favorites_screen.dart";
-import "features/home/presentation/screens/home_screen.dart";
-import "features/home/presentation/screens/restaurant_detail_screen.dart";
-import "features/onboarding/presentation/screens/onboarding_screen.dart";
-import "features/profile/presentation/screens/profile_screen.dart";
-import "features/splash/presentation/screens/splash_screen.dart";
-import "features/tawseya/presentation/screens/tawseya_screen.dart";
-import "features/wallet/presentation/screens/wallet_screen.dart";
-import "firebase_options.dart";
+import 'core/providers.dart';
+import 'core/services/firebase/firebase_data_seeder.dart';
+import 'core/services/firebase/firebase_messaging_service.dart';
+import 'core/services/service_locator.dart';
+import 'core/theme/app_typography.dart';
+import 'core/theme/shadcn_theme.dart';
+import 'core/utils/localization_helper.dart';
+import 'core/widgets/buttons/floating_cart_button.dart';
+import 'core/widgets/demo/component_showcase.dart';
+import 'features/auth/presentation/screens/auth_wrapper.dart';
+import 'features/auth/presentation/screens/forgot_password_screen.dart';
+import 'features/auth/presentation/screens/phone_verification_screen.dart';
+import 'features/cart/presentation/screens/cart_screen.dart';
+import 'features/cart/presentation/screens/order_confirmation_screen.dart';
+import 'features/favorites/presentation/screens/favorites_screen.dart';
+import 'features/home/presentation/screens/home_screen.dart';
+import 'features/home/presentation/screens/restaurant_detail_screen.dart';
+import 'features/onboarding/presentation/screens/onboarding_screen.dart';
+import 'features/profile/presentation/screens/profile_screen.dart';
+import 'features/splash/presentation/screens/splash_screen.dart';
+import 'features/tawseya/presentation/screens/tawseya_screen.dart';
+import 'features/wallet/presentation/screens/wallet_screen.dart';
+import 'firebase_options.dart';
 /*  import removed for public commit */
 
 void main() async {
-  try {
-    print("Main: Starting app initialization");
+  await _initializeApp();
+}
 
+Future<void> _initializeApp() async {
+  try {
     WidgetsFlutterBinding.ensureInitialized();
-    print("Main: WidgetsFlutterBinding initialized");
 
     // Initialize Firebase
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
-    print("Main: Firebase initialized");
 
-    // Initialize Firebase Cloud Messaging
-    await FirebaseMessagingService.initialize();
-    print("Main: Firebase Messaging initialized");
+    // Initialize Firebase Cloud Messaging (optional for web)
+    try {
+      await FirebaseMessagingService.initialize();
+    } catch (e) {
+      // Log error but continue without FCM
+      _logError('Firebase Messaging initialization failed: $e');
+    }
 
     // Initialize service locator with Firebase services
     setupFirebaseServices();
-    print("Main: Service locator initialized");
 
-    // Seed data in debug mode
-    if (const bool.fromEnvironment("dart.vm.product") == false) {
-      try {
-        print("Main: Starting data seeding...");
-        var seeder = getIt<FirebaseDataSeeder>();
-        await seeder.seedSampleData();
-        print("Main: Data seeding completed successfully");
-      } catch (e) {
-        print("Main: Error seeding data: $e");
-        // Continue app initialization even if seeding fails
-      }
+    // Seed data in debug mode only
+    if (!const bool.fromEnvironment('dart.vm.product')) {
+      await _seedDevelopmentData();
     }
 
-    print("Main: About to call runApp");
-    runApp(
-      EasyLocalization(
-        supportedLocales: const [Locale('en', 'US'), Locale('ar', 'EG')],
-        path: 'assets/translations',
-        fallbackLocale: const Locale('en', 'US'),
-        startLocale: const Locale(
-          'ar',
-          'EG',
-        ), // Default to Arabic for Egyptian market
-        useOnlyLangCode: true,
-        child: const ProviderScope(child: MyApp()),
-      ),
-    );
-    print("Main: runApp called with EasyLocalization");
+    _runMainApp();
   } catch (e, stackTrace) {
-    print("Main: CRITICAL ERROR during initialization: $e");
-    print("Main: Stack trace: $stackTrace");
+    _handleInitializationError(e, stackTrace);
+  }
+}
 
-    // Fallback to simple app if complex app fails
-    runApp(
-      MaterialApp(
-        home: Scaffold(
-          appBar: AppBar(title: const Text("ERROR")),
-          body: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  "CRITICAL ERROR: $e",
-                  style: const TextStyle(color: Colors.red),
-                ),
-                const SizedBox(height: 20),
-                const Text("Check console for details"),
-              ],
-            ),
+Future<void> _seedDevelopmentData() async {
+  try {
+    var seeder = getIt<FirebaseDataSeeder>();
+    await seeder.seedSampleData();
+  } catch (e) {
+    _logError('Error seeding development data: $e');
+    // Continue app initialization even if seeding fails
+  }
+}
+
+void _runMainApp() {
+  runApp(
+    EasyLocalization(
+      supportedLocales: const [Locale('en', 'US'), Locale('ar', 'EG')],
+      path: 'assets/translations',
+      fallbackLocale: const Locale('en', 'US'),
+      startLocale: const Locale(
+        'ar',
+        'EG',
+      ), // Default to Arabic for Egyptian market
+      useOnlyLangCode: true,
+      child: const ProviderScope(child: MyApp()),
+    ),
+  );
+}
+
+void _handleInitializationError(Object e, StackTrace stackTrace) {
+  _logError('CRITICAL ERROR during initialization: $e');
+  _logError('Stack trace: $stackTrace');
+
+  // Fallback to simple error app
+  runApp(
+    MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(title: const Text('Initialization Error')),
+        body: const Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.error_outline, size: 64, color: Colors.red),
+              SizedBox(height: 16),
+              Text(
+                'Failed to initialize app',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 8),
+              Text('Please restart the application'),
+            ],
           ),
         ),
       ),
-    );
+    ),
+  );
+}
+
+void _logError(String message) {
+  // In production, use proper logging instead of print
+  if (!const bool.fromEnvironment('dart.vm.product')) {
+    // TODO: Replace with proper logging service when available
+    if (const bool.hasEnvironment('LOG_LEVEL')) {
+      print('[ERROR] $message');
+    }
   }
 }
 
@@ -113,22 +136,21 @@ class MyApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    print("MyApp: Building MyApp widget");
+    // Building main app widget
 
     final router = GoRouter(
-      initialLocation: "/splash",
+      initialLocation: '/splash',
       debugLogDiagnostics: true, // Enable router logging
       redirect: (context, state) {
-        var location = state.matchedLocation;
-        print("Router: Current location: $location");
+        final location = state.matchedLocation;
 
         // Don't redirect from splash - let the splash screen handle navigation
-        if (location == "/splash") {
+        if (location == '/splash') {
           return null;
         }
 
         // For debugging, always allow navigation to onboarding
-        if (location == "/onboarding") {
+        if (location == '/onboarding') {
           return null;
         }
 
@@ -136,30 +158,30 @@ class MyApp extends ConsumerWidget {
       },
       routes: [
         GoRoute(
-          path: "/splash",
+          path: '/splash',
           builder: (context, state) => const SplashScreen(),
         ),
         GoRoute(
-          path: "/onboarding",
+          path: '/onboarding',
           builder: (context, state) => const OnboardingScreen(),
         ),
         GoRoute(
-          path: "/auth",
+          path: '/auth',
           builder: (context, state) => const AuthWrapper(),
         ),
         GoRoute(
-          path: "/forgot-password",
+          path: '/forgot-password',
           builder: (context, state) => const ForgotPasswordScreen(),
         ),
         GoRoute(
-          path: "/phone-verification",
+          path: '/phone-verification',
           builder: (context, state) {
             var phoneNumber = state.extra as String;
             return PhoneVerificationScreen(phoneNumber: phoneNumber);
           },
         ),
         GoRoute(
-          path: "/address",
+          path: '/address',
           builder: (context, state) => Scaffold(
             body: Center(
               child: Column(
@@ -168,20 +190,20 @@ class MyApp extends ConsumerWidget {
                   const Icon(Icons.location_on, size: 100, color: Colors.grey),
                   const SizedBox(height: 20),
                   const Text(
-                    "Address Setup Screen",
+                    'Address Setup Screen',
                     style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 10),
                   const Text(
-                    "This screen will be implemented later.",
+                    'This screen will be implemented later.',
                     style: TextStyle(fontSize: 16, color: Colors.grey),
                   ),
                   const SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () {
-                      context.go("/home");
+                      context.go('/home');
                     },
-                    child: const Text("Go to Home (Stub)"),
+                    child: const Text('Go to Home (Stub)'),
                   ),
                 ],
               ),
@@ -189,65 +211,65 @@ class MyApp extends ConsumerWidget {
           ),
         ),
         GoRoute(
-          path: "/restaurant/:id",
+          path: '/restaurant/:id',
           builder: (context, state) =>
-              RestaurantDetailScreen(id: state.pathParameters["id"]!),
+              RestaurantDetailScreen(id: state.pathParameters['id']!),
         ),
         GoRoute(
-          path: "/order-confirmation",
+          path: '/order-confirmation',
           builder: (context, state) => const OrderConfirmationScreen(),
         ),
         GoRoute(
-          path: "/category",
+          path: '/category',
           builder: (context, state) => Scaffold(
-            appBar: AppBar(title: const Text("Category")),
-            body: const Center(child: Text("Category Screen Stub")),
+            appBar: AppBar(title: const Text('Category')),
+            body: const Center(child: Text('Category Screen Stub')),
           ),
         ),
         GoRoute(
-          path: "/tracking",
+          path: '/tracking',
           builder: (context, state) => Scaffold(
-            appBar: AppBar(title: const Text("Order Tracking")),
-            body: const Center(child: Text("Tracking Screen Stub")),
+            appBar: AppBar(title: const Text('Order Tracking')),
+            body: const Center(child: Text('Tracking Screen Stub')),
           ),
         ),
         GoRoute(
-          path: "/demo",
+          path: '/demo',
           builder: (context, state) => const ComponentShowcaseScreen(),
         ),
         GoRoute(
-          path: "/tawseya",
+          path: '/tawseya',
           builder: (context, state) => const TawseyaScreen(),
         ),
         GoRoute(
-          path: "/wallet",
+          path: '/wallet',
           builder: (context, state) => const WalletScreen(),
         ),
         GoRoute(
-          path: "/wallet",
+          path: '/wallet',
           builder: (context, state) => const WalletScreen(),
         ),
         ShellRoute(
           builder: (context, state, child) => ScaffoldWithNavBar(child: child),
           routes: [
             GoRoute(
-              path: "/home",
+              path: '/home',
               builder: (context, state) => const HomeScreen(),
             ),
             GoRoute(
-              path: "/favorites",
+              path: '/favorites',
               builder: (context, state) => const FavoritesScreen(),
             ),
             GoRoute(
-              path: "/tawseya",
+              path: '/tawseya',
               builder: (context, state) => const TawseyaScreen(),
             ),
             GoRoute(
-              path: "/cart",
+              path: '/cart',
               builder: (context, state) => const CartScreen(),
             ),
             GoRoute(
-              path: "/profile",
+              path: '/profile',
               builder: (context, state) => const ProfileScreen(),
             ),
           ],
@@ -262,46 +284,42 @@ class MyApp extends ConsumerWidget {
       builder: (context, child) => ShadTheme(
         data: ShadThemeData(
           brightness: Brightness.light,
-          colorScheme: ShadColorScheme(
+          colorScheme: const ShadColorScheme(
             background: Colors.white,
             foreground: Colors.black,
             card: Colors.white,
             cardForeground: Colors.black,
             popover: Colors.white,
             popoverForeground: Colors.black,
-            primary: const Color(0xFFDC2626),
+            primary: Color(0xFFDC2626),
             primaryForeground: Colors.white,
-            secondary: const Color(0xFFF59E0B),
+            secondary: Color(0xFFF59E0B),
             secondaryForeground: Colors.black,
             destructive: Colors.red,
             destructiveForeground: Colors.white,
-            muted: const Color(0xFFF3F4F6),
-            mutedForeground: const Color(0xFF6B7280),
-            accent: const Color(0xFFF3F4F6),
-            accentForeground: const Color(0xFF374151),
-            border: const Color(0xFFE5E7EB),
-            input: const Color(0xFFE5E7EB),
-            ring: const Color(0xFFDC2626),
-            selection: const Color(0xFFDC2626),
+            muted: Color(0xFFF3F4F6),
+            mutedForeground: Color(0xFF6B7280),
+            accent: Color(0xFFF3F4F6),
+            accentForeground: Color(0xFF374151),
+            border: Color(0xFFE5E7EB),
+            input: Color(0xFFE5E7EB),
+            ring: Color(0xFFDC2626),
+            selection: Color(0xFFDC2626),
           ),
         ),
         child: MaterialApp.router(
           title: LocalizationHelper.of(context).app_name,
           theme: ShadcnTheme.shadcnTheme.copyWith(
-            textTheme: AppTypography.getResponsiveTextTheme(context),
+            textTheme:
+                AppTypography.textTheme, // Use default text theme initially
           ),
           routerConfig: router,
           // RTL & Localization Support
           localizationsDelegates: context.localizationDelegates,
           supportedLocales: context.supportedLocales,
           locale: context.locale,
-          // RTL Configuration
-          builder: (context, child) {
-            return Directionality(
-              textDirection: Directionality.of(context),
-              child: child!,
-            );
-          },
+          // TODO: Fix RTL Configuration - TextDirection properties not recognized
+          builder: (context, child) => child ?? const SizedBox(),
         ),
       ),
     );
@@ -328,7 +346,7 @@ class ScaffoldWithNavBar extends ConsumerWidget {
           return;
         } else {
           ref.read(navigationIndexProvider.notifier).state = 0;
-          context.go("/home");
+          context.go('/home');
         }
       },
       child: Scaffold(
@@ -357,9 +375,9 @@ class ScaffoldWithNavBar extends ConsumerWidget {
               selectedIcon: const Icon(Icons.favorite),
               label: LocalizationHelper.of(context).nav_favorites,
             ),
-            NavigationDestination(
-              icon: const Icon(Icons.account_balance_wallet_outlined),
-              selectedIcon: const Icon(Icons.account_balance_wallet),
+            const NavigationDestination(
+              icon: Icon(Icons.account_balance_wallet_outlined),
+              selectedIcon: Icon(Icons.account_balance_wallet),
               label: 'Wallet',
             ),
             NavigationDestination(
@@ -383,22 +401,22 @@ class ScaffoldWithNavBar extends ConsumerWidget {
             ref.read(navigationIndexProvider.notifier).state = index;
             switch (index) {
               case 0:
-                context.go("/home");
+                context.go('/home');
                 break;
               case 1:
-                context.go("/favorites");
+                context.go('/favorites');
                 break;
               case 2:
-                context.go("/wallet");
+                context.go('/wallet');
                 break;
               case 3:
-                context.go("/tawseya");
+                context.go('/tawseya');
                 break;
               case 4:
-                context.go("/cart");
+                context.go('/cart');
                 break;
               case 5:
-                context.go("/profile");
+                context.go('/profile');
                 break;
             }
           },

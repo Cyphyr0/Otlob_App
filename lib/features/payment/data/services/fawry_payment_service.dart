@@ -1,23 +1,25 @@
-import "dart:convert";
-import "package:http/http.dart" as http;
-import "package:crypto/crypto.dart";
-import "../../domain/entities/payment.dart";
+import 'dart:convert';
+
+import 'package:crypto/crypto.dart';
+import 'package:http/http.dart' as http;
+
+import '../../domain/entities/payment.dart';
 
 class FawryPaymentService {
-  static const String _baseUrl = "https://www.atfawry.com";
-  final String _merchantCode;
-  final String _securityKey;
-  final http.Client _client;
 
   FawryPaymentService(
     this._merchantCode,
     this._securityKey, {
     http.Client? client,
   }) : _client = client ?? http.Client();
+  static const String _baseUrl = 'https://www.atfawry.com';
+  final String _merchantCode;
+  final String _securityKey;
+  final http.Client _client;
 
   Map<String, String> get _headers => {
-        "Content-Type": "application/json",
-        "Accept": "application/json",
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
       };
 
   /// Create a Fawry payment
@@ -31,34 +33,34 @@ class FawryPaymentService {
     String? description,
   }) async {
     try {
-      final String merchantRefNum = _generateMerchantRefNum(orderId);
-      final String signature = _generateSignature(merchantRefNum, amount, currency);
+      final merchantRefNum = _generateMerchantRefNum(orderId);
+      final signature = _generateSignature(merchantRefNum, amount, currency);
 
-      final Map<String, dynamic> paymentData = {
-        "merchantCode": _merchantCode,
-        "merchantRefNum": merchantRefNum,
-        "customerName": customerName,
-        "customerEmail": customerEmail,
-        "customerMobile": customerMobile,
-        "amount": amount,
-        "currency": currency,
-        "description": description ?? "Order Payment - $orderId",
-        "signature": signature,
-        "paymentMethod": "PAYATFAWRY", // Fawry outlet payment
-        "language": "en",
-        "chargeItems": [
+      final paymentData = <String, dynamic>{
+        'merchantCode': _merchantCode,
+        'merchantRefNum': merchantRefNum,
+        'customerName': customerName,
+        'customerEmail': customerEmail,
+        'customerMobile': customerMobile,
+        'amount': amount,
+        'currency': currency,
+        'description': description ?? 'Order Payment - $orderId',
+        'signature': signature,
+        'paymentMethod': 'PAYATFAWRY', // Fawry outlet payment
+        'language': 'en',
+        'chargeItems': [
           {
-            "itemId": "ORDER_$orderId",
-            "description": description ?? "Order Payment",
-            "quantity": 1,
-            "price": amount,
+            'itemId': 'ORDER_$orderId',
+            'description': description ?? 'Order Payment',
+            'quantity': 1,
+            'price': amount,
           }
         ],
       };
 
       // For Fawry, we create a payment reference that can be used at Fawry outlets
       final response = await _client.post(
-        Uri.parse("$_baseUrl/api/payments/init"),
+        Uri.parse('$_baseUrl/api/payments/init'),
         headers: _headers,
         body: json.encode(paymentData),
       );
@@ -67,25 +69,25 @@ class FawryPaymentService {
         final Map<String, dynamic> responseData = json.decode(response.body);
 
         return PaymentIntent(
-          id: responseData["referenceNumber"] as String? ?? merchantRefNum,
+          id: responseData['referenceNumber'] as String? ?? merchantRefNum,
           orderId: orderId,
           provider: PaymentProvider.fawry,
           amount: amount,
           currency: currency,
-          clientSecret: responseData["referenceNumber"] as String? ?? merchantRefNum,
+          clientSecret: responseData['referenceNumber'] as String? ?? merchantRefNum,
           metadata: {
-            "merchantRefNum": merchantRefNum,
-            "paymentUrl": responseData["paymentUrl"],
-            " FawryRefNum": responseData["fawryRefNum"],
+            'merchantRefNum': merchantRefNum,
+            'paymentUrl': responseData['paymentUrl'],
+            ' FawryRefNum': responseData['fawryRefNum'],
           },
         );
       } else {
         throw FawryPaymentException(
-          "Failed to create Fawry payment: ${response.body}",
+          'Failed to create Fawry payment: ${response.body}',
         );
       }
     } catch (e) {
-      throw FawryPaymentException("Error creating Fawry payment: $e");
+      throw FawryPaymentException('Error creating Fawry payment: $e');
     }
   }
 
@@ -93,7 +95,7 @@ class FawryPaymentService {
   Future<Payment> getPaymentStatus(String referenceNumber) async {
     try {
       final response = await _client.get(
-        Uri.parse("$_baseUrl/api/payments/status/$referenceNumber"),
+        Uri.parse('$_baseUrl/api/payments/status/$referenceNumber'),
         headers: _headers,
       );
 
@@ -102,11 +104,11 @@ class FawryPaymentService {
         return _mapFawryResponseToPayment(responseData);
       } else {
         throw FawryPaymentException(
-          "Failed to get payment status: ${response.body}",
+          'Failed to get payment status: ${response.body}',
         );
       }
     } catch (e) {
-      throw FawryPaymentException("Error getting payment status: $e");
+      throw FawryPaymentException('Error getting payment status: $e');
     }
   }
 
@@ -116,13 +118,13 @@ class FawryPaymentService {
     required String fawryRefNum,
   }) async {
     try {
-      final Map<String, String> confirmationData = {
-        "referenceNumber": referenceNumber,
-        "fawryRefNum": fawryRefNum,
+      final confirmationData = <String, String>{
+        'referenceNumber': referenceNumber,
+        'fawryRefNum': fawryRefNum,
       };
 
       final response = await _client.post(
-        Uri.parse("$_baseUrl/api/payments/confirm"),
+        Uri.parse('$_baseUrl/api/payments/confirm'),
         headers: _headers,
         body: json.encode(confirmationData),
       );
@@ -132,11 +134,11 @@ class FawryPaymentService {
         return _mapFawryResponseToPayment(responseData);
       } else {
         throw FawryPaymentException(
-          "Failed to confirm payment: ${response.body}",
+          'Failed to confirm payment: ${response.body}',
         );
       }
     } catch (e) {
-      throw FawryPaymentException("Error confirming payment: $e");
+      throw FawryPaymentException('Error confirming payment: $e');
     }
   }
 
@@ -144,7 +146,7 @@ class FawryPaymentService {
   Future<Payment> cancelPayment(String referenceNumber) async {
     try {
       final response = await _client.post(
-        Uri.parse("$_baseUrl/api/payments/$referenceNumber/cancel"),
+        Uri.parse('$_baseUrl/api/payments/$referenceNumber/cancel'),
         headers: _headers,
       );
 
@@ -153,11 +155,11 @@ class FawryPaymentService {
         return _mapFawryResponseToPayment(responseData);
       } else {
         throw FawryPaymentException(
-          "Failed to cancel payment: ${response.body}",
+          'Failed to cancel payment: ${response.body}',
         );
       }
     } catch (e) {
-      throw FawryPaymentException("Error canceling payment: $e");
+      throw FawryPaymentException('Error canceling payment: $e');
     }
   }
 
@@ -167,13 +169,13 @@ class FawryPaymentService {
     double? amount,
   }) async {
     try {
-      final Map<String, dynamic> refundData = {
-        "referenceNumber": referenceNumber,
-        if (amount != null) "amount": amount,
+      final refundData = <String, dynamic>{
+        'referenceNumber': referenceNumber,
+        if (amount != null) 'amount': amount,
       };
 
       final response = await _client.post(
-        Uri.parse("$_baseUrl/api/payments/$referenceNumber/refund"),
+        Uri.parse('$_baseUrl/api/payments/$referenceNumber/refund'),
         headers: _headers,
         body: json.encode(refundData),
       );
@@ -183,35 +185,35 @@ class FawryPaymentService {
         return _mapFawryResponseToPayment(responseData);
       } else {
         throw FawryPaymentException(
-          "Failed to refund payment: ${response.body}",
+          'Failed to refund payment: ${response.body}',
         );
       }
     } catch (e) {
-      throw FawryPaymentException("Error refunding payment: $e");
+      throw FawryPaymentException('Error refunding payment: $e');
     }
   }
 
   Payment _mapFawryResponseToPayment(Map<String, dynamic> responseData) {
-    final String orderId = responseData["merchantRefNum"]?.toString().replaceFirst("ORDER_", "") ?? "";
+    final orderId = responseData['merchantRefNum']?.toString().replaceFirst('ORDER_', '') ?? '';
 
     PaymentTransactionStatus status;
-    switch (responseData["status"]?.toString().toLowerCase()) {
-      case "paid":
-      case "success":
+    switch (responseData['status']?.toString().toLowerCase()) {
+      case 'paid':
+      case 'success':
         status = PaymentTransactionStatus.completed;
         break;
-      case "pending":
-      case "in_progress":
+      case 'pending':
+      case 'in_progress':
         status = PaymentTransactionStatus.processing;
         break;
-      case "cancelled":
-      case "canceled":
+      case 'cancelled':
+      case 'canceled':
         status = PaymentTransactionStatus.cancelled;
         break;
-      case "expired":
+      case 'expired':
         status = PaymentTransactionStatus.failed;
         break;
-      case "refunded":
+      case 'refunded':
         status = PaymentTransactionStatus.refunded;
         break;
       default:
@@ -219,32 +221,32 @@ class FawryPaymentService {
     }
 
     return Payment(
-      id: responseData["referenceNumber"] as String? ?? responseData["fawryRefNum"] as String? ?? "",
+      id: responseData['referenceNumber'] as String? ?? responseData['fawryRefNum'] as String? ?? '',
       orderId: orderId,
       provider: PaymentProvider.fawry,
-      amount: (responseData["amount"] as num?)?.toDouble() ?? 0.0,
-      currency: responseData["currency"] as String? ?? "EGP",
+      amount: (responseData['amount'] as num?)?.toDouble() ?? 0.0,
+      currency: responseData['currency'] as String? ?? 'EGP',
       status: status,
-      createdAt: DateTime.parse(responseData["createdAt"] as String? ?? DateTime.now().toIso8601String()),
+      createdAt: DateTime.parse(responseData['createdAt'] as String? ?? DateTime.now().toIso8601String()),
       updatedAt: DateTime.now(),
-      transactionId: responseData["fawryRefNum"] as String?,
-      referenceId: responseData["referenceNumber"] as String?,
+      transactionId: responseData['fawryRefNum'] as String?,
+      referenceId: responseData['referenceNumber'] as String?,
       providerResponse: responseData,
       metadata: {
-        "payment_method": responseData["paymentMethod"],
-        "payment_time": responseData["paymentTime"],
-        "outlet_code": responseData["outletCode"],
+        'payment_method': responseData['paymentMethod'],
+        'payment_time': responseData['paymentTime'],
+        'outlet_code': responseData['outletCode'],
       },
     );
   }
 
   String _generateMerchantRefNum(String orderId) {
     final timestamp = DateTime.now().millisecondsSinceEpoch.toString();
-    return "ORDER_${orderId}_$timestamp";
+    return 'ORDER_${orderId}_$timestamp';
   }
 
   String _generateSignature(String merchantRefNum, double amount, String currency) {
-    final data = "$_merchantCode$merchantRefNum${amount.toStringAsFixed(2)}$currency$_securityKey";
+    final data = '$_merchantCode$merchantRefNum${amount.toStringAsFixed(2)}$currency$_securityKey';
     final bytes = utf8.encode(data);
     final digest = sha256.convert(bytes);
     return digest.toString();
@@ -256,10 +258,10 @@ class FawryPaymentService {
 }
 
 class FawryPaymentException implements Exception {
-  final String message;
 
   FawryPaymentException(this.message);
+  final String message;
 
   @override
-  String toString() => "FawryPaymentException: $message";
+  String toString() => 'FawryPaymentException: $message';
 }

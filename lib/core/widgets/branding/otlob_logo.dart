@@ -1,7 +1,9 @@
-import "package:flutter/material.dart";
-import "../../theme/app_colors.dart";
-import "../../theme/app_typography.dart";
-import "../../theme/app_animations.dart";
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+
+import '../../theme/app_animations.dart';
+import '../../theme/app_colors.dart';
+import '../../theme/app_typography.dart';
 
 /// Otlob Logo Widget
 ///
@@ -111,7 +113,7 @@ class _OtlobLogoState extends State<OtlobLogo>
 
   @override
   Widget build(BuildContext context) {
-    var logoText = widget.isArabic ? "أطلب" : "Otlob";
+    var logoText = widget.isArabic ? 'أطلب' : 'Otlob';
     var logoColor = widget.color ?? AppColors.logoRed;
 
     Widget logo = Text(
@@ -220,12 +222,10 @@ class _OtlobLogoWithEntranceState extends State<OtlobLogoWithEntrance>
   @override
   Widget build(BuildContext context) => AnimatedBuilder(
       animation: _controller,
-      builder: (context, child) {
-        return Opacity(
+      builder: (context, child) => Opacity(
           opacity: _fadeAnimation.value,
           child: Transform.scale(scale: _scaleAnimation.value, child: child),
-        );
-      },
+        ),
       child: OtlobLogo(
         size: widget.size,
         color: widget.color,

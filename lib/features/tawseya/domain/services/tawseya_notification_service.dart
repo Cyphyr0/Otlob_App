@@ -9,8 +9,8 @@ class TawseyaNotificationService {
     required VotingPeriod votingPeriod,
     String? imageUrl,
   }) async {
-    final title = 'بدأ التصويت في توصية الشهر!';
-    final body = 'ابدأ التصويت الآن في أفضل المطاعم والأطباق لهذا الشهر';
+    const title = 'بدأ التصويت في توصية الشهر!';
+    const body = 'ابدأ التصويت الآن في أفضل المطاعم والأطباق لهذا الشهر';
 
     await FirebaseMessagingService.showTawseyaNotification(
       title: title,
@@ -33,7 +33,7 @@ class TawseyaNotificationService {
     required int hoursRemaining,
     String? imageUrl,
   }) async {
-    final title = 'تذكير: التصويت ينتهي قريباً!';
+    const title = 'تذكير: التصويت ينتهي قريباً!';
     final body = 'تبقى $hoursRemaining ساعة فقط للتصويت في توصية الشهر. لا تفوت الفرصة!';
 
     await FirebaseMessagingService.showTawseyaNotification(
@@ -57,8 +57,8 @@ class TawseyaNotificationService {
     required VotingPeriod votingPeriod,
     String? imageUrl,
   }) async {
-    final title = 'انتهى التصويت في توصية الشهر';
-    final body = 'شكراً لمشاركتك في التصويت. ستعلن النتائج قريباً!';
+    const title = 'انتهى التصويت في توصية الشهر';
+    const body = 'شكراً لمشاركتك في التصويت. ستعلن النتائج قريباً!';
 
     await FirebaseMessagingService.showTawseyaNotification(
       title: title,
@@ -81,7 +81,7 @@ class TawseyaNotificationService {
     required List<TawseyaItem> topItems,
     String? imageUrl,
   }) async {
-    final title = 'نتائج توصية الشهر!';
+    const title = 'نتائج توصية الشهر!';
     String body;
 
     if (topItems.isNotEmpty) {
@@ -113,7 +113,7 @@ class TawseyaNotificationService {
     required VotingPeriod votingPeriod,
     String? imageUrl,
   }) async {
-    final title = 'تذكير بالتصويت';
+    const title = 'تذكير بالتصويت';
     final body = 'هل جربت "${tawseyaItem.name}"؟ شاركنا رأيك بالتصويت!';
 
     await FirebaseMessagingService.showTawseyaNotification(
@@ -137,7 +137,7 @@ class TawseyaNotificationService {
     required TawseyaItem tawseyaItem,
     String? imageUrl,
   }) async {
-    final title = 'عنصر جديد في التوصية!';
+    const title = 'عنصر جديد في التوصية!';
     final body = 'تم إضافة "${tawseyaItem.name}" إلى قائمة التوصية. اكتشفه الآن!';
 
     await FirebaseMessagingService.showTawseyaNotification(

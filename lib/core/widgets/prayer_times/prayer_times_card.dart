@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../providers/prayer_times_provider.dart';
-import '../../services/prayer_times_service.dart';
 import '../../services/hijri_calendar_service.dart';
+import '../../services/prayer_times_service.dart';
 
 /// Prayer times card widget for Egyptian market
 class PrayerTimesCard extends ConsumerWidget {
@@ -119,7 +119,7 @@ class PrayerTimesCard extends ConsumerWidget {
                       backgroundColor: Colors.white,
                       foregroundColor: const Color(0xFF1E3A8A),
                     ),
-                    child: Text(
+                    child: const Text(
                       'إعادة المحاولة',
                       style: TextStyle(fontFamily: 'Cairo'),
                     ),
@@ -184,7 +184,7 @@ class PrayerTimesCard extends ConsumerWidget {
                         onChanged: (value) {
                           ref.read(prayerTimesProvider.notifier).toggleNotifications(value);
                         },
-                        activeColor: Colors.white,
+                        activeThumbColor: Colors.white,
                         activeTrackColor: Colors.white.withOpacity(0.3),
                       ),
                     ],
@@ -197,8 +197,7 @@ class PrayerTimesCard extends ConsumerWidget {
     );
   }
 
-  Widget _buildNextPrayerCountdown(TimeUntilNextPrayer timeUntil) {
-    return Container(
+  Widget _buildNextPrayerCountdown(TimeUntilNextPrayer timeUntil) => Container(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
       decoration: BoxDecoration(
         color: Colors.white.withOpacity(0.1),
@@ -242,7 +241,6 @@ class PrayerTimesCard extends ConsumerWidget {
         ],
       ),
     );
-  }
 
   Widget _buildPrayerTimesGrid(PrayerTimesModel prayerTimes) {
     final timings = prayerTimes.timings;
@@ -277,8 +275,7 @@ class PrayerTimesCard extends ConsumerWidget {
     );
   }
 
-  Widget _buildPrayerTimeItem(String name, String time, IconData icon) {
-    return Container(
+  Widget _buildPrayerTimeItem(String name, String time, IconData icon) => DecoratedBox(
       decoration: BoxDecoration(
         color: Colors.white.withOpacity(0.1),
         borderRadius: BorderRadius.circular(8.r),
@@ -314,5 +311,4 @@ class PrayerTimesCard extends ConsumerWidget {
         ],
       ),
     );
-  }
 }

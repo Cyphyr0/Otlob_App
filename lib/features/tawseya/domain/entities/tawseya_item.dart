@@ -1,14 +1,4 @@
 class TawseyaItem {
-  final String id;
-  final String name;
-  final String description;
-  final String imageUrl;
-  final String category;
-  final bool isActive;
-  final DateTime createdAt;
-  final DateTime? expiresAt;
-  final int totalVotes;
-  final double averageRating;
 
   const TawseyaItem({
     required this.id,
@@ -22,6 +12,16 @@ class TawseyaItem {
     this.totalVotes = 0,
     this.averageRating = 0.0,
   });
+  final String id;
+  final String name;
+  final String description;
+  final String imageUrl;
+  final String category;
+  final bool isActive;
+  final DateTime createdAt;
+  final DateTime? expiresAt;
+  final int totalVotes;
+  final double averageRating;
 
   TawseyaItem copyWith({
     String? id,
@@ -34,8 +34,7 @@ class TawseyaItem {
     DateTime? expiresAt,
     int? totalVotes,
     double? averageRating,
-  }) {
-    return TawseyaItem(
+  }) => TawseyaItem(
       id: id ?? this.id,
       name: name ?? this.name,
       description: description ?? this.description,
@@ -47,16 +46,13 @@ class TawseyaItem {
       totalVotes: totalVotes ?? this.totalVotes,
       averageRating: averageRating ?? this.averageRating,
     );
-  }
 
   bool get isExpired {
     if (expiresAt == null) return false;
     return DateTime.now().isAfter(expiresAt!);
   }
 
-  bool get canVote {
-    return isActive && !isExpired;
-  }
+  bool get canVote => isActive && !isExpired;
 
   @override
   bool operator ==(Object other) {

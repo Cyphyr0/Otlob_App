@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import '../../domain/entities/working_hours.dart';
+
 import '../../domain/entities/restaurant_status_type.dart';
+import '../../domain/entities/working_hours.dart';
 
 class WorkingHoursDisplay extends StatelessWidget {
   const WorkingHoursDisplay({
-    super.key,
-    required this.workingHours,
+    required this.workingHours, super.key,
     this.statusType = RestaurantStatusType.open,
     this.compact = false,
     this.showTodayHighlight = true,
@@ -46,6 +46,15 @@ class WorkingHoursDisplay extends StatelessWidget {
       ],
     );
   }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<WorkingHours>('workingHours', workingHours));
+    properties.add(EnumProperty<RestaurantStatusType>('statusType', statusType));
+    properties.add(DiagnosticsProperty<bool>('compact', compact));
+    properties.add(DiagnosticsProperty<bool>('showTodayHighlight', showTodayHighlight));
+  }
 }
 
 class _WorkingHoursList extends StatelessWidget {
@@ -78,14 +87,21 @@ class _WorkingHoursList extends StatelessWidget {
     ];
 
     return Column(
-      children: days.map((day) {
-        return _DayHoursWidget(
+      children: days.map((day) => _DayHoursWidget(
           day: day,
           compact: compact,
           theme: theme,
-        );
-      }).toList(),
+        )).toList(),
     );
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<WorkingHours>('workingHours', workingHours));
+    properties.add(EnumProperty<RestaurantStatusType>('statusType', statusType));
+    properties.add(DiagnosticsProperty<bool>('compact', compact));
+    properties.add(DiagnosticsProperty<bool>('showTodayHighlight', showTodayHighlight));
   }
 }
 
@@ -120,8 +136,7 @@ class _DayHoursWidget extends StatelessWidget {
   final ThemeData theme;
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
+  Widget build(BuildContext context) => Container(
       padding: EdgeInsets.symmetric(
         horizontal: compact ? 8 : 12,
         vertical: compact ? 4 : 6,
@@ -159,7 +174,6 @@ class _DayHoursWidget extends StatelessWidget {
         ],
       ),
     );
-  }
 
   String _formatTimeSlot(TimeSlot timeSlot) {
     if (!timeSlot.isOpen) {
@@ -179,5 +193,13 @@ class _DayHoursWidget extends StatelessWidget {
     }
 
     return '$openTime - $closeTime';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<_DayHours>('day', day));
+    properties.add(DiagnosticsProperty<bool>('compact', compact));
+    properties.add(DiagnosticsProperty<ThemeData>('theme', theme));
   }
 }

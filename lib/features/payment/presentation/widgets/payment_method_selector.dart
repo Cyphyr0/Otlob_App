@@ -1,22 +1,27 @@
-import "package:flutter/material.dart";
-import "package:flutter_riverpod/flutter_riverpod.dart";
-import "../../domain/entities/payment.dart";
-import "../providers/payment_provider.dart";
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../domain/entities/payment.dart';
+import '../providers/payment_provider.dart';
 
 class PaymentMethodSelector extends ConsumerStatefulWidget {
+
+  const PaymentMethodSelector({
+    required this.amount, required this.currency, required this.onPaymentMethodSelected, super.key,
+  });
   final double amount;
   final String currency;
   final Function(PaymentProvider) onPaymentMethodSelected;
 
-  const PaymentMethodSelector({
-    super.key,
-    required this.amount,
-    required this.currency,
-    required this.onPaymentMethodSelected,
-  });
-
   @override
   ConsumerState<PaymentMethodSelector> createState() => _PaymentMethodSelectorState();
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DoubleProperty('amount', amount));
+    properties.add(StringProperty('currency', currency));
+    properties.add(ObjectFlagProperty<Function(PaymentProvider p1)>.has('onPaymentMethodSelected', onPaymentMethodSelected));
+  }
 }
 
 class _PaymentMethodSelectorState extends ConsumerState<PaymentMethodSelector> {
@@ -63,7 +68,7 @@ class _PaymentMethodSelectorState extends ConsumerState<PaymentMethodSelector> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            "Select Payment Method",
+            'Select Payment Method',
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
@@ -75,7 +80,7 @@ class _PaymentMethodSelectorState extends ConsumerState<PaymentMethodSelector> {
               child: CircularProgressIndicator(),
             )
           else
-            ...PaymentProvider.values.map((provider) => _buildPaymentMethodTile(provider)),
+            ...PaymentProvider.values.map(_buildPaymentMethodTile),
         ],
       ),
     );
@@ -129,26 +134,26 @@ class _PaymentMethodSelectorState extends ConsumerState<PaymentMethodSelector> {
   String _getPaymentMethodTitle(PaymentProvider provider) {
     switch (provider) {
       case PaymentProvider.stripe:
-        return "Credit/Debit Card";
+        return 'Credit/Debit Card';
       case PaymentProvider.fawry:
-        return "Fawry";
+        return 'Fawry';
       case PaymentProvider.vodafoneCash:
-        return "Vodafone CASH";
+        return 'Vodafone CASH';
       case PaymentProvider.meeza:
-        return "Meeza";
+        return 'Meeza';
     }
   }
 
   String _getPaymentMethodDescription(PaymentProvider provider) {
     switch (provider) {
       case PaymentProvider.stripe:
-        return "Pay securely with your card";
+        return 'Pay securely with your card';
       case PaymentProvider.fawry:
-        return "Pay at any Fawry outlet";
+        return 'Pay at any Fawry outlet';
       case PaymentProvider.vodafoneCash:
-        return "Pay with your Vodafone wallet";
+        return 'Pay with your Vodafone wallet';
       case PaymentProvider.meeza:
-        return "Pay with Meeza digital wallet";
+        return 'Pay with Meeza digital wallet';
     }
   }
 }

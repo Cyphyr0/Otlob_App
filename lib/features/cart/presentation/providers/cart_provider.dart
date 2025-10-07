@@ -1,12 +1,12 @@
-import "dart:convert";
-import "package:flutter_riverpod/flutter_riverpod.dart";
-import "package:shared_preferences/shared_preferences.dart";
-import "package:uuid/uuid.dart";
-import "../../../../core/services/service_locator.dart";
-import "../../../auth/presentation/providers/auth_provider.dart";
-import "../../data/repositories/firebase_cart_repository.dart";
-import "../../domain/entities/cart_item.dart";
-import "../../domain/repositories/cart_repository.dart";
+import 'dart:convert';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uuid/uuid.dart';
+import '../../../../core/services/service_locator.dart';
+import '../../../auth/presentation/providers/auth_provider.dart';
+import '../../data/repositories/firebase_cart_repository.dart';
+import '../../domain/entities/cart_item.dart';
+import '../../domain/repositories/cart_repository.dart';
 
 final cartProvider = NotifierProvider<CartNotifier, List<CartItem>>(
   CartNotifier.new,
@@ -14,8 +14,8 @@ final cartProvider = NotifierProvider<CartNotifier, List<CartItem>>(
 
 class CartNotifier extends Notifier<List<CartItem>> {
   String? _promoCode;
-  static const String _cartKey = "cart_items";
-  static const String _promoKey = "promo_code";
+  static const String _cartKey = 'cart_items';
+  static const String _promoKey = 'promo_code';
   bool _isInitialized = false;
   bool _isLoading = true;
   CartRepository? _cartRepository;
@@ -62,15 +62,15 @@ class CartNotifier extends Notifier<List<CartItem>> {
         var cartItems = decoded.map((m) {
           var map = m as Map<String, dynamic>;
           return CartItem(
-            id: map["id"] as String,
-            name: map["name"] as String,
-            price: (map["price"] as num).toDouble(),
-            quantity: map["quantity"] as int,
-            imageUrl: map["imageUrl"] as String? ?? "",
-            specialInstructions: map["specialInstructions"] as String?,
-            restaurantId: map["restaurantId"] as String?,
-            restaurantName: map["restaurantName"] as String?,
-            addedAt: DateTime.parse(map["addedAt"] as String? ?? DateTime.now().toIso8601String()),
+            id: map['id'] as String,
+            name: map['name'] as String,
+            price: (map['price'] as num).toDouble(),
+            quantity: map['quantity'] as int,
+            imageUrl: map['imageUrl'] as String? ?? '',
+            specialInstructions: map['specialInstructions'] as String?,
+            restaurantId: map['restaurantId'] as String?,
+            restaurantName: map['restaurantName'] as String?,
+            addedAt: DateTime.parse(map['addedAt'] as String? ?? DateTime.now().toIso8601String()),
           );
         }).toList();
         state = cartItems;
@@ -92,15 +92,15 @@ class CartNotifier extends Notifier<List<CartItem>> {
         state
             .map(
               (item) => {
-                "id": item.id,
-                "name": item.name,
-                "price": item.price,
-                "quantity": item.quantity,
-                "imageUrl": item.imageUrl,
-                "specialInstructions": item.specialInstructions,
-                "restaurantId": item.restaurantId,
-                "restaurantName": item.restaurantName,
-                "addedAt": item.addedAt.toIso8601String(),
+                'id': item.id,
+                'name': item.name,
+                'price': item.price,
+                'quantity': item.quantity,
+                'imageUrl': item.imageUrl,
+                'specialInstructions': item.specialInstructions,
+                'restaurantId': item.restaurantId,
+                'restaurantName': item.restaurantName,
+                'addedAt': item.addedAt.toIso8601String(),
               },
             )
             .toList(),
@@ -148,7 +148,7 @@ class CartNotifier extends Notifier<List<CartItem>> {
           name: name,
           price: price,
           quantity: 1,
-          imageUrl: imageUrl ?? "",
+          imageUrl: imageUrl ?? '',
           specialInstructions: null,
           restaurantId: null,
           restaurantName: null,
@@ -184,7 +184,7 @@ class CartNotifier extends Notifier<List<CartItem>> {
           name: name,
           price: price,
           quantity: 1,
-          imageUrl: imageUrl ?? "",
+          imageUrl: imageUrl ?? '',
           specialInstructions: null,
           restaurantId: null,
           restaurantName: null,
@@ -263,7 +263,7 @@ class CartNotifier extends Notifier<List<CartItem>> {
   double get deliveryFee => 2;
 
   double get discount {
-    if (_promoCode == "mock10") {
+    if (_promoCode == 'mock10') {
       return subtotal * 0.1;
     }
     return 0;
@@ -271,10 +271,10 @@ class CartNotifier extends Notifier<List<CartItem>> {
 
   double get total => subtotal + deliveryFee - discount;
 
-  bool get hasValidPromo => _promoCode == "mock10";
+  bool get hasValidPromo => _promoCode == 'mock10';
 
-  String? get promoError => _promoCode != null && _promoCode != "mock10"
-      ? "Invalid promo code"
+  String? get promoError => _promoCode != null && _promoCode != 'mock10'
+      ? 'Invalid promo code'
       : null;
 
   void applyPromo(String code) {
@@ -293,9 +293,9 @@ class CartNotifier extends Notifier<List<CartItem>> {
     try {
       var prefs = await SharedPreferences.getInstance();
       if (_promoCode != null) {
-        await prefs.setString("promo_code", _promoCode!);
+        await prefs.setString('promo_code', _promoCode!);
       } else {
-        await prefs.remove("promo_code");
+        await prefs.remove('promo_code');
       }
     } catch (e) {
       // Silently fail if saving fails
@@ -305,7 +305,7 @@ class CartNotifier extends Notifier<List<CartItem>> {
   Future<void> _loadPromoFromStorage() async {
     try {
       var prefs = await SharedPreferences.getInstance();
-      _promoCode = prefs.getString("promo_code");
+      _promoCode = prefs.getString('promo_code');
     } catch (e) {
       _promoCode = null;
     }

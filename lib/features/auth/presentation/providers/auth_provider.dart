@@ -1,9 +1,9 @@
-import "package:flutter_riverpod/flutter_riverpod.dart";
-import "../../../../core/services/service_locator.dart";
-import "../../../../core/utils/shared_prefs_helper.dart";
-import "../../data/repositories/firebase_auth_repository.dart";
-import "../../domain/entities/user.dart";
-import "../../domain/repositories/auth_repository.dart";
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../core/services/service_locator.dart';
+import '../../../../core/utils/shared_prefs_helper.dart';
+import '../../data/repositories/firebase_auth_repository.dart';
+import '../../domain/entities/user.dart';
+import '../../domain/repositories/auth_repository.dart';
 
 class AuthStateNotifier extends AsyncNotifier<User?> {
   @override
@@ -177,7 +177,7 @@ class AuthStateNotifier extends AsyncNotifier<User?> {
         // Use a public method for password reset if available
         await (repository as dynamic).sendPasswordResetEmail(email);
       } else {
-        throw Exception("Password reset not implemented for this repository");
+        throw Exception('Password reset not implemented for this repository');
       }
       state = AsyncValue.data(state.value);
     } catch (e, st) {
@@ -193,7 +193,7 @@ class AuthStateNotifier extends AsyncNotifier<User?> {
       if (repository is FirebaseAuthRepository) {
         await (repository as dynamic).sendEmailVerification();
       } else {
-        throw Exception("Email verification not implemented for this repository");
+        throw Exception('Email verification not implemented for this repository');
       }
       state = AsyncValue.data(state.value);
     } catch (e, st) {
@@ -216,6 +216,6 @@ final authProvider = AsyncNotifierProvider<AuthStateNotifier, User?>(
   AuthStateNotifier.new,
 );
 
-final phoneProvider = StateProvider<String>((ref) => "");
+final phoneProvider = StateProvider<String>((ref) => '');
 
 final authRepositoryProvider = Provider<AuthRepository>((ref) => getIt<FirebaseAuthRepository>());

@@ -11,8 +11,7 @@ class RestaurantStatus {
     this.updatedBy,
   });
 
-  factory RestaurantStatus.fromJson(Map<String, dynamic> json) {
-    return RestaurantStatus(
+  factory RestaurantStatus.fromJson(Map<String, dynamic> json) => RestaurantStatus(
       statusType: RestaurantStatusType.values.firstWhere(
         (type) => type.name == json['statusType'],
         orElse: () => RestaurantStatusType.closed,
@@ -27,7 +26,6 @@ class RestaurantStatus {
           : null,
       updatedBy: json['updatedBy'] as String?,
     );
-  }
 
   final RestaurantStatusType statusType;
   final WorkingHours workingHours;
@@ -41,9 +39,7 @@ class RestaurantStatus {
     return workingHours.isOpenAt(DateTime.now());
   }
 
-  bool get isCurrentlyOpen {
-    return statusType.isOperational && workingHours.isOpenAt(DateTime.now());
-  }
+  bool get isCurrentlyOpen => statusType.isOperational && workingHours.isOpenAt(DateTime.now());
 
   String? getNextOpenTime() {
     if (statusType.isOperational) {
@@ -92,8 +88,7 @@ class RestaurantStatus {
     DateTime? estimatedReopening,
     DateTime? lastUpdated,
     String? updatedBy,
-  }) {
-    return RestaurantStatus(
+  }) => RestaurantStatus(
       statusType: statusType ?? this.statusType,
       workingHours: workingHours ?? this.workingHours,
       reason: reason ?? this.reason,
@@ -101,7 +96,6 @@ class RestaurantStatus {
       lastUpdated: lastUpdated ?? this.lastUpdated,
       updatedBy: updatedBy ?? this.updatedBy,
     );
-  }
 
   Map<String, dynamic> toJson() => {
         'statusType': statusType.name,

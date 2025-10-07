@@ -1,21 +1,20 @@
-import "package:flutter_riverpod/flutter_riverpod.dart";
-import "package:uuid/uuid.dart";
-import "../../../../core/services/service_locator.dart";
-import "../../../auth/presentation/providers/auth_provider.dart";
-import "../../domain/entities/payment.dart";
-import "../../domain/repositories/payment_repository.dart";
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:uuid/uuid.dart';
+import '../../../../core/services/service_locator.dart';
+import '../../domain/entities/payment.dart';
+import '../../domain/repositories/payment_repository.dart';
 
 final paymentProvider = StateNotifierProvider<PaymentNotifier, PaymentState>(
-  (ref) => PaymentNotifier(ref),
+  PaymentNotifier.new,
 );
 
 class PaymentNotifier extends StateNotifier<PaymentState> {
-  final Ref ref;
-  final Uuid _uuid = const Uuid();
 
   PaymentNotifier(this.ref) : super(const PaymentState.initial()) {
     _paymentRepository = getIt<PaymentRepository>();
   }
+  final Ref ref;
+  final Uuid _uuid = const Uuid();
 
   late final PaymentRepository _paymentRepository;
 
@@ -54,7 +53,7 @@ class PaymentNotifier extends StateNotifier<PaymentState> {
   Future<void> processPayment(dynamic paymentData) async {
     if (state.paymentIntent == null) {
       state = state.copyWith(
-        error: "Payment intent not initialized",
+        error: 'Payment intent not initialized',
       );
       return;
     }
@@ -182,13 +181,6 @@ class PaymentNotifier extends StateNotifier<PaymentState> {
 }
 
 class PaymentState {
-  final bool isLoading;
-  final bool isProcessing;
-  final PaymentIntent? paymentIntent;
-  final Payment? currentPayment;
-  final List<Payment> orderPayments;
-  final PaymentProvider? selectedProvider;
-  final String? error;
 
   const PaymentState({
     required this.isLoading,
@@ -208,6 +200,13 @@ class PaymentState {
         orderPayments = const [],
         selectedProvider = null,
         error = null;
+  final bool isLoading;
+  final bool isProcessing;
+  final PaymentIntent? paymentIntent;
+  final Payment? currentPayment;
+  final List<Payment> orderPayments;
+  final PaymentProvider? selectedProvider;
+  final String? error;
 
   PaymentState copyWith({
     bool? isLoading,
@@ -217,8 +216,7 @@ class PaymentState {
     List<Payment>? orderPayments,
     PaymentProvider? selectedProvider,
     String? error,
-  }) {
-    return PaymentState(
+  }) => PaymentState(
       isLoading: isLoading ?? this.isLoading,
       isProcessing: isProcessing ?? this.isProcessing,
       paymentIntent: paymentIntent ?? this.paymentIntent,
@@ -227,5 +225,4 @@ class PaymentState {
       selectedProvider: selectedProvider ?? this.selectedProvider,
       error: error ?? this.error,
     );
-  }
 }

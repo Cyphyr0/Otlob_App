@@ -5,7 +5,5 @@ class ToggleFavorite {
 
   final FavoritesRepository repository;
 
-  Future<bool> call(String restaurantId, String restaurantName, String? restaurantImageUrl) async {
-    return repository.toggleFavorite(restaurantId, restaurantName, restaurantImageUrl);
-  }
+  Future<bool> call(String restaurantId, String restaurantName, String? restaurantImageUrl) async => repository.toggleFavorite(restaurantId, restaurantName, restaurantImageUrl);
 }

@@ -8,6 +8,15 @@ class Favorite {
     required this.createdAt,
   });
 
+  factory Favorite.fromJson(Map<String, dynamic> json) => Favorite(
+      id: json['id'] as String,
+      userId: json['userId'] as String,
+      restaurantId: json['restaurantId'] as String,
+      restaurantName: json['restaurantName'] as String,
+      restaurantImageUrl: json['restaurantImageUrl'] as String?,
+      createdAt: DateTime.parse(json['createdAt'] as String),
+    );
+
   final String id;
   final String userId;
   final String restaurantId;
@@ -22,8 +31,7 @@ class Favorite {
     String? restaurantName,
     String? restaurantImageUrl,
     DateTime? createdAt,
-  }) {
-    return Favorite(
+  }) => Favorite(
       id: id ?? this.id,
       userId: userId ?? this.userId,
       restaurantId: restaurantId ?? this.restaurantId,
@@ -31,10 +39,8 @@ class Favorite {
       restaurantImageUrl: restaurantImageUrl ?? this.restaurantImageUrl,
       createdAt: createdAt ?? this.createdAt,
     );
-  }
 
-  Map<String, dynamic> toJson() {
-    return {
+  Map<String, dynamic> toJson() => {
       'id': id,
       'userId': userId,
       'restaurantId': restaurantId,
@@ -42,18 +48,6 @@ class Favorite {
       'restaurantImageUrl': restaurantImageUrl,
       'createdAt': createdAt.toIso8601String(),
     };
-  }
-
-  factory Favorite.fromJson(Map<String, dynamic> json) {
-    return Favorite(
-      id: json['id'] as String,
-      userId: json['userId'] as String,
-      restaurantId: json['restaurantId'] as String,
-      restaurantName: json['restaurantName'] as String,
-      restaurantImageUrl: json['restaurantImageUrl'] as String?,
-      createdAt: DateTime.parse(json['createdAt'] as String),
-    );
-  }
 
   @override
   bool operator ==(Object other) {
@@ -65,7 +59,5 @@ class Favorite {
   int get hashCode => id.hashCode;
 
   @override
-  String toString() {
-    return 'Favorite(id: $id, restaurantId: $restaurantId, restaurantName: $restaurantName)';
-  }
+  String toString() => 'Favorite(id: $id, restaurantId: $restaurantId, restaurantName: $restaurantName)';
 }

@@ -1,24 +1,29 @@
-import "package:flutter/material.dart";
-import "package:flutter_riverpod/flutter_riverpod.dart";
-import "../../domain/entities/payment.dart";
-import "../providers/payment_provider.dart";
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../domain/entities/payment.dart';
+import '../providers/payment_provider.dart';
 
 class PaymentProcessingWidget extends ConsumerStatefulWidget {
+
+  const PaymentProcessingWidget({
+    required this.orderId, required this.selectedProvider, required this.amount, required this.currency, super.key,
+  });
   final String orderId;
   final PaymentProvider selectedProvider;
   final double amount;
   final String currency;
 
-  const PaymentProcessingWidget({
-    super.key,
-    required this.orderId,
-    required this.selectedProvider,
-    required this.amount,
-    required this.currency,
-  });
-
   @override
   ConsumerState<PaymentProcessingWidget> createState() => _PaymentProcessingWidgetState();
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(StringProperty('orderId', orderId));
+    properties.add(EnumProperty<PaymentProvider>('selectedProvider', selectedProvider));
+    properties.add(DoubleProperty('amount', amount));
+    properties.add(StringProperty('currency', currency));
+  }
 }
 
 class _PaymentProcessingWidgetState extends ConsumerState<PaymentProcessingWidget>
@@ -35,8 +40,8 @@ class _PaymentProcessingWidgetState extends ConsumerState<PaymentProcessingWidge
     )..repeat();
 
     _animation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
+      begin: 0,
+      end: 1,
     ).animate(CurvedAnimation(
       parent: _animationController,
       curve: Curves.easeInOut,
@@ -61,8 +66,8 @@ class _PaymentProcessingWidgetState extends ConsumerState<PaymentProcessingWidge
       amount: widget.amount,
       currency: widget.currency,
       metadata: {
-        "customerEmail": "customer@example.com", // Would come from user data
-        "customerPhone": "+20123456789", // Would come from user data
+        'customerEmail': 'customer@example.com', // Would come from user data
+        'customerPhone': '+20123456789', // Would come from user data
       },
     );
 
@@ -77,7 +82,7 @@ class _PaymentProcessingWidgetState extends ConsumerState<PaymentProcessingWidge
     final paymentState = ref.read(paymentProvider);
 
     if (paymentState.paymentIntent == null) {
-      _showError("Payment initialization failed");
+      _showError('Payment initialization failed');
       return;
     }
 
@@ -89,7 +94,7 @@ class _PaymentProcessingWidgetState extends ConsumerState<PaymentProcessingWidge
         case PaymentProvider.stripe:
           // For Stripe, we would need card details or payment method ID
           // This would typically involve Stripe SDK or webview
-          _showError("Stripe payment requires card details");
+          _showError('Stripe payment requires card details');
           break;
 
         case PaymentProvider.fawry:
@@ -108,7 +113,7 @@ class _PaymentProcessingWidgetState extends ConsumerState<PaymentProcessingWidge
           break;
       }
     } catch (e) {
-      _showError("Payment processing failed: $e");
+      _showError('Payment processing failed: $e');
     }
   }
 
@@ -116,12 +121,12 @@ class _PaymentProcessingWidgetState extends ConsumerState<PaymentProcessingWidge
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text("Fawry Payment Instructions"),
+        title: const Text('Fawry Payment Instructions'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text("Please visit any Fawry outlet and provide this reference number:"),
+            const Text('Please visit any Fawry outlet and provide this reference number:'),
             const SizedBox(height: 16),
             Container(
               padding: const EdgeInsets.all(16),
@@ -141,13 +146,13 @@ class _PaymentProcessingWidgetState extends ConsumerState<PaymentProcessingWidge
               ),
             ),
             const SizedBox(height: 16),
-            Text("Amount: ${widget.amount} ${widget.currency}"),
+            Text('Amount: ${widget.amount} ${widget.currency}'),
           ],
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text("OK"),
+            child: const Text('OK'),
           ),
         ],
       ),
@@ -160,16 +165,16 @@ class _PaymentProcessingWidgetState extends ConsumerState<PaymentProcessingWidge
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text("Vodafone CASH Payment"),
+        title: const Text('Vodafone CASH Payment'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text("Enter your Vodafone phone number:"),
+            const Text('Enter your Vodafone phone number:'),
             const SizedBox(height: 16),
             TextField(
               controller: phoneController,
               decoration: const InputDecoration(
-                hintText: "01xxxxxxxxx",
+                hintText: '01xxxxxxxxx',
                 border: OutlineInputBorder(),
               ),
               keyboardType: TextInputType.phone,
@@ -179,14 +184,14 @@ class _PaymentProcessingWidgetState extends ConsumerState<PaymentProcessingWidge
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text("Cancel"),
+            child: const Text('Cancel'),
           ),
           ElevatedButton(
             onPressed: () async {
               Navigator.of(context).pop();
               await _processVodafonePayment(phoneController.text);
             },
-            child: const Text("Pay"),
+            child: const Text('Pay'),
           ),
         ],
       ),
@@ -200,16 +205,16 @@ class _PaymentProcessingWidgetState extends ConsumerState<PaymentProcessingWidge
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text("Meeza Payment"),
+        title: const Text('Meeza Payment'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text("Enter your Meeza card token:"),
+            const Text('Enter your Meeza card token:'),
             const SizedBox(height: 16),
             TextField(
               controller: cardTokenController,
               decoration: const InputDecoration(
-                hintText: "Card Token",
+                hintText: 'Card Token',
                 border: OutlineInputBorder(),
               ),
             ),
@@ -217,7 +222,7 @@ class _PaymentProcessingWidgetState extends ConsumerState<PaymentProcessingWidge
             TextField(
               controller: cvvController,
               decoration: const InputDecoration(
-                hintText: "CVV",
+                hintText: 'CVV',
                 border: OutlineInputBorder(),
               ),
               keyboardType: TextInputType.number,
@@ -228,14 +233,14 @@ class _PaymentProcessingWidgetState extends ConsumerState<PaymentProcessingWidge
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text("Cancel"),
+            child: const Text('Cancel'),
           ),
           ElevatedButton(
             onPressed: () async {
               Navigator.of(context).pop();
               await _processMeezaPayment(cardTokenController.text, cvvController.text);
             },
-            child: const Text("Pay"),
+            child: const Text('Pay'),
           ),
         ],
       ),
@@ -250,13 +255,13 @@ class _PaymentProcessingWidgetState extends ConsumerState<PaymentProcessingWidge
         phoneNumber: phoneNumber,
         amount: widget.amount,
         currency: widget.currency,
-        description: "Order Payment - ${widget.orderId}",
+        description: 'Order Payment - ${widget.orderId}',
       );
 
       await paymentNotifier.processPayment(vodafoneData);
       _showPaymentResult();
     } catch (e) {
-      _showError("Vodafone CASH payment failed: $e");
+      _showError('Vodafone CASH payment failed: $e');
     }
   }
 
@@ -268,13 +273,13 @@ class _PaymentProcessingWidgetState extends ConsumerState<PaymentProcessingWidge
         cardToken: cardToken,
         amount: widget.amount,
         currency: widget.currency,
-        description: "Order Payment - ${widget.orderId}",
+        description: 'Order Payment - ${widget.orderId}',
       );
 
       await paymentNotifier.processPayment(meezaData);
       _showPaymentResult();
     } catch (e) {
-      _showError("Meeza payment failed: $e");
+      _showError('Meeza payment failed: $e');
     }
   }
 
@@ -287,8 +292,8 @@ class _PaymentProcessingWidgetState extends ConsumerState<PaymentProcessingWidge
       builder: (context) => AlertDialog(
         title: Text(
           paymentState.currentPayment?.status == PaymentTransactionStatus.completed
-              ? "Payment Successful"
-              : "Payment Failed",
+              ? 'Payment Successful'
+              : 'Payment Failed',
         ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
@@ -305,12 +310,12 @@ class _PaymentProcessingWidgetState extends ConsumerState<PaymentProcessingWidge
             const SizedBox(height: 16),
             Text(
               paymentState.currentPayment?.status == PaymentTransactionStatus.completed
-                  ? "Your payment has been processed successfully!"
-                  : "Your payment could not be processed.",
+                  ? 'Your payment has been processed successfully!'
+                  : 'Your payment could not be processed.',
             ),
             if (paymentState.currentPayment != null) ...[
               const SizedBox(height: 16),
-              Text("Amount: ${paymentState.currentPayment!.amount} ${paymentState.currentPayment!.currency}"),
+              Text('Amount: ${paymentState.currentPayment!.amount} ${paymentState.currentPayment!.currency}'),
               Text("Transaction ID: ${paymentState.currentPayment!.transactionId ?? 'N/A'}"),
             ],
           ],
@@ -321,7 +326,7 @@ class _PaymentProcessingWidgetState extends ConsumerState<PaymentProcessingWidge
               Navigator.of(context).pop();
               Navigator.of(context).pop(); // Go back to previous screen
             },
-            child: const Text("OK"),
+            child: const Text('OK'),
           ),
         ],
       ),
@@ -342,7 +347,7 @@ class _PaymentProcessingWidgetState extends ConsumerState<PaymentProcessingWidge
     final paymentState = ref.watch(paymentProvider);
 
     return Scaffold(
-      body: Container(
+      body: DecoratedBox(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             colors: [Colors.blue, Colors.purple],
@@ -356,7 +361,7 @@ class _PaymentProcessingWidgetState extends ConsumerState<PaymentProcessingWidge
               const SizedBox(height: 32),
               // Header
               const Text(
-                "Processing Payment",
+                'Processing Payment',
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
@@ -365,7 +370,7 @@ class _PaymentProcessingWidgetState extends ConsumerState<PaymentProcessingWidge
               ),
               const SizedBox(height: 8),
               Text(
-                "${widget.amount} ${widget.currency}",
+                '${widget.amount} ${widget.currency}',
                 style: const TextStyle(
                   fontSize: 32,
                   fontWeight: FontWeight.bold,
@@ -382,8 +387,7 @@ class _PaymentProcessingWidgetState extends ConsumerState<PaymentProcessingWidge
                     children: [
                       AnimatedBuilder(
                         animation: _animation,
-                        builder: (context, child) {
-                          return Container(
+                        builder: (context, child) => Container(
                             width: 120,
                             height: 120,
                             decoration: BoxDecoration(
@@ -398,12 +402,11 @@ class _PaymentProcessingWidgetState extends ConsumerState<PaymentProcessingWidge
                               size: 48,
                               color: Colors.white,
                             ),
-                          );
-                        },
+                          ),
                       ),
                       const SizedBox(height: 32),
                       const Text(
-                        "Please wait...",
+                        'Please wait...',
                         style: TextStyle(
                           fontSize: 18,
                           color: Colors.white,
@@ -411,7 +414,7 @@ class _PaymentProcessingWidgetState extends ConsumerState<PaymentProcessingWidge
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        "Processing your ${widget.selectedProvider.name} payment",
+                        'Processing your ${widget.selectedProvider.name} payment',
                         style: const TextStyle(
                           fontSize: 16,
                           color: Colors.white70,
@@ -451,7 +454,7 @@ class _PaymentProcessingWidgetState extends ConsumerState<PaymentProcessingWidge
                     foregroundColor: Colors.blue,
                     minimumSize: const Size(double.infinity, 50),
                   ),
-                  child: const Text("Cancel"),
+                  child: const Text('Cancel'),
                 ),
               ),
             ],

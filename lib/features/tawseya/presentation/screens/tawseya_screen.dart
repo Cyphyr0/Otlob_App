@@ -104,7 +104,7 @@ class _TawseyaScreenState extends ConsumerState<TawseyaScreen>
         children: [
           // Voting Tab
           tawseyaState.when(
-            data: (state) => _buildVotingTab(state),
+            data: _buildVotingTab,
             loading: () => const Center(child: CircularProgressIndicator()),
             error: (error, stackTrace) => Center(
               child: Column(

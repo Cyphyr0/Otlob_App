@@ -1,8 +1,8 @@
-import "package:flutter/material.dart";
-import "package:flutter_riverpod/flutter_riverpod.dart";
-import "package:flutter_screenutil/flutter_screenutil.dart";
-import "package:go_router/go_router.dart";
-import "../providers/cart_provider.dart";
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+import '../providers/cart_provider.dart';
 
 class OrderConfirmationScreen extends ConsumerWidget {
   const OrderConfirmationScreen({super.key});
@@ -24,9 +24,9 @@ class OrderConfirmationScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          "Order Confirmation",
+          'Order Confirmation',
           style: TextStyle(
-            fontFamily: "TutanoCCV2",
+            fontFamily: 'TutanoCCV2',
             fontWeight: FontWeight.bold,
             color: Colors.white,
           ),
@@ -41,7 +41,7 @@ class OrderConfirmationScreen extends ConsumerWidget {
             Icon(Icons.check_circle, size: 80.sp, color: Colors.green),
             SizedBox(height: 16.h),
             Text(
-              "Order Placed!",
+              'Order Placed!',
               style: TextStyle(
                 fontSize: 24.sp,
                 fontWeight: FontWeight.bold,
@@ -50,12 +50,12 @@ class OrderConfirmationScreen extends ConsumerWidget {
             ),
             SizedBox(height: 8.h),
             Text(
-              "Your order has been confirmed. Estimated delivery time: 30-45 minutes.",
+              'Your order has been confirmed. Estimated delivery time: 30-45 minutes.',
               style: TextStyle(fontSize: 16.sp, color: Colors.grey[600]),
             ),
             SizedBox(height: 24.h),
             Text(
-              "Order Summary",
+              'Order Summary',
               style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 16.h),
@@ -64,10 +64,10 @@ class OrderConfirmationScreen extends ConsumerWidget {
                 leading: const Icon(Icons.restaurant_menu),
                 title: Text(item.name),
                 subtitle: Text(
-                  "${item.quantity}x \$${item.price.toStringAsFixed(2)}",
+                  '${item.quantity}x \$${item.price.toStringAsFixed(2)}',
                 ),
                 trailing: Text(
-                  "\$${(item.price * item.quantity).toStringAsFixed(2)}",
+                  '\$${(item.price * item.quantity).toStringAsFixed(2)}',
                 ),
               ),
             ),
@@ -75,23 +75,23 @@ class OrderConfirmationScreen extends ConsumerWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text("Subtotal"),
-                Text("\$${subtotal.toStringAsFixed(2)}"),
+                const Text('Subtotal'),
+                Text('\$${subtotal.toStringAsFixed(2)}'),
               ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text("Delivery Fee"),
-                Text("\$${deliveryFee.toStringAsFixed(2)}"),
+                const Text('Delivery Fee'),
+                Text('\$${deliveryFee.toStringAsFixed(2)}'),
               ],
             ),
             if (discount > 0)
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text("Discount"),
-                  Text("- \$${discount.toStringAsFixed(2)}"),
+                  const Text('Discount'),
+                  Text('- \$${discount.toStringAsFixed(2)}'),
                 ],
               ),
             const Divider(),
@@ -99,14 +99,14 @@ class OrderConfirmationScreen extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "Total",
+                  'Total',
                   style: TextStyle(
                     fontSize: 18.sp,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 Text(
-                  "\$${total.toStringAsFixed(2)}",
+                  '\$${total.toStringAsFixed(2)}',
                   style: TextStyle(
                     fontSize: 18.sp,
                     fontWeight: FontWeight.bold,
@@ -116,27 +116,27 @@ class OrderConfirmationScreen extends ConsumerWidget {
             ),
             SizedBox(height: 24.h),
             Text(
-              "Tracking",
+              'Tracking',
               style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 16.h),
             const LinearProgressIndicator(value: 0.3),
             SizedBox(height: 8.h),
-            const Text("Preparing your order..."),
+            const Text('Preparing your order...'),
             SizedBox(height: 24.h),
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {
                   cartNotifier.clearCart();
-                  context.go("/tracking");
+                  context.go('/tracking');
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFFE84545),
                   foregroundColor: Colors.white,
                   padding: EdgeInsets.symmetric(vertical: 16.h),
                 ),
-                child: const Text("Track Order"),
+                child: const Text('Track Order'),
               ),
             ),
           ],

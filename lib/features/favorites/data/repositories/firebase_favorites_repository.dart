@@ -4,10 +4,10 @@ import '../../domain/entities/favorite.dart';
 import '../../domain/repositories/favorites_repository.dart';
 
 class FirebaseFavoritesRepository implements FavoritesRepository {
-  final FirebaseFirestore _firestore;
-  final FirebaseAuth _auth;
 
   FirebaseFavoritesRepository(this._firestore, this._auth);
+  final FirebaseFirestore _firestore;
+  final FirebaseAuth _auth;
 
   String get _userId => _auth.currentUser?.uid ?? '';
 
@@ -110,7 +110,7 @@ class FirebaseFavoritesRepository implements FavoritesRepository {
           .get();
 
       final batch = _firestore.batch();
-      for (var doc in snapshot.docs) {
+      for (final doc in snapshot.docs) {
         batch.delete(doc.reference);
       }
       await batch.commit();
@@ -127,11 +127,9 @@ class FirebaseFavoritesRepository implements FavoritesRepository {
         .where('userId', isEqualTo: _userId)
         .orderBy('createdAt', descending: true)
         .snapshots()
-        .map((snapshot) {
-          return snapshot.docs
+        .map((snapshot) => snapshot.docs
               .map((doc) => Favorite.fromJson({'id': doc.id, ...doc.data()}))
-              .toList();
-        })
+              .toList())
         .handleError((error) {
           throw Exception('Failed to watch favorites: $error');
         });

@@ -1,7 +1,7 @@
 /// Use case for validating if a user's location is within a restaurant's delivery area
-import '../../../../core/errors/failures.dart';
-import '../../../../features/location/domain/entities/location.dart';
+library;
 import '../../../../features/home/domain/entities/restaurant.dart';
+import '../../../../features/location/domain/entities/location.dart';
 import '../entities/delivery_area_status.dart';
 import '../entities/delivery_area_validation.dart';
 import '../repositories/delivery_area_repository.dart';

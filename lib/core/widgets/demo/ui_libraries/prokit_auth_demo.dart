@@ -1,7 +1,8 @@
-import "package:flutter/material.dart";
-import "../../../theme/app_colors.dart";
-import "../../../theme/app_spacing.dart";
-import "../../../theme/app_typography.dart";
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import '../../../theme/app_colors.dart';
+import '../../../theme/app_spacing.dart';
+import '../../../theme/app_typography.dart';
 
 class ProKitAuthDemo extends StatefulWidget {
   const ProKitAuthDemo({super.key});
@@ -48,7 +49,7 @@ class _ProKitAuthDemoState extends State<ProKitAuthDemo> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            isLogin ? "Login successful!" : "Account created successfully!",
+            isLogin ? 'Login successful!' : 'Account created successfully!',
           ),
           backgroundColor: AppColors.logoRed,
         ),
@@ -75,7 +76,7 @@ class _ProKitAuthDemoState extends State<ProKitAuthDemo> {
               Container(
                 padding: EdgeInsets.all(AppSpacing.lg),
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(
+                  gradient: const LinearGradient(
                     colors: [AppColors.logoRed, AppColors.primaryGold],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
@@ -124,7 +125,7 @@ class _ProKitAuthDemoState extends State<ProKitAuthDemo> {
               SizedBox(height: AppSpacing.lg),
 
               // Auth Toggle
-              Container(
+              DecoratedBox(
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(12),
@@ -329,7 +330,7 @@ class _ProKitAuthDemoState extends State<ProKitAuthDemo> {
                                 ),
                               );
                             },
-                            child: Text(
+                            child: const Text(
                               'Forgot Password?',
                               style: TextStyle(
                                 color: AppColors.logoRed,
@@ -381,7 +382,7 @@ class _ProKitAuthDemoState extends State<ProKitAuthDemo> {
                       // Divider
                       Row(
                         children: [
-                          Expanded(child: Divider(color: AppColors.lightGray)),
+                          const Expanded(child: Divider(color: AppColors.lightGray)),
                           Padding(
                             padding: EdgeInsets.symmetric(
                               horizontal: AppSpacing.sm,
@@ -396,7 +397,7 @@ class _ProKitAuthDemoState extends State<ProKitAuthDemo> {
                               ),
                             ),
                           ),
-                          Expanded(child: Divider(color: AppColors.lightGray)),
+                          const Expanded(child: Divider(color: AppColors.lightGray)),
                         ],
                       ),
 
@@ -475,7 +476,7 @@ class _ProKitAuthDemoState extends State<ProKitAuthDemo> {
                                   ? 'By signing in, you agree to our '
                                   : 'By creating an account, you agree to our ',
                             ),
-                            TextSpan(
+                            const TextSpan(
                               text: 'Terms of Service',
                               style: TextStyle(
                                 color: AppColors.logoRed,
@@ -483,7 +484,7 @@ class _ProKitAuthDemoState extends State<ProKitAuthDemo> {
                               ),
                             ),
                             const TextSpan(text: ' and '),
-                            TextSpan(
+                            const TextSpan(
                               text: 'Privacy Policy',
                               style: TextStyle(
                                 color: AppColors.logoRed,
@@ -577,7 +578,7 @@ class _ProKitAuthDemoState extends State<ProKitAuthDemo> {
               children: [
                 Text(
                   title,
-                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+                  style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
                 ),
                 Text(
                   subtitle,

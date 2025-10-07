@@ -2,20 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart' as firestore;
 import '../../domain/entities/subscription.dart';
 
 class SubscriptionModel {
-  final String id;
-  final String userId;
-  final String walletId;
-  final String type;
-  final String status;
-  final double amount;
-  final String currency;
-  final DateTime startDate;
-  final DateTime endDate;
-  final DateTime? nextBillingDate;
-  final DateTime? cancelledAt;
-  final Map<String, dynamic>? metadata;
-  final DateTime? createdAt;
-  final DateTime? updatedAt;
 
   SubscriptionModel({
     required this.id,
@@ -35,7 +21,7 @@ class SubscriptionModel {
   });
 
   factory SubscriptionModel.fromFirestore(firestore.DocumentSnapshot doc) {
-    Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+    var data = doc.data() as Map<String, dynamic>;
     return SubscriptionModel(
       id: doc.id,
       userId: data['userId'] ?? '',
@@ -54,8 +40,38 @@ class SubscriptionModel {
     );
   }
 
-  Map<String, dynamic> toFirestore() {
-    return {
+  factory SubscriptionModel.fromEntity(Subscription subscription) => SubscriptionModel(
+      id: subscription.id,
+      userId: subscription.userId,
+      walletId: subscription.walletId,
+      type: subscription.type.name,
+      status: subscription.status.name,
+      amount: subscription.amount,
+      currency: subscription.currency,
+      startDate: subscription.startDate,
+      endDate: subscription.endDate,
+      nextBillingDate: subscription.nextBillingDate,
+      cancelledAt: subscription.cancelledAt,
+      metadata: subscription.metadata,
+      createdAt: subscription.createdAt,
+      updatedAt: subscription.updatedAt,
+    );
+  final String id;
+  final String userId;
+  final String walletId;
+  final String type;
+  final String status;
+  final double amount;
+  final String currency;
+  final DateTime startDate;
+  final DateTime endDate;
+  final DateTime? nextBillingDate;
+  final DateTime? cancelledAt;
+  final Map<String, dynamic>? metadata;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
+
+  Map<String, dynamic> toFirestore() => {
       'userId': userId,
       'walletId': walletId,
       'type': type,
@@ -70,10 +86,8 @@ class SubscriptionModel {
       if (createdAt != null) 'createdAt': firestore.Timestamp.fromDate(createdAt!),
       if (updatedAt != null) 'updatedAt': firestore.Timestamp.fromDate(updatedAt!),
     };
-  }
 
-  Subscription toEntity() {
-    return Subscription(
+  Subscription toEntity() => Subscription(
       id: id,
       userId: userId,
       walletId: walletId,
@@ -95,26 +109,6 @@ class SubscriptionModel {
       createdAt: createdAt,
       updatedAt: updatedAt,
     );
-  }
-
-  factory SubscriptionModel.fromEntity(Subscription subscription) {
-    return SubscriptionModel(
-      id: subscription.id,
-      userId: subscription.userId,
-      walletId: subscription.walletId,
-      type: subscription.type.name,
-      status: subscription.status.name,
-      amount: subscription.amount,
-      currency: subscription.currency,
-      startDate: subscription.startDate,
-      endDate: subscription.endDate,
-      nextBillingDate: subscription.nextBillingDate,
-      cancelledAt: subscription.cancelledAt,
-      metadata: subscription.metadata,
-      createdAt: subscription.createdAt,
-      updatedAt: subscription.updatedAt,
-    );
-  }
 
   SubscriptionModel copyWith({
     String? id,
@@ -131,8 +125,7 @@ class SubscriptionModel {
     Map<String, dynamic>? metadata,
     DateTime? createdAt,
     DateTime? updatedAt,
-  }) {
-    return SubscriptionModel(
+  }) => SubscriptionModel(
       id: id ?? this.id,
       userId: userId ?? this.userId,
       walletId: walletId ?? this.walletId,
@@ -148,5 +141,4 @@ class SubscriptionModel {
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );
-  }
 }

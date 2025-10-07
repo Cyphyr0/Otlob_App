@@ -20,17 +20,11 @@ enum RestaurantStatusType {
     }
   }
 
-  bool get isOperational {
-    return this == RestaurantStatusType.open;
-  }
+  bool get isOperational => this == RestaurantStatusType.open;
 
-  bool get isTemporarilyUnavailable {
-    return this == RestaurantStatusType.renovation ||
+  bool get isTemporarilyUnavailable => this == RestaurantStatusType.renovation ||
            this == RestaurantStatusType.repairs ||
            this == RestaurantStatusType.maintenance;
-  }
 
-  bool get isPermanentlyUnavailable {
-    return this == RestaurantStatusType.permanentlyClosed;
-  }
+  bool get isPermanentlyUnavailable => this == RestaurantStatusType.permanentlyClosed;
 }

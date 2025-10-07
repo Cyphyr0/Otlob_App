@@ -1,13 +1,14 @@
-import "package:flutter/foundation.dart";
-import "package:flutter/material.dart";
-import "package:flutter_screenutil/flutter_screenutil.dart";
-import "package:shimmer/shimmer.dart";
-import "../../theme/app_colors.dart";
-import "../../theme/app_typography.dart";
-import "../../theme/app_radius.dart";
-import "../../theme/app_spacing.dart";
-import "../../theme/app_shadows.dart";
-import "../../theme/app_animations.dart";
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:shimmer/shimmer.dart';
+
+import '../../theme/app_animations.dart';
+import '../../theme/app_colors.dart';
+import '../../theme/app_radius.dart';
+import '../../theme/app_shadows.dart';
+import '../../theme/app_spacing.dart';
+import '../../theme/app_typography.dart';
 
 /// Dish Card Component
 ///
@@ -46,10 +47,8 @@ import "../../theme/app_animations.dart";
 class DishCard extends StatefulWidget {
 
   const DishCard({
-    super.key,
+    required this.name, required this.price, super.key,
     this.imageUrl,
-    required this.name,
-    required this.price,
     this.specialTag,
     this.onTap,
     this.onAddToCart,
@@ -195,13 +194,11 @@ class _DishCardState extends State<DishCard>
                 ? Image.network(
                     widget.imageUrl!,
                     fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) {
-                      return const Icon(
+                    errorBuilder: (context, error, stackTrace) => const Icon(
                         Icons.fastfood,
                         size: 40,
                         color: AppColors.gray,
-                      );
-                    },
+                      ),
                   )
                 : const Icon(Icons.fastfood, size: 40, color: AppColors.gray),
           ),

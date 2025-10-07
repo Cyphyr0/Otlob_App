@@ -1,10 +1,4 @@
 class Vote {
-  final String id;
-  final String userId;
-  final String tawseyaItemId;
-  final String votingPeriodId;
-  final DateTime createdAt;
-  final String? comment;
 
   const Vote({
     required this.id,
@@ -14,6 +8,12 @@ class Vote {
     required this.createdAt,
     this.comment,
   });
+  final String id;
+  final String userId;
+  final String tawseyaItemId;
+  final String votingPeriodId;
+  final DateTime createdAt;
+  final String? comment;
 
   Vote copyWith({
     String? id,
@@ -22,8 +22,7 @@ class Vote {
     String? votingPeriodId,
     DateTime? createdAt,
     String? comment,
-  }) {
-    return Vote(
+  }) => Vote(
       id: id ?? this.id,
       userId: userId ?? this.userId,
       tawseyaItemId: tawseyaItemId ?? this.tawseyaItemId,
@@ -31,7 +30,6 @@ class Vote {
       createdAt: createdAt ?? this.createdAt,
       comment: comment ?? this.comment,
     );
-  }
 
   @override
   bool operator ==(Object other) {
@@ -44,10 +42,8 @@ class Vote {
   }
 
   @override
-  int get hashCode {
-    return id.hashCode ^
+  int get hashCode => id.hashCode ^
         userId.hashCode ^
         tawseyaItemId.hashCode ^
         votingPeriodId.hashCode;
-  }
 }

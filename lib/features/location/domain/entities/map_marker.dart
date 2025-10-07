@@ -1,9 +1,11 @@
 /// Map marker entity for displaying restaurants and other points of interest on the map
+library;
 import 'dart:math';
-import 'dart:ui';
+
 import 'package:flutter/material.dart';
-import 'location.dart';
+
 import '../../../../features/home/domain/entities/restaurant.dart';
+import 'location.dart';
 class MapMarker {
   const MapMarker({
     required this.id,
@@ -18,23 +20,11 @@ class MapMarker {
     this.restaurant,
   });
 
-  final String id;
-  final Location position;
-  final String title;
-  final String? snippet;
-  final MarkerIcon? icon;
-  final Anchor? anchor;
-  final InfoWindow? infoWindow;
-  final VoidCallback? onTap;
-  final MarkerType markerType;
-  final Restaurant? restaurant;
-
   /// Create a restaurant marker
   factory MapMarker.restaurant({
     required Restaurant restaurant,
     VoidCallback? onTap,
-  }) {
-    return MapMarker(
+  }) => MapMarker(
       id: 'restaurant_${restaurant.id}',
       position: Location(
         latitude: restaurant.latitude,
@@ -47,22 +37,30 @@ class MapMarker {
       restaurant: restaurant,
       onTap: onTap,
     );
-  }
 
   /// Create a user location marker
   factory MapMarker.userLocation({
     required Location location,
     String title = 'Your Location',
     VoidCallback? onTap,
-  }) {
-    return MapMarker(
+  }) => MapMarker(
       id: 'user_location',
       position: location,
       title: title,
       markerType: MarkerType.userLocation,
       onTap: onTap,
     );
-  }
+
+  final String id;
+  final Location position;
+  final String title;
+  final String? snippet;
+  final MarkerIcon? icon;
+  final Anchor? anchor;
+  final InfoWindow? infoWindow;
+  final VoidCallback? onTap;
+  final MarkerType markerType;
+  final Restaurant? restaurant;
 
   /// Create a copy of this MapMarker with modified fields
   MapMarker copyWith({
@@ -76,8 +74,7 @@ class MapMarker {
     VoidCallback? onTap,
     MarkerType? markerType,
     Restaurant? restaurant,
-  }) {
-    return MapMarker(
+  }) => MapMarker(
       id: id ?? this.id,
       position: position ?? this.position,
       title: title ?? this.title,
@@ -89,12 +86,9 @@ class MapMarker {
       markerType: markerType ?? this.markerType,
       restaurant: restaurant ?? this.restaurant,
     );
-  }
 
   @override
-  String toString() {
-    return 'MapMarker(id: $id, title: $title, position: $position)';
-  }
+  String toString() => 'MapMarker(id: $id, title: $title, position: $position)';
 }
 
 /// Types of markers that can be displayed on the map
@@ -152,13 +146,13 @@ class Anchor {
   final double y; // 0.0 (top) to 1.0 (bottom)
 
   /// Center-bottom anchor (default for most markers)
-  static const Anchor centerBottom = Anchor(x: 0.5, y: 1.0);
+  static const Anchor centerBottom = Anchor(x: 0.5, y: 1);
 
   /// Center-center anchor
   static const Anchor center = Anchor(x: 0.5, y: 0.5);
 
   /// Center-top anchor
-  static const Anchor centerTop = Anchor(x: 0.5, y: 0.0);
+  static const Anchor centerTop = Anchor(x: 0.5, y: 0);
 }
 
 /// Info window configuration for markers
@@ -166,20 +160,18 @@ class InfoWindow {
   const InfoWindow({
     required this.title,
     this.snippet,
-    this.anchor = const Anchor(x: 0.5, y: 0.0),
+    this.anchor = const Anchor(x: 0.5, y: 0),
   });
+
+  /// Create info window from restaurant data
+  factory InfoWindow.fromRestaurant(Restaurant restaurant) => InfoWindow(
+      title: restaurant.name,
+      snippet: '${restaurant.cuisine}\nRating: ${restaurant.rating} ⭐\nDistance: ${restaurant.distance.toStringAsFixed(1)} km',
+    );
 
   final String title;
   final String? snippet;
   final Anchor anchor;
-
-  /// Create info window from restaurant data
-  factory InfoWindow.fromRestaurant(Restaurant restaurant) {
-    return InfoWindow(
-      title: restaurant.name,
-      snippet: '${restaurant.cuisine}\nRating: ${restaurant.rating} ⭐\nDistance: ${restaurant.distance.toStringAsFixed(1)} km',
-    );
-  }
 }
 
 /// Utility class for calculating marker positions and clustering
@@ -210,10 +202,10 @@ class MarkerUtils {
       throw ArgumentError('Locations list cannot be empty');
     }
 
-    double minLat = locations.first.latitude;
-    double maxLat = locations.first.latitude;
-    double minLng = locations.first.longitude;
-    double maxLng = locations.first.longitude;
+    var minLat = locations.first.latitude;
+    var maxLat = locations.first.latitude;
+    var minLng = locations.first.longitude;
+    var maxLng = locations.first.longitude;
 
     for (final location in locations) {
       minLat = min(minLat, location.latitude);
@@ -274,7 +266,5 @@ class MapBounds {
   double get longitudeSpan => northeast.longitude - southwest.longitude;
 
   @override
-  String toString() {
-    return 'MapBounds(northeast: $northeast, southwest: $southwest)';
-  }
+  String toString() => 'MapBounds(northeast: $northeast, southwest: $southwest)';
 }

@@ -1,20 +1,21 @@
-import "package:flutter/material.dart";
-import "package:flutter/foundation.dart";
-import "package:flutter_riverpod/flutter_riverpod.dart";
-import "package:flutter_screenutil/flutter_screenutil.dart";
-import "package:go_router/go_router.dart";
-import "../../../../core/theme/app_colors.dart";
-import "../../../../core/theme/app_typography.dart";
-import "../../../../core/theme/app_spacing.dart";
-import "../../../../core/theme/app_radius.dart";
-import "../../../../core/theme/app_shadows.dart";
-import "../../../../core/widgets/branding/otlob_logo.dart";
-import "../../../../core/widgets/buttons/primary_button.dart";
-import "../../../../core/widgets/buttons/secondary_button.dart";
-import "../../../../core/widgets/states/empty_state.dart";
-import "../../../../core/utils/shared_prefs_helper.dart";
-import "../providers/cart_provider.dart";
-import "../../domain/entities/cart_item.dart";
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+
+import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_radius.dart';
+import '../../../../core/theme/app_shadows.dart';
+import '../../../../core/theme/app_spacing.dart';
+import '../../../../core/theme/app_typography.dart';
+import '../../../../core/utils/shared_prefs_helper.dart';
+import '../../../../core/widgets/branding/otlob_logo.dart';
+import '../../../../core/widgets/buttons/primary_button.dart';
+import '../../../../core/widgets/buttons/secondary_button.dart';
+import '../../../../core/widgets/states/empty_state.dart';
+import '../../domain/entities/cart_item.dart';
+import '../providers/cart_provider.dart';
 
 class CartScreen extends ConsumerStatefulWidget {
   const CartScreen({super.key});
@@ -24,7 +25,7 @@ class CartScreen extends ConsumerStatefulWidget {
 }
 
 class _CartScreenState extends ConsumerState<CartScreen> {
-  String? selectedPayment = "cash";
+  String? selectedPayment = 'cash';
   final TextEditingController promoController = TextEditingController();
 
   @override
@@ -41,7 +42,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
     var body = cartNotifier.isLoading
         ? const Center(child: CircularProgressIndicator())
         : cartState.isEmpty
-        ? EmptyState.emptyCart(onAction: () => context.go("/home"))
+        ? EmptyState.emptyCart(onAction: () => context.go('/home'))
         : ListView.builder(
             padding: EdgeInsets.only(
               left: AppSpacing.screenPadding,
@@ -89,7 +90,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
       ),
     );
 
-  Widget _buildCartItem(CartItem item, dynamic cartNotifier) => Container(
+  Widget _buildCartItem(CartItem item, dynamic cartNotifier) => DecoratedBox(
       decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: AppRadius.cardRadius,
@@ -153,7 +154,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
             // Quantity Controls
             Column(
               children: [
-                Container(
+                DecoratedBox(
                   decoration: BoxDecoration(
                     color: AppColors.lightGray,
                     borderRadius: BorderRadius.circular(AppRadius.sm),
@@ -253,9 +254,9 @@ class _CartScreenState extends ConsumerState<CartScreen> {
             mainAxisSize: MainAxisSize.min,
             children: [
               // Order Summary
-              _buildSummaryRow("Subtotal", cartNotifier.subtotal),
+              _buildSummaryRow('Subtotal', cartNotifier.subtotal),
               SizedBox(height: AppSpacing.sm),
-              _buildSummaryRow("Delivery Fee", cartNotifier.deliveryFee),
+              _buildSummaryRow('Delivery Fee', cartNotifier.deliveryFee),
 
               if (cartNotifier.hasValidPromo) ...[
                 SizedBox(height: AppSpacing.sm),
@@ -272,13 +273,13 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "Total",
+                    'Total',
                     style: AppTypography.headlineSmall.copyWith(
                       fontWeight: FontWeight.w700,
                     ),
                   ),
                   Text(
-                    "\$${cartNotifier.total.toStringAsFixed(2)}",
+                    '\$${cartNotifier.total.toStringAsFixed(2)}',
                     style: AppTypography.headlineSmall.copyWith(
                       color: AppColors.logoRed,
                       fontWeight: FontWeight.w700,
@@ -296,7 +297,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                     child: TextField(
                       controller: promoController,
                       decoration: InputDecoration(
-                        labelText: "Promo Code",
+                        labelText: 'Promo Code',
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(AppRadius.md),
                           borderSide: const BorderSide(color: AppColors.lightGray),
@@ -316,7 +317,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                   SizedBox(
                     height: 56.h,
                     child: PrimaryButton(
-                      text: "Apply",
+                      text: 'Apply',
                       backgroundColor: AppColors.primaryGold,
                       onPressed: () {
                         var code = promoController.text.trim();
@@ -328,7 +329,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                               isError: true,
                             );
                           } else {
-                            _showSnackBar("Promo applied!", isSuccess: true);
+                            _showSnackBar('Promo applied!', isSuccess: true);
                           }
                         }
                       },
@@ -354,7 +355,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                       ),
                       SizedBox(width: AppSpacing.xs),
                       Text(
-                        "10% discount applied!",
+                        '10% discount applied!',
                         style: AppTypography.bodyMedium.copyWith(
                           color: AppColors.primaryBlack,
                           fontWeight: FontWeight.w600,
@@ -378,7 +379,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Payment Method",
+                      'Payment Method',
                       style: AppTypography.titleMedium.copyWith(
                         fontWeight: FontWeight.w600,
                       ),
@@ -386,41 +387,41 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                     Column(
                       children: [
                         InkWell(
-                          onTap: () => setState(() => selectedPayment = "cash"),
+                          onTap: () => setState(() => selectedPayment = 'cash'),
                           child: Row(
                             children: [
                               Icon(
-                                selectedPayment == "cash"
+                                selectedPayment == 'cash'
                                     ? Icons.radio_button_checked
                                     : Icons.radio_button_unchecked,
-                                color: selectedPayment == "cash"
+                                color: selectedPayment == 'cash'
                                     ? AppColors.logoRed
                                     : AppColors.gray,
                                 size: 20.sp,
                               ),
                               SizedBox(width: AppSpacing.sm),
                               Text(
-                                "Cash on Delivery",
+                                'Cash on Delivery',
                                 style: AppTypography.bodyMedium,
                               ),
                             ],
                           ),
                         ),
                         InkWell(
-                          onTap: () => setState(() => selectedPayment = "card"),
+                          onTap: () => setState(() => selectedPayment = 'card'),
                           child: Row(
                             children: [
                               Icon(
-                                selectedPayment == "card"
+                                selectedPayment == 'card'
                                     ? Icons.radio_button_checked
                                     : Icons.radio_button_unchecked,
-                                color: selectedPayment == "card"
+                                color: selectedPayment == 'card'
                                     ? AppColors.logoRed
                                     : AppColors.gray,
                                 size: 20.sp,
                               ),
                               SizedBox(width: AppSpacing.sm),
-                              Text("Card", style: AppTypography.bodyMedium),
+                              Text('Card', style: AppTypography.bodyMedium),
                             ],
                           ),
                         ),
@@ -434,7 +435,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
 
               // Checkout Button
               PrimaryButton(
-                text: "Checkout",
+                text: 'Checkout',
                 fullWidth: true,
                 onPressed: () async {
                   var isAuthenticated =
@@ -444,7 +445,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                     _showSignInDialog();
                     return;
                   }
-                  context.go("/order-confirmation");
+                  context.go('/order-confirmation');
                 },
               ),
             ],
@@ -510,25 +511,25 @@ class _CartScreenState extends ConsumerState<CartScreen> {
           borderRadius: BorderRadius.circular(AppRadius.lg),
         ),
         title: Text(
-          "Sign In Required",
+          'Sign In Required',
           style: AppTypography.headlineMedium.copyWith(
             fontWeight: FontWeight.w700,
           ),
         ),
         content: Text(
-          "Please sign in to place your order and complete checkout.",
+          'Please sign in to place your order and complete checkout.',
           style: AppTypography.bodyLarge,
         ),
         actions: [
           SecondaryButton(
-            text: "Cancel",
+            text: 'Cancel',
             onPressed: () => Navigator.pop(context),
           ),
           PrimaryButton(
-            text: "Sign In",
+            text: 'Sign In',
             onPressed: () {
               Navigator.pop(context);
-              context.go("/auth");
+              context.go('/auth');
             },
           ),
         ],

@@ -5,9 +5,9 @@ import '../../domain/entities/profile.dart';
 import 'profile_datasource.dart';
 
 class FirebaseProfileDataSource implements ProfileDataSource {
-  final FirebaseFirestoreService _firestoreService;
 
   FirebaseProfileDataSource(this._firestoreService);
+  final FirebaseFirestoreService _firestoreService;
 
   static const String _collection = 'profiles';
 
@@ -104,8 +104,7 @@ class FirebaseProfileDataSource implements ProfileDataSource {
   }
 
   @override
-  Stream<Profile?> watchProfile(String userId) {
-    return _firestoreService.firestoreInstance
+  Stream<Profile?> watchProfile(String userId) => _firestoreService.firestoreInstance
         .collection(_collection)
         .doc('${userId}_profile')
         .snapshots()
@@ -115,5 +114,4 @@ class FirebaseProfileDataSource implements ProfileDataSource {
           }
           return Profile.fromJson(doc.data()!);
         });
-  }
 }

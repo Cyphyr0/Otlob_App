@@ -20,9 +20,9 @@ class EgyptianCurrencyService {
   /// Format amount in Egyptian Pounds for compact display
   static String formatEGPCompact(double amount, {bool useArabicNumerals = true}) {
     if (amount >= 1000000) {
-      return '${(amount / 1000000).toStringAsFixed(1)}M ${_currencySymbol}';
+      return '${(amount / 1000000).toStringAsFixed(1)}M $_currencySymbol';
     } else if (amount >= 1000) {
-      return '${(amount / 1000).toStringAsFixed(1)}K ${_currencySymbol}';
+      return '${(amount / 1000).toStringAsFixed(1)}K $_currencySymbol';
     } else {
       return formatEGP(amount, useArabicNumerals: useArabicNumerals);
     }
@@ -40,49 +40,49 @@ class EgyptianCurrencyService {
   /// Convert USD to EGP (using approximate current rate)
   static double usdToEGP(double usdAmount) {
     // Current approximate rate: 1 USD ≈ 48 EGP (as of 2024)
-    const double exchangeRate = 48.0;
+    const exchangeRate = 48;
     return usdAmount * exchangeRate;
   }
 
   /// Convert EUR to EGP (using approximate current rate)
   static double eurToEGP(double eurAmount) {
     // Current approximate rate: 1 EUR ≈ 52 EGP (as of 2024)
-    const double exchangeRate = 52.0;
+    const exchangeRate = 52;
     return eurAmount * exchangeRate;
   }
 
   /// Convert SAR to EGP (using approximate current rate)
   static double sarToEGP(double sarAmount) {
     // Current approximate rate: 1 SAR ≈ 12.8 EGP (as of 2024)
-    const double exchangeRate = 12.8;
+    const exchangeRate = 12.8;
     return sarAmount * exchangeRate;
   }
 
   /// Convert AED to EGP (using approximate current rate)
   static double aedToEGP(double aedAmount) {
     // Current approximate rate: 1 AED ≈ 13.07 EGP (as of 2024)
-    const double exchangeRate = 13.07;
+    const exchangeRate = 13.07;
     return aedAmount * exchangeRate;
   }
 
   /// Convert EGP to other currencies
   static double egpToUSD(double egpAmount) {
-    const double exchangeRate = 48.0;
+    const exchangeRate = 48;
     return egpAmount / exchangeRate;
   }
 
   static double egpToEUR(double egpAmount) {
-    const double exchangeRate = 52.0;
+    const exchangeRate = 52;
     return egpAmount / exchangeRate;
   }
 
   static double egpToSAR(double egpAmount) {
-    const double exchangeRate = 12.8;
+    const exchangeRate = 12.8;
     return egpAmount / exchangeRate;
   }
 
   static double egpToAED(double egpAmount) {
-    const double exchangeRate = 13.07;
+    const exchangeRate = 13.07;
     return egpAmount / exchangeRate;
   }
 
@@ -94,7 +94,7 @@ class EgyptianCurrencyService {
     switch (targetCurrency.toUpperCase()) {
       case 'USD':
         convertedAmount = egpToUSD(amount);
-        symbol = '\$';
+        symbol = r'$';
         break;
       case 'EUR':
         convertedAmount = egpToEUR(amount);
@@ -122,15 +122,13 @@ class EgyptianCurrencyService {
   }
 
   /// Get currency exchange rates (for display purposes)
-  static Map<String, double> getExchangeRates() {
-    return {
+  static Map<String, double> getExchangeRates() => {
       'USD': 48.0,
       'EUR': 52.0,
       'SAR': 12.8,
       'AED': 13.07,
       'EGP': 1.0,
     };
-  }
 
   /// Format delivery fee with proper Egyptian context
   static String formatDeliveryFee(double fee, {bool useArabicNumerals = true}) {
@@ -144,20 +142,16 @@ class EgyptianCurrencyService {
   }
 
   /// Format minimum order amount
-  static String formatMinimumOrder(double amount, {bool useArabicNumerals = true}) {
-    return '${useArabicNumerals ? 'الحد الأدنى' : 'Min. Order'}: ${formatEGP(amount, useArabicNumerals: useArabicNumerals)}';
-  }
+  static String formatMinimumOrder(double amount, {bool useArabicNumerals = true}) => '${useArabicNumerals ? 'الحد الأدنى' : 'Min. Order'}: ${formatEGP(amount, useArabicNumerals: useArabicNumerals)}';
 
   /// Format discount amount
   static String formatDiscount(double originalPrice, double discountAmount, {bool useArabicNumerals = true}) {
     final discountPercentage = ((discountAmount / originalPrice) * 100).round();
-    return '${useArabicNumerals ? 'خصم' : 'Save'} ${formatEGP(discountAmount, useArabicNumerals: useArabicNumerals)} (${discountPercentage}%)';
+    return '${useArabicNumerals ? 'خصم' : 'Save'} ${formatEGP(discountAmount, useArabicNumerals: useArabicNumerals)} ($discountPercentage%)';
   }
 
   /// Format price per item (for menu items)
-  static String formatItemPrice(double price, {bool useArabicNumerals = true}) {
-    return formatEGP(price, useArabicNumerals: useArabicNumerals);
-  }
+  static String formatItemPrice(double price, {bool useArabicNumerals = true}) => formatEGP(price, useArabicNumerals: useArabicNumerals);
 
   /// Format total order amount with breakdown
   static String formatOrderTotal(double subtotal, double deliveryFee, double tax, {bool useArabicNumerals = true}) {
@@ -204,18 +198,14 @@ Total: ${formatEGP(total, useArabicNumerals: false)}
   }
 
   /// Format cash on delivery message
-  static String getCashOnDeliveryMessage({bool useArabicNumerals = true}) {
-    return useArabicNumerals
+  static String getCashOnDeliveryMessage({bool useArabicNumerals = true}) => useArabicNumerals
         ? 'ادفع نقداً عند التسليم'
         : 'Pay with cash on delivery';
-  }
 
   /// Format digital wallet message
-  static String getDigitalWalletMessage({bool useArabicNumerals = true}) {
-    return useArabicNumerals
+  static String getDigitalWalletMessage({bool useArabicNumerals = true}) => useArabicNumerals
         ? 'ادفع بمحفظتك الرقمية'
         : 'Pay with your digital wallet';
-  }
 
   /// Validate Egyptian phone number for mobile payments
   static bool isValidEgyptianPhoneNumber(String phoneNumber) {
@@ -245,14 +235,10 @@ Total: ${formatEGP(total, useArabicNumerals: false)}
 /// Extension to add currency formatting to double values
 extension EgyptianCurrencyExtension on double {
   /// Format as EGP currency
-  String toEGP({bool useArabicNumerals = true}) {
-    return EgyptianCurrencyService.formatEGP(this, useArabicNumerals: useArabicNumerals);
-  }
+  String toEGP({bool useArabicNumerals = true}) => EgyptianCurrencyService.formatEGP(this, useArabicNumerals: useArabicNumerals);
 
   /// Format as compact EGP currency
-  String toEGPCompact({bool useArabicNumerals = true}) {
-    return EgyptianCurrencyService.formatEGPCompact(this, useArabicNumerals: useArabicNumerals);
-  }
+  String toEGPCompact({bool useArabicNumerals = true}) => EgyptianCurrencyService.formatEGPCompact(this, useArabicNumerals: useArabicNumerals);
 
   /// Check if expensive in Egyptian market
   bool get isExpensiveInEgypt => EgyptianCurrencyService.isExpensive(this);
@@ -261,9 +247,7 @@ extension EgyptianCurrencyExtension on double {
   bool get isBudgetFriendlyInEgypt => EgyptianCurrencyService.isBudgetFriendly(this);
 
   /// Get price category for Egyptian market
-  String getPriceCategoryInEgypt({bool useArabicNumerals = true}) {
-    return EgyptianCurrencyService.getPriceCategory(this, useArabicNumerals: useArabicNumerals);
-  }
+  String getPriceCategoryInEgypt({bool useArabicNumerals = true}) => EgyptianCurrencyService.getPriceCategory(this, useArabicNumerals: useArabicNumerals);
 }
 
 /// Extension to add phone number formatting to strings

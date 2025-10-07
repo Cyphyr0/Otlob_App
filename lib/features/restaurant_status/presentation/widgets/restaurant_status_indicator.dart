@@ -4,8 +4,7 @@ import '../../domain/entities/restaurant_status_type.dart';
 
 class RestaurantStatusIndicator extends StatelessWidget {
   const RestaurantStatusIndicator({
-    super.key,
-    required this.status,
+    required this.status, super.key,
     this.size = 16,
     this.showText = true,
     this.textStyle,
@@ -36,6 +35,15 @@ class RestaurantStatusIndicator extends StatelessWidget {
         ],
       ],
     );
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<RestaurantStatus>('status', status));
+    properties.add(DoubleProperty('size', size));
+    properties.add(DiagnosticsProperty<bool>('showText', showText));
+    properties.add(DiagnosticsProperty<TextStyle?>('textStyle', textStyle));
   }
 }
 
@@ -86,6 +94,13 @@ class _StatusIcon extends StatelessWidget {
       color: color,
     );
   }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(EnumProperty<RestaurantStatusType>('statusType', statusType));
+    properties.add(DoubleProperty('size', size));
+  }
 }
 
 class _StatusText extends StatelessWidget {
@@ -123,5 +138,12 @@ class _StatusText extends StatelessWidget {
       case RestaurantStatusType.permanentlyClosed:
         return Colors.red;
     }
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<RestaurantStatus>('status', status));
+    properties.add(DiagnosticsProperty<TextStyle?>('style', style));
   }
 }

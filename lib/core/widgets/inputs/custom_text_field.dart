@@ -1,10 +1,12 @@
-import "package:flutter/material.dart";
-import "package:flutter/services.dart";
-import "package:flutter_screenutil/flutter_screenutil.dart";
-import "../../theme/app_colors.dart";
-import "../../theme/app_typography.dart";
-import "../../theme/app_radius.dart";
-import "../../theme/app_spacing.dart";
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import '../../theme/app_colors.dart';
+import '../../theme/app_radius.dart';
+import '../../theme/app_spacing.dart';
+import '../../theme/app_typography.dart';
 
 /// Custom Text Field Component
 ///
@@ -188,7 +190,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
 
   @override
   Widget build(BuildContext context) {
-    hasError = widget.errorText != null;
+    final hasError = widget.errorText != null;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -274,7 +276,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
               borderRadius: AppRadius.inputRadius,
               borderSide: const BorderSide(color: AppColors.error, width: 2),
             ),
-            counterText: "",
+            counterText: '',
           ),
           onChanged: widget.onChanged,
           onSubmitted: widget.onSubmitted,

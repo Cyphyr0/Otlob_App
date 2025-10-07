@@ -1,11 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
+
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:awesome_notifications/awesome_notifications.dart';
-import '../service_locator.dart';
 
 class FirebaseMessagingService {
   static final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
@@ -53,10 +54,7 @@ class FirebaseMessagingService {
       }
 
       // Listen for token refresh
-      _firebaseMessaging.onTokenRefresh.listen((newToken) {
-        print('FCM Token refreshed: $newToken');
-        _saveFCMToken(newToken);
-      });
+      _firebaseMessaging.onTokenRefresh.listen(_saveFCMToken);
 
       print('Firebase Messaging initialized successfully');
     } catch (e) {
@@ -66,7 +64,15 @@ class FirebaseMessagingService {
   }
 
   static Future<void> _requestNotificationPermission() async {
-    if (Platform.isIOS) {
+    if (kIsWeb) {
+      // For web, request permission directly
+      await _firebaseMessaging.requestPermission(
+        alert: true,
+        badge: true,
+        sound: true,
+        provisional: false,
+      );
+    } else if (Platform.isIOS) {
       // For iOS, request permission
       await _firebaseMessaging.requestPermission(
         alert: true,
@@ -79,17 +85,17 @@ class FirebaseMessagingService {
   }
 
   static Future<void> _initializeLocalNotifications() async {
-    const AndroidInitializationSettings initializationSettingsAndroid =
+    const initializationSettingsAndroid =
         AndroidInitializationSettings('@mipmap/ic_launcher');
 
-    const DarwinInitializationSettings initializationSettingsIOS =
+    const initializationSettingsIOS =
         DarwinInitializationSettings(
       requestAlertPermission: true,
       requestBadgePermission: true,
       requestSoundPermission: true,
     );
 
-    const InitializationSettings initializationSettings = InitializationSettings(
+    const initializationSettings = InitializationSettings(
       android: initializationSettingsAndroid,
       iOS: initializationSettingsIOS,
     );
@@ -252,7 +258,7 @@ class FirebaseMessagingService {
     required String body,
     String? payload,
   }) async {
-    const AndroidNotificationDetails androidPlatformChannelSpecifics =
+    const androidPlatformChannelSpecifics =
         AndroidNotificationDetails(
       'otlob_channel',
       'Otlob Notifications',
@@ -262,14 +268,14 @@ class FirebaseMessagingService {
       showWhen: true,
     );
 
-    const DarwinNotificationDetails iOSPlatformChannelSpecifics =
+    const iOSPlatformChannelSpecifics =
         DarwinNotificationDetails(
       presentAlert: true,
       presentBadge: true,
       presentSound: true,
     );
 
-    const NotificationDetails platformChannelSpecifics = NotificationDetails(
+    const platformChannelSpecifics = NotificationDetails(
       android: androidPlatformChannelSpecifics,
       iOS: iOSPlatformChannelSpecifics,
     );
@@ -297,9 +303,7 @@ class FirebaseMessagingService {
     }
   }
 
-  static int _generateNotificationId() {
-    return DateTime.now().millisecondsSinceEpoch ~/ 1000;
-  }
+  static int _generateNotificationId() => DateTime.now().millisecondsSinceEpoch ~/ 1000;
 
   static Future<void> _saveFCMToken(String token) async {
     // TODO: Save token to Firestore associated with current user

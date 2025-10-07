@@ -5,23 +5,32 @@ import '../../services/cultural_hospitality_service.dart';
 
 /// Widget for displaying culturally appropriate hospitality messages
 class HospitalityMessageDisplay extends StatefulWidget {
+
+  const HospitalityMessageDisplay({
+    required this.messageType, super.key,
+    this.customMessage,
+    this.details,
+    this.animated = true,
+    this.animationDuration = const Duration(milliseconds: 500),
+  });
   final MessageType messageType;
   final String? customMessage;
   final String? details;
   final bool animated;
   final Duration animationDuration;
 
-  const HospitalityMessageDisplay({
-    super.key,
-    required this.messageType,
-    this.customMessage,
-    this.details,
-    this.animated = true,
-    this.animationDuration = const Duration(milliseconds: 500),
-  });
-
   @override
   State<HospitalityMessageDisplay> createState() => _HospitalityMessageDisplayState();
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(EnumProperty<MessageType>('messageType', messageType));
+    properties.add(StringProperty('customMessage', customMessage));
+    properties.add(StringProperty('details', details));
+    properties.add(DiagnosticsProperty<bool>('animated', animated));
+    properties.add(DiagnosticsProperty<Duration>('animationDuration', animationDuration));
+  }
 }
 
 class _HospitalityMessageDisplayState extends State<HospitalityMessageDisplay>
@@ -39,8 +48,8 @@ class _HospitalityMessageDisplayState extends State<HospitalityMessageDisplay>
       );
 
       _fadeAnimation = Tween<double>(
-        begin: 0.0,
-        end: 1.0,
+        begin: 0,
+        end: 1,
       ).animate(CurvedAnimation(
         parent: _animationController,
         curve: Curves.easeInOut,
@@ -64,8 +73,7 @@ class _HospitalityMessageDisplayState extends State<HospitalityMessageDisplay>
 
     return AnimatedBuilder(
       animation: _fadeAnimation,
-      builder: (context, child) {
-        return Opacity(
+      builder: (context, child) => Opacity(
           opacity: widget.animated ? _fadeAnimation.value : 1.0,
           child: Container(
             padding: EdgeInsets.all(16.w),
@@ -143,8 +151,7 @@ class _HospitalityMessageDisplayState extends State<HospitalityMessageDisplay>
               ],
             ),
           ),
-        );
-      },
+        ),
     );
   }
 
@@ -288,16 +295,15 @@ class _HospitalityMessageDisplayState extends State<HospitalityMessageDisplay>
 
 /// Simplified hospitality message for inline use
 class InlineHospitalityMessage extends StatelessWidget {
-  final MessageType messageType;
-  final TextStyle? style;
-  final bool showIcon;
 
   const InlineHospitalityMessage({
-    super.key,
-    required this.messageType,
+    required this.messageType, super.key,
     this.style,
     this.showIcon = true,
   });
+  final MessageType messageType;
+  final TextStyle? style;
+  final bool showIcon;
 
   @override
   Widget build(BuildContext context) {
@@ -348,26 +354,31 @@ class InlineHospitalityMessage extends StatelessWidget {
         return Icons.info;
     }
   }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(EnumProperty<MessageType>('messageType', messageType));
+    properties.add(DiagnosticsProperty<TextStyle?>('style', style));
+    properties.add(DiagnosticsProperty<bool>('showIcon', showIcon));
+  }
 }
 
 /// Hospitality notification widget for order status updates
 class HospitalityNotification extends StatelessWidget {
+
+  const HospitalityNotification({
+    required this.title, required this.message, super.key,
+    this.type = NotificationType.info,
+    this.showAnimation = true,
+  });
   final String title;
   final String message;
   final NotificationType type;
   final bool showAnimation;
 
-  const HospitalityNotification({
-    super.key,
-    required this.title,
-    required this.message,
-    this.type = NotificationType.info,
-    this.showAnimation = true,
-  });
-
   @override
-  Widget build(BuildContext context) {
-    return Container(
+  Widget build(BuildContext context) => Container(
       margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 4.h),
       padding: EdgeInsets.all(12.w),
       decoration: BoxDecoration(
@@ -414,7 +425,6 @@ class HospitalityNotification extends StatelessWidget {
         ],
       ),
     );
-  }
 
   Color _getBackgroundColor() {
     switch (type) {
@@ -484,6 +494,15 @@ class HospitalityNotification extends StatelessWidget {
       default:
         return Icons.info;
     }
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(StringProperty('title', title));
+    properties.add(StringProperty('message', message));
+    properties.add(EnumProperty<NotificationType>('type', type));
+    properties.add(DiagnosticsProperty<bool>('showAnimation', showAnimation));
   }
 }
 

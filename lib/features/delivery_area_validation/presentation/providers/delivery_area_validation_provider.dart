@@ -1,12 +1,12 @@
 /// Provider for managing delivery area validation state
+library;
 import 'package:flutter/material.dart';
 
-import '../../../../features/location/domain/entities/location.dart';
 import '../../../../features/home/domain/entities/restaurant.dart';
+import '../../../../features/location/domain/entities/location.dart';
 import '../../domain/entities/delivery_area_validation.dart';
-import '../../domain/entities/delivery_area_status.dart';
-import '../../domain/services/delivery_area_validation_service.dart';
 import '../../domain/repositories/delivery_area_repository.dart';
+import '../../domain/services/delivery_area_validation_service.dart';
 
 /// State class for delivery area validation
 class DeliveryAreaValidationState {
@@ -23,9 +23,7 @@ class DeliveryAreaValidationState {
   final String? error;
 
   /// Get validation for a specific restaurant
-  DeliveryAreaValidation? getValidation(String restaurantId) {
-    return validations[restaurantId];
-  }
+  DeliveryAreaValidation? getValidation(String restaurantId) => validations[restaurantId];
 
   /// Check if a restaurant can deliver to current location
   bool canDeliverTo(String restaurantId) {
@@ -34,12 +32,10 @@ class DeliveryAreaValidationState {
   }
 
   /// Get all restaurants that can deliver to current location
-  List<Restaurant> getAvailableRestaurants() {
-    return validations.values
+  List<Restaurant> getAvailableRestaurants() => validations.values
         .where((validation) => validation.canOrder)
         .map((validation) => validation.restaurant)
         .toList();
-  }
 
   /// Create a copy with modified fields
   DeliveryAreaValidationState copyWith({
@@ -47,14 +43,12 @@ class DeliveryAreaValidationState {
     Map<String, DeliveryAreaValidation>? validations,
     bool? isLoading,
     String? error,
-  }) {
-    return DeliveryAreaValidationState(
+  }) => DeliveryAreaValidationState(
       currentLocation: currentLocation ?? this.currentLocation,
       validations: validations ?? this.validations,
       isLoading: isLoading ?? this.isLoading,
       error: error ?? this.error,
     );
-  }
 }
 
 /// Provider for delivery area validation
@@ -182,12 +176,10 @@ class DeliveryAreaValidationProvider extends ChangeNotifier {
       notifyListeners();
 
       // Return error validations for all restaurants
-      return restaurants.map((restaurant) {
-        return DeliveryAreaValidation.error(
+      return restaurants.map((restaurant) => DeliveryAreaValidation.error(
           restaurant: restaurant,
           message: 'Validation failed: $e',
-        );
-      }).toList();
+        )).toList();
     }
   }
 

@@ -1,4 +1,3 @@
-import 'package:intl/intl.dart';
 
 /// Hijri (Islamic) calendar service for Egyptian market
 class HijriCalendarService {
@@ -34,16 +33,14 @@ class HijriCalendarService {
 
     // Approximate base date: Hijri 1445-01-01 ≈ Gregorian 2023-07-19
     final baseGregorian = DateTime(2023, 7, 19);
-    final baseHijri = const HijriDate(1445, 1, 1);
+    const baseHijri = HijriDate(1445, 1, 1);
 
     final hijriDays = _hijriDateToDays(hijriDate) - _hijriDateToDays(baseHijri);
     return baseGregorian.add(Duration(days: (hijriDays * 29.53).round()));
   }
 
   /// Get current Hijri date
-  static HijriDate getCurrentHijriDate() {
-    return gregorianToHijri(DateTime.now());
-  }
+  static HijriDate getCurrentHijriDate() => gregorianToHijri(DateTime.now());
 
   /// Format Hijri date in Arabic
   static String formatHijriDateArabic(HijriDate hijriDate) {
@@ -124,11 +121,11 @@ class HijriCalendarService {
   }
 
   static DateTime _findClosestDate(DateTime target, Iterable<DateTime> dates) {
-    DateTime closest = dates.first;
-    int minDifference = (target.difference(closest)).inDays.abs();
+    var closest = dates.first;
+    var minDifference = target.difference(closest).inDays.abs();
 
     for (final date in dates) {
-      final difference = (target.difference(date)).inDays.abs();
+      final difference = target.difference(date).inDays.abs();
       if (difference < minDifference) {
         minDifference = difference;
         closest = date;
@@ -139,7 +136,7 @@ class HijriCalendarService {
   }
 
   static HijriDate _addHijriDays(HijriDate hijriDate, int days) {
-    int totalDays = _hijriDateToDays(hijriDate) + days;
+    var totalDays = _hijriDateToDays(hijriDate) + days;
     return _daysToHijriDate(totalDays);
   }
 
@@ -161,16 +158,14 @@ class HijriCalendarService {
 
 /// Hijri date model
 class HijriDate {
+
+  const HijriDate(this.year, this.month, this.day);
   final int year;
   final int month;
   final int day;
 
-  const HijriDate(this.year, this.month, this.day);
-
   @override
-  String toString() {
-    return '$day/$month/$year';
-  }
+  String toString() => '$day/$month/$year';
 
   @override
   bool operator ==(Object other) {

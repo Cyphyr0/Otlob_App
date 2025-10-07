@@ -1,8 +1,9 @@
 /// Use case for getting nearby restaurants with delivery
+library;
 import '../../../../core/errors/failures.dart';
-import '../entities/location.dart';
-import '../../data/repositories/map_repository.dart';
 import '../../../home/domain/entities/restaurant.dart';
+import '../../data/repositories/map_repository.dart';
+import '../entities/location.dart';
 
 class GetNearbyRestaurantsWithDelivery {
   const GetNearbyRestaurantsWithDelivery(this._repository);

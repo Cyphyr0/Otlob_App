@@ -1,9 +1,11 @@
-import "package:flutter/material.dart";
-import "package:flutter_screenutil/flutter_screenutil.dart";
-import "../../theme/app_colors.dart";
-import "../../theme/app_typography.dart";
-import "../../theme/app_spacing.dart";
-import "../branding/otlob_logo.dart";
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import '../../theme/app_colors.dart';
+import '../../theme/app_spacing.dart';
+import '../../theme/app_typography.dart';
+import '../branding/otlob_logo.dart';
 
 /// Loading Indicator Component
 ///
@@ -134,7 +136,7 @@ class LogoLoadingIndicator extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          OtlobLogo(size: LogoSize.large, animated: true),
+          const OtlobLogo(size: LogoSize.large, animated: true),
           SizedBox(height: AppSpacing.lg),
           SizedBox(
             width: 48.w,

@@ -1,25 +1,27 @@
-import "package:flutter/material.dart";
-import "package:flutter_riverpod/flutter_riverpod.dart";
-import "package:flutter_screenutil/flutter_screenutil.dart";
-import "package:geocoding/geocoding.dart";
-import "package:geolocator/geolocator.dart";
-import "package:go_router/go_router.dart";
-import "../../../../core/providers.dart";
-import "../../../../core/theme/app_colors.dart";
-import "../../../../core/theme/app_radius.dart";
-import "../../../../core/theme/app_shadows.dart";
-import "../../../../core/theme/app_spacing.dart";
-import "../../../../core/theme/app_typography.dart";
-import "../../../../core/theme/otlob_design_system.dart";
-import "../../../../core/widgets/branding/otlob_logo.dart";
-import "../../../../core/widgets/buttons/primary_button.dart";
-import "../../../../core/widgets/buttons/secondary_button.dart";
-import "../../../../core/widgets/cards/restaurant_card.dart";
-import "../../../../core/widgets/inputs/search_bar_widget.dart";
-import "../../../../core/widgets/prayer_times/prayer_times_card.dart";
-import "../../domain/entities/restaurant.dart";
-import "../../../location/presentation/screens/map_screen.dart";
-import "../../../surprise_me/presentation/screens/surprise_me_screen.dart";
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:go_router/go_router.dart';
+
+import '../../../../core/providers.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_radius.dart';
+import '../../../../core/theme/app_shadows.dart';
+import '../../../../core/theme/app_spacing.dart';
+import '../../../../core/theme/app_typography.dart';
+import '../../../../core/theme/otlob_design_system.dart';
+import '../../../../core/widgets/branding/otlob_logo.dart';
+import '../../../../core/widgets/buttons/primary_button.dart';
+import '../../../../core/widgets/buttons/secondary_button.dart';
+import '../../../../core/widgets/cards/restaurant_card.dart';
+import '../../../../core/widgets/inputs/search_bar_widget.dart';
+import '../../../../core/widgets/prayer_times/prayer_times_card.dart';
+import '../../../location/presentation/screens/map_screen.dart';
+import '../../../surprise_me/presentation/screens/surprise_me_screen.dart';
+import '../../domain/entities/restaurant.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -32,9 +34,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   String? _currentAddress;
   bool _isLocating = false;
   String? _locationError;
-  String _selectedCuisine = "All";
+  String _selectedCuisine = 'All';
   double _minRating = 0;
-  String _priceRange = "All";
+  String _priceRange = 'All';
 
   final ScrollController _scrollController = ScrollController();
   bool _isLoadingMore = false;
@@ -49,7 +51,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       var serviceEnabled = await Geolocator.isLocationServiceEnabled();
       if (!serviceEnabled) {
         setState(() {
-          _locationError = "Location services are disabled.";
+          _locationError = 'Location services are disabled.';
         });
         return;
       }
@@ -59,7 +61,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         permission = await Geolocator.requestPermission();
         if (permission == LocationPermission.denied) {
           setState(() {
-            _locationError = "Location permissions are denied.";
+            _locationError = 'Location permissions are denied.';
             _isLocating = false;
           });
           return;
@@ -67,7 +69,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       }
       if (permission == LocationPermission.deniedForever) {
         setState(() {
-          _locationError = "Location permissions are permanently denied.";
+          _locationError = 'Location permissions are permanently denied.';
           _isLocating = false;
         });
         return;
@@ -81,15 +83,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         position.longitude,
       );
       var address = placemarks.isNotEmpty
-          ? "${placemarks.first.street}, ${placemarks.first.subAdministrativeArea ?? placemarks.first.locality}, ${placemarks.first.country}"
-          : "Unknown location";
+          ? '${placemarks.first.street}, ${placemarks.first.subAdministrativeArea ?? placemarks.first.locality}, ${placemarks.first.country}'
+          : 'Unknown location';
       setState(() {
         _currentAddress = address;
         _isLocating = false;
       });
     } catch (e) {
       setState(() {
-        _locationError = "Failed to get location: $e";
+        _locationError = 'Failed to get location: $e';
         _isLocating = false;
       });
     }
@@ -104,12 +106,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     return restaurantsAsync.when(
       loading: _buildLoadingState,
       error: (error, stack) => Scaffold(
-        body: Center(child: Text("Error loading restaurants: $error")),
+        body: Center(child: Text('Error loading restaurants: $error')),
       ),
       data: (restaurants) {
         // Apply client-side filters
         var filtered = restaurants;
-        if (_selectedCuisine != "All") {
+        if (_selectedCuisine != 'All') {
           filtered = filtered
               .where((r) => r.cuisine == _selectedCuisine)
               .toList();
@@ -117,12 +119,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         if (_minRating > 0) {
           filtered = filtered.where((r) => r.rating >= _minRating).toList();
         }
-        if (_priceRange != "All") {
+        if (_priceRange != 'All') {
           switch (_priceRange) {
-            case "Budget":
+            case 'Budget':
               filtered = filtered.where((r) => r.priceLevel <= 1.5).toList();
               break;
-            case "Premium":
+            case 'Premium':
               filtered = filtered.where((r) => r.priceLevel > 1.5).toList();
               break;
           }
@@ -131,15 +133,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         return hiddenGemsAsync.when(
           loading: _buildLoadingState,
           error: (error, stack) => Scaffold(
-            body: Center(child: Text("Error loading hidden gems: $error")),
+            body: Center(child: Text('Error loading hidden gems: $error')),
           ),
           data: (hiddenGems) => localHeroesAsync.when(
-              loading: () => _buildLoadingState(),
+              loading: _buildLoadingState,
               error: (error, stack) => Scaffold(
                 body: Center(child: Text('Error loading local heroes: $error')),
               ),
-              data: (localHeroes) {
-                return Scaffold(
+              data: (localHeroes) => Scaffold(
                   backgroundColor: Theme.of(context).colorScheme.surface,
                   body: CustomScrollView(
                     slivers: [
@@ -191,8 +192,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       ),
                     ],
                   ),
-                );
-              },
+                ),
             ),
         );
       },
@@ -244,7 +244,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       }
     } catch (e) {
       // Handle error - could show snackbar
-      debugPrint("Error loading more data: $e");
+      debugPrint('Error loading more data: $e');
     } finally {
       if (mounted) {
         setState(() => _isLoadingMore = false);
@@ -257,7 +257,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       elevation: 0,
       pinned: true,
       expandedHeight: 70.h,
-      flexibleSpace: Container(
+      flexibleSpace: DecoratedBox(
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.surface,
           boxShadow: AppShadows.sm,
@@ -278,9 +278,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 // Location Selector
                 Expanded(
                   child: GestureDetector(
-                    onTap: () {
-                      _fetchLocation();
-                    },
+                    onTap: _fetchLocation,
                     child: Container(
                       padding: EdgeInsets.symmetric(
                         horizontal: AppSpacing.sm,
@@ -304,14 +302,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             child: _isLocating
                                 ? Row(
                                     children: [
-                                      SizedBox(
+                                      const SizedBox(
                                         width: 14,
                                         height: 14,
                                         child: CircularProgressIndicator(
                                           strokeWidth: 2,
                                         ),
                                       ),
-                                      SizedBox(width: 6),
+                                      const SizedBox(width: 6),
                                       Text(
                                         'Locating...',
                                         style: AppTypography.bodyMedium
@@ -435,8 +433,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                  restaurants: restaurants,
                                  // TODO: Pass actual user preferences, favorites, and tawseya data
                                  userPreferences: null, // ref.watch(userPreferencesProvider),
-                                 userFavorites: [], // ref.watch(favoritesProvider),
-                                 tawseyaItems: [], // ref.watch(tawseyaItemsProvider),
+                                 userFavorites: const [], // ref.watch(favoritesProvider),
+                                 tawseyaItems: const [], // ref.watch(tawseyaItemsProvider),
                                ),
                              ),
                            );
@@ -686,7 +684,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         .watch(isFavoriteProvider(restaurant.id));
 
     return GestureDetector(
-      onTap: () => context.go("/restaurant/${restaurant.id}"),
+      onTap: () => context.go('/restaurant/${restaurant.id}'),
       child: DecoratedBox(
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.surface,
@@ -707,11 +705,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   child:
                       restaurant.imageUrl != null &&
                           restaurant.imageUrl!.isNotEmpty
-                      ? (restaurant.imageUrl!.startsWith("assets/")
+                      ? (restaurant.imageUrl!.startsWith('assets/')
                             ? Image.asset(
                                 restaurant.imageUrl!.replaceFirst(
-                                  "assets/",
-                                  "",
+                                  'assets/',
+                                  '',
                                 ),
                                 fit: BoxFit.cover,
                                 errorBuilder: (context, error, stackTrace) => Icon(
@@ -800,7 +798,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         SizedBox(width: 2.w),
                         Expanded(
                           child: Text(
-                            "${restaurant.distance.toStringAsFixed(1)} km",
+                            '${restaurant.distance.toStringAsFixed(1)} km',
                             style: AppTypography.bodySmall.copyWith(
                               color: Theme.of(
                                 context,
@@ -819,7 +817,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           ),
                           SizedBox(width: 2.w),
                           Text(
-                            "${restaurant.tawseyaCount}",
+                            '${restaurant.tawseyaCount}',
                             style: AppTypography.bodySmall.copyWith(
                               color: AppColors.primaryGold,
                               fontWeight: FontWeight.w600,
@@ -1082,13 +1080,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 class FilterBottomSheet extends StatefulWidget {
 
   const FilterBottomSheet({
-    super.key,
-    required this.selectedCuisine,
-    required this.minRating,
-    required this.priceRange,
-    required this.onCuisineChanged,
-    required this.onRatingChanged,
-    required this.onPriceChanged,
+    required this.selectedCuisine, required this.minRating, required this.priceRange, required this.onCuisineChanged, required this.onRatingChanged, required this.onPriceChanged, super.key,
   });
   final String selectedCuisine;
   final double minRating;
@@ -1217,8 +1209,8 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
               Expanded(
                 child: Slider(
                   value: _minRating,
-                  min: 0.0,
-                  max: 5.0,
+                  min: 0,
+                  max: 5,
                   divisions: 10,
                   label: _minRating.toStringAsFixed(1),
                   activeColor: Theme.of(context).colorScheme.primary,
@@ -1299,7 +1291,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                   text: 'Clear All',
                   onPressed: () {
                     widget.onCuisineChanged('All');
-                    widget.onRatingChanged(0.0);
+                    widget.onRatingChanged(0);
                     widget.onPriceChanged('All');
                     Navigator.pop(context);
                   },

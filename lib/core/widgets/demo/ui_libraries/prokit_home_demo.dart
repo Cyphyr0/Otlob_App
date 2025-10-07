@@ -1,7 +1,7 @@
-import "package:flutter/material.dart";
-import "../../../theme/app_colors.dart";
-import "../../../theme/app_spacing.dart";
-import "../../../theme/app_typography.dart";
+import 'package:flutter/material.dart';
+import '../../../theme/app_colors.dart';
+import '../../../theme/app_spacing.dart';
+import '../../../theme/app_typography.dart';
 
 class ProKitHomeDemo extends StatefulWidget {
   const ProKitHomeDemo({super.key});
@@ -17,106 +17,106 @@ class _ProKitHomeDemoState extends State<ProKitHomeDemo> {
   bool _isSearchFocused = false;
 
   final List<Map<String, dynamic>> _categories = [
-    {"icon": Icons.local_pizza, "name": "Pizza", "color": Colors.red},
-    {"icon": Icons.fastfood, "name": "Burgers", "color": Colors.orange},
-    {"icon": Icons.restaurant, "name": "Sushi", "color": Colors.pink},
-    {"icon": Icons.local_dining, "name": "Italian", "color": Colors.green},
-    {"icon": Icons.rice_bowl, "name": "Asian", "color": Colors.blue},
-    {"icon": Icons.local_cafe, "name": "Desserts", "color": Colors.purple},
-    {"icon": Icons.local_bar, "name": "Drinks", "color": Colors.teal},
-    {"icon": Icons.more_horiz, "name": "More", "color": Colors.grey},
+    {'icon': Icons.local_pizza, 'name': 'Pizza', 'color': Colors.red},
+    {'icon': Icons.fastfood, 'name': 'Burgers', 'color': Colors.orange},
+    {'icon': Icons.restaurant, 'name': 'Sushi', 'color': Colors.pink},
+    {'icon': Icons.local_dining, 'name': 'Italian', 'color': Colors.green},
+    {'icon': Icons.rice_bowl, 'name': 'Asian', 'color': Colors.blue},
+    {'icon': Icons.local_cafe, 'name': 'Desserts', 'color': Colors.purple},
+    {'icon': Icons.local_bar, 'name': 'Drinks', 'color': Colors.teal},
+    {'icon': Icons.more_horiz, 'name': 'More', 'color': Colors.grey},
   ];
 
   final List<Map<String, dynamic>> _restaurants = [
     {
-      "name": "Pizza Palace",
-      "image": "🍕",
-      "rating": 4.8,
-      "deliveryTime": "25-35 min",
-      "deliveryFee": "Free",
-      "cuisine": "Italian",
-      "distance": "1.2 km",
-      "isPromoted": true,
-      "discount": "20% OFF",
+      'name': 'Pizza Palace',
+      'image': '🍕',
+      'rating': 4.8,
+      'deliveryTime': '25-35 min',
+      'deliveryFee': 'Free',
+      'cuisine': 'Italian',
+      'distance': '1.2 km',
+      'isPromoted': true,
+      'discount': '20% OFF',
     },
     {
-      "name": "Burger Barn",
-      "image": "🍔",
-      "rating": 4.6,
-      "deliveryTime": "20-30 min",
-      "deliveryFee": "\$2.99",
-      "cuisine": "American",
-      "distance": "0.8 km",
-      "isPromoted": false,
-      "discount": null,
+      'name': 'Burger Barn',
+      'image': '🍔',
+      'rating': 4.6,
+      'deliveryTime': '20-30 min',
+      'deliveryFee': r'$2.99',
+      'cuisine': 'American',
+      'distance': '0.8 km',
+      'isPromoted': false,
+      'discount': null,
     },
     {
-      "name": "Sushi Master",
-      "image": "🍱",
-      "rating": 4.9,
-      "deliveryTime": "30-40 min",
-      "deliveryFee": r"$3.99",
-      "cuisine": "Japanese",
-      "distance": "2.1 km",
-      "isPromoted": true,
-      "discount": "15% OFF",
+      'name': 'Sushi Master',
+      'image': '🍱',
+      'rating': 4.9,
+      'deliveryTime': '30-40 min',
+      'deliveryFee': r'$3.99',
+      'cuisine': 'Japanese',
+      'distance': '2.1 km',
+      'isPromoted': true,
+      'discount': '15% OFF',
     },
     {
-      "name": "Taco Town",
-      "image": "🌮",
-      "rating": 4.4,
-      "deliveryTime": "15-25 min",
-      "deliveryFee": "Free",
-      "cuisine": "Mexican",
-      "distance": "1.5 km",
-      "isPromoted": false,
-      "discount": null,
+      'name': 'Taco Town',
+      'image': '🌮',
+      'rating': 4.4,
+      'deliveryTime': '15-25 min',
+      'deliveryFee': 'Free',
+      'cuisine': 'Mexican',
+      'distance': '1.5 km',
+      'isPromoted': false,
+      'discount': null,
     },
     {
-      "name": "Pasta Paradise",
-      "image": "🍝",
-      "rating": 4.7,
-      "deliveryTime": "25-35 min",
-      "deliveryFee": "\$1.99",
-      "cuisine": "Italian",
-      "distance": "1.8 km",
-      "isPromoted": true,
-      "discount": "10% OFF",
+      'name': 'Pasta Paradise',
+      'image': '🍝',
+      'rating': 4.7,
+      'deliveryTime': '25-35 min',
+      'deliveryFee': r'$1.99',
+      'cuisine': 'Italian',
+      'distance': '1.8 km',
+      'isPromoted': true,
+      'discount': '10% OFF',
     },
     {
-      "name": "Sweet Treats",
-      "image": "🍰",
-      "rating": 4.5,
-      "deliveryTime": "20-30 min",
-      "deliveryFee": "\$2.49",
-      "cuisine": "Desserts",
-      "distance": "0.9 km",
-      "isPromoted": false,
-      "discount": null,
+      'name': 'Sweet Treats',
+      'image': '🍰',
+      'rating': 4.5,
+      'deliveryTime': '20-30 min',
+      'deliveryFee': r'$2.49',
+      'cuisine': 'Desserts',
+      'distance': '0.9 km',
+      'isPromoted': false,
+      'discount': null,
     },
   ];
 
   final List<Map<String, dynamic>> _promotions = [
     {
-      "title": "Weekend Special",
-      "subtitle": "50% OFF on all pizzas",
-      "image": "🎉",
-      "gradient": [Colors.purple, Colors.pink],
-      "cta": "Order Now",
+      'title': 'Weekend Special',
+      'subtitle': '50% OFF on all pizzas',
+      'image': '🎉',
+      'gradient': [Colors.purple, Colors.pink],
+      'cta': 'Order Now',
     },
     {
-      "title": "Free Delivery",
-      "subtitle": "On orders over \$25",
-      "image": "🚚",
-      "gradient": [Colors.blue, Colors.cyan],
-      "cta": "Shop Now",
+      'title': 'Free Delivery',
+      'subtitle': r'On orders over $25',
+      'image': '🚚',
+      'gradient': [Colors.blue, Colors.cyan],
+      'cta': 'Shop Now',
     },
     {
-      "title": "New Restaurants",
-      "subtitle": "Discover amazing cuisines",
-      "image": "⭐",
-      "gradient": [Colors.orange, Colors.red],
-      "cta": "Explore",
+      'title': 'New Restaurants',
+      'subtitle': 'Discover amazing cuisines',
+      'image': '⭐',
+      'gradient': [Colors.orange, Colors.red],
+      'cta': 'Explore',
     },
   ];
 
@@ -170,7 +170,7 @@ class _ProKitHomeDemoState extends State<ProKitHomeDemo> {
           Container(
             padding: EdgeInsets.all(AppSpacing.xs),
             decoration: BoxDecoration(
-              gradient: LinearGradient(
+              gradient: const LinearGradient(
                 colors: [AppColors.logoRed, AppColors.primaryGold],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
@@ -204,15 +204,15 @@ class _ProKitHomeDemoState extends State<ProKitHomeDemo> {
           onTap: () {},
           child: Container(
             margin: EdgeInsets.only(right: AppSpacing.md),
-            padding: EdgeInsets.all(2),
+            padding: const EdgeInsets.all(2),
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               border: Border.all(color: AppColors.primaryGold, width: 2),
             ),
-            child: CircleAvatar(
+            child: const CircleAvatar(
               radius: 16,
               backgroundColor: AppColors.lightGray,
-              child: const Icon(
+              child: Icon(
                 Icons.person,
                 size: 20,
                 color: AppColors.primaryBlack,
@@ -227,7 +227,7 @@ class _ProKitHomeDemoState extends State<ProKitHomeDemo> {
       padding: EdgeInsets.all(AppSpacing.lg),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.only(
+        borderRadius: const BorderRadius.only(
           bottomLeft: Radius.circular(20),
           bottomRight: Radius.circular(20),
         ),
@@ -245,7 +245,7 @@ class _ProKitHomeDemoState extends State<ProKitHomeDemo> {
           // Location
           Row(
             children: [
-              Icon(Icons.location_on, color: AppColors.logoRed, size: 20),
+              const Icon(Icons.location_on, color: AppColors.logoRed, size: 20),
               SizedBox(width: AppSpacing.xs),
               Text(
                 'Deliver to',
@@ -265,7 +265,7 @@ class _ProKitHomeDemoState extends State<ProKitHomeDemo> {
                         fontWeight: FontWeight.w500,
                       ),
                     ),
-                    Icon(
+                    const Icon(
                       Icons.keyboard_arrow_down,
                       color: AppColors.primaryBlack,
                       size: 20,
@@ -279,7 +279,7 @@ class _ProKitHomeDemoState extends State<ProKitHomeDemo> {
           SizedBox(height: AppSpacing.md),
 
           // Search Bar
-          Container(
+          DecoratedBox(
             decoration: BoxDecoration(
               color: AppColors.offWhite,
               borderRadius: BorderRadius.circular(12),
@@ -305,7 +305,7 @@ class _ProKitHomeDemoState extends State<ProKitHomeDemo> {
                 ),
                 suffixIcon: IconButton(
                   onPressed: () {},
-                  icon: Icon(Icons.filter_list, color: AppColors.primaryGold),
+                  icon: const Icon(Icons.filter_list, color: AppColors.primaryGold),
                 ),
                 border: InputBorder.none,
                 contentPadding: EdgeInsets.symmetric(
@@ -627,7 +627,7 @@ class _ProKitHomeDemoState extends State<ProKitHomeDemo> {
 
   Widget _buildRestaurantCard(Map<String, dynamic> restaurant) => GestureDetector(
       onTap: () {},
-      child: Container(
+      child: DecoratedBox(
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(16),
@@ -728,8 +728,8 @@ class _ProKitHomeDemoState extends State<ProKitHomeDemo> {
                   SizedBox(height: AppSpacing.xs),
                   Row(
                     children: [
-                      Icon(Icons.star, color: Colors.amber, size: 16),
-                      SizedBox(width: 2),
+                      const Icon(Icons.star, color: Colors.amber, size: 16),
+                      const SizedBox(width: 2),
                       Text(
                         restaurant['rating'].toString(),
                         style: AppTypography.bodySmall.copyWith(
@@ -761,7 +761,7 @@ class _ProKitHomeDemoState extends State<ProKitHomeDemo> {
                         color: AppColors.primaryBlack.withValues(alpha: 0.5),
                         size: 14,
                       ),
-                      SizedBox(width: 2),
+                      const SizedBox(width: 2),
                       Text(
                         restaurant['deliveryTime'],
                         style: AppTypography.bodySmall.copyWith(
@@ -797,7 +797,7 @@ class _ProKitHomeDemoState extends State<ProKitHomeDemo> {
       ),
     );
 
-  Widget _buildBottomNavigation() => Container(
+  Widget _buildBottomNavigation() => DecoratedBox(
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: const BorderRadius.only(

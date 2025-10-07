@@ -1,4 +1,4 @@
-import "package:dio/dio.dart";
+import 'package:dio/dio.dart';
 
 /// Service for fetching food images from Unsplash API
 class UnsplashService {
@@ -12,18 +12,18 @@ class UnsplashService {
     try {
       var query = _getQueryForCuisine(cuisine);
       var response = await _dio.get(
-        "https://api.unsplash.com/photos/random",
+        'https://api.unsplash.com/photos/random',
         queryParameters: {
-          "query": query,
-          "orientation": "landscape",
-          "content_filter": "high",
+          'query': query,
+          'orientation': 'landscape',
+          'content_filter': 'high',
         },
-        options: Options(headers: {"Authorization": "Client-ID $_accessKey"}),
+        options: Options(headers: {'Authorization': 'Client-ID $_accessKey'}),
       );
 
       if (response.statusCode == 200) {
         var data = response.data;
-        return data["urls"]["regular"] as String?;
+        return data['urls']['regular'] as String?;
       }
     } catch (e) {
       // Fallback to generic food images
@@ -38,22 +38,22 @@ class UnsplashService {
 
     // Map cuisines to better search terms
     switch (cuisineLower) {
-      case "egyptian":
-        return "egyptian food koshary falafel";
-      case "street food":
-        return "street food egyptian";
-      case "indian":
-        return "indian food curry biryani";
-      case "bakery":
-        return "bakery bread pastries egypt";
-      case "grill":
-        return "grilled meat kebab egypt";
-      case "cafe":
-        return "cafe coffee egypt nile";
-      case "mediterranean":
-        return "mediterranean food meze";
+      case 'egyptian':
+        return 'egyptian food koshary falafel';
+      case 'street food':
+        return 'street food egyptian';
+      case 'indian':
+        return 'indian food curry biryani';
+      case 'bakery':
+        return 'bakery bread pastries egypt';
+      case 'grill':
+        return 'grilled meat kebab egypt';
+      case 'cafe':
+        return 'cafe coffee egypt nile';
+      case 'mediterranean':
+        return 'mediterranean food meze';
       default:
-        return "food egyptian cuisine";
+        return 'food egyptian cuisine';
     }
   }
 

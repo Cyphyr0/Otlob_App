@@ -2,18 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart' as firestore;
 import '../../domain/entities/transaction.dart';
 
 class TransactionModel {
-  final String id;
-  final String walletId;
-  final String userId;
-  final String type;
-  final double amount;
-  final String currency;
-  final String status;
-  final DateTime createdAt;
-  final DateTime? updatedAt;
-  final String? description;
-  final String? reference;
-  final Map<String, dynamic>? metadata;
 
   TransactionModel({
     required this.id,
@@ -31,7 +19,7 @@ class TransactionModel {
   });
 
   factory TransactionModel.fromFirestore(firestore.DocumentSnapshot doc) {
-    Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+    var data = doc.data() as Map<String, dynamic>;
     return TransactionModel(
       id: doc.id,
       walletId: data['walletId'] ?? '',
@@ -48,8 +36,34 @@ class TransactionModel {
     );
   }
 
-  Map<String, dynamic> toFirestore() {
-    return {
+  factory TransactionModel.fromEntity(Transaction transaction) => TransactionModel(
+      id: transaction.id,
+      walletId: transaction.walletId,
+      userId: transaction.userId,
+      type: transaction.type.name,
+      amount: transaction.amount,
+      currency: transaction.currency,
+      status: transaction.status.name,
+      createdAt: transaction.createdAt,
+      updatedAt: transaction.updatedAt,
+      description: transaction.description,
+      reference: transaction.reference,
+      metadata: transaction.metadata,
+    );
+  final String id;
+  final String walletId;
+  final String userId;
+  final String type;
+  final double amount;
+  final String currency;
+  final String status;
+  final DateTime createdAt;
+  final DateTime? updatedAt;
+  final String? description;
+  final String? reference;
+  final Map<String, dynamic>? metadata;
+
+  Map<String, dynamic> toFirestore() => {
       'walletId': walletId,
       'userId': userId,
       'type': type,
@@ -62,10 +76,8 @@ class TransactionModel {
       if (reference != null) 'reference': reference,
       if (metadata != null) 'metadata': metadata,
     };
-  }
 
-  Transaction toEntity() {
-    return Transaction(
+  Transaction toEntity() => Transaction(
       id: id,
       walletId: walletId,
       userId: userId,
@@ -85,24 +97,6 @@ class TransactionModel {
       reference: reference,
       metadata: metadata,
     );
-  }
-
-  factory TransactionModel.fromEntity(Transaction transaction) {
-    return TransactionModel(
-      id: transaction.id,
-      walletId: transaction.walletId,
-      userId: transaction.userId,
-      type: transaction.type.name,
-      amount: transaction.amount,
-      currency: transaction.currency,
-      status: transaction.status.name,
-      createdAt: transaction.createdAt,
-      updatedAt: transaction.updatedAt,
-      description: transaction.description,
-      reference: transaction.reference,
-      metadata: transaction.metadata,
-    );
-  }
 
   TransactionModel copyWith({
     String? id,
@@ -117,8 +111,7 @@ class TransactionModel {
     String? description,
     String? reference,
     Map<String, dynamic>? metadata,
-  }) {
-    return TransactionModel(
+  }) => TransactionModel(
       id: id ?? this.id,
       walletId: walletId ?? this.walletId,
       userId: userId ?? this.userId,
@@ -132,5 +125,4 @@ class TransactionModel {
       reference: reference ?? this.reference,
       metadata: metadata ?? this.metadata,
     );
-  }
 }

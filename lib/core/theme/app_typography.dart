@@ -1,7 +1,7 @@
-import "package:flutter/material.dart";
-import "package:flutter_screenutil/flutter_screenutil.dart";
-import "package:google_fonts/google_fonts.dart";
-import "app_colors.dart";
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'app_colors.dart';
 
 /// Typography System
 ///
@@ -361,7 +361,7 @@ class AppTypography {
     required LogoSize size,
     Color color = AppColors.logoRed,
   }) {
-    fontSize = switch (size) {
+    var fontSize = switch (size) {
       LogoSize.small => 24.0,
       LogoSize.medium => 32.0,
       LogoSize.large => 48.0,
@@ -369,7 +369,7 @@ class AppTypography {
     };
 
     return TextStyle(
-      fontFamily: "TutanoCCV2",
+      fontFamily: 'TutanoCCV2',
       fontSize: fontSize.sp,
       fontWeight: FontWeight.w700,
       height: 1.2,

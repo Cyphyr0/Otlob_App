@@ -12,9 +12,9 @@ class FirebaseTawseyaRepository implements TawseyaRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   // Collections
-  static const String tawseyaItemsCollection = "tawseya_items";
-  static const String votesCollection = "votes";
-  static const String votingPeriodsCollection = "voting_periods";
+  static const String tawseyaItemsCollection = 'tawseya_items';
+  static const String votesCollection = 'votes';
+  static const String votingPeriodsCollection = 'voting_periods';
 
   @override
   Future<Vote> castVote(Vote vote) async {
@@ -74,7 +74,7 @@ class FirebaseTawseyaRepository implements TawseyaRepository {
         .get();
 
     return snapshot.docs
-        .map((doc) => TawseyaItemModel.fromFirestore(doc))
+        .map(TawseyaItemModel.fromFirestore)
         .map(_tawseyaItemModelToEntity)
         .toList();
   }
@@ -88,7 +88,7 @@ class FirebaseTawseyaRepository implements TawseyaRepository {
         .get();
 
     return snapshot.docs
-        .map((doc) => TawseyaItemModel.fromFirestore(doc))
+        .map(TawseyaItemModel.fromFirestore)
         .map(_tawseyaItemModelToEntity)
         .toList();
   }
@@ -134,7 +134,7 @@ class FirebaseTawseyaRepository implements TawseyaRepository {
         .get();
 
     return snapshot.docs
-        .map((doc) => VotingPeriodModel.fromFirestore(doc))
+        .map(VotingPeriodModel.fromFirestore)
         .map(_votingPeriodModelToEntity)
         .toList();
   }
@@ -147,7 +147,7 @@ class FirebaseTawseyaRepository implements TawseyaRepository {
         .get();
 
     return snapshot.docs
-        .map((doc) => VoteModel.fromFirestore(doc))
+        .map(VoteModel.fromFirestore)
         .map(_voteModelToEntity)
         .toList();
   }
@@ -160,7 +160,7 @@ class FirebaseTawseyaRepository implements TawseyaRepository {
         .get();
 
     return snapshot.docs
-        .map((doc) => VoteModel.fromFirestore(doc))
+        .map(VoteModel.fromFirestore)
         .map(_voteModelToEntity)
         .toList();
   }
@@ -186,7 +186,7 @@ class FirebaseTawseyaRepository implements TawseyaRepository {
         .get();
 
     return snapshot.docs
-        .map((doc) => VoteModel.fromFirestore(doc))
+        .map(VoteModel.fromFirestore)
         .map(_voteModelToEntity)
         .toList();
   }
@@ -236,8 +236,7 @@ class FirebaseTawseyaRepository implements TawseyaRepository {
   }
 
   // Entity converters
-  TawseyaItem _tawseyaItemModelToEntity(TawseyaItemModel model) {
-    return TawseyaItem(
+  TawseyaItem _tawseyaItemModelToEntity(TawseyaItemModel model) => TawseyaItem(
       id: model.id,
       name: model.name,
       description: model.description,
@@ -249,10 +248,8 @@ class FirebaseTawseyaRepository implements TawseyaRepository {
       totalVotes: model.totalVotes,
       averageRating: model.averageRating,
     );
-  }
 
-  Vote _voteModelToEntity(VoteModel model) {
-    return Vote(
+  Vote _voteModelToEntity(VoteModel model) => Vote(
       id: model.id,
       userId: model.userId,
       tawseyaItemId: model.tawseyaItemId,
@@ -260,10 +257,8 @@ class FirebaseTawseyaRepository implements TawseyaRepository {
       createdAt: model.createdAt,
       comment: model.comment,
     );
-  }
 
-  VotingPeriod _votingPeriodModelToEntity(VotingPeriodModel model) {
-    return VotingPeriod(
+  VotingPeriod _votingPeriodModelToEntity(VotingPeriodModel model) => VotingPeriod(
       id: model.id,
       month: model.month,
       year: model.year,
@@ -273,5 +268,4 @@ class FirebaseTawseyaRepository implements TawseyaRepository {
       createdAt: model.createdAt,
       totalVotes: model.totalVotes,
     );
-  }
 }

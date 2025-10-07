@@ -1,4 +1,5 @@
 /// Delivery area visualization component for displaying restaurant coverage areas
+library;
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart' as gmaps;
@@ -8,8 +9,7 @@ import '../../domain/entities/map_marker.dart';
 /// Widget for visualizing delivery areas on the map
 class DeliveryAreaVisualization extends StatefulWidget {
   const DeliveryAreaVisualization({
-    super.key,
-    required this.deliveryAreas,
+    required this.deliveryAreas, super.key,
     this.showLabels = true,
     this.fillOpacity = 0.2,
     this.strokeWidth = 2.0,
@@ -24,6 +24,16 @@ class DeliveryAreaVisualization extends StatefulWidget {
 
   @override
   State<DeliveryAreaVisualization> createState() => _DeliveryAreaVisualizationState();
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(IterableProperty<DeliveryArea>('deliveryAreas', deliveryAreas));
+    properties.add(DiagnosticsProperty<bool>('showLabels', showLabels));
+    properties.add(DoubleProperty('fillOpacity', fillOpacity));
+    properties.add(DoubleProperty('strokeWidth', strokeWidth));
+    properties.add(ObjectFlagProperty<Function(DeliveryArea p1)?>.has('onAreaTap', onAreaTap));
+  }
 }
 
 class _DeliveryAreaVisualizationState extends State<DeliveryAreaVisualization> {
@@ -69,7 +79,7 @@ class _DeliveryAreaVisualizationState extends State<DeliveryAreaVisualization> {
           radius: area.radius * 1000, // Convert km to meters
           fillColor: _getAreaColor(area).withOpacity(widget.fillOpacity),
           strokeColor: _getAreaColor(area),
-          strokeWidth: widget.strokeWidth,
+          strokeWidth: widget.strokeWidth.toInt(),
           onTap: () {
             if (widget.onAreaTap != null) {
               widget.onAreaTap!(area);
@@ -111,8 +121,7 @@ class _DeliveryAreaVisualizationState extends State<DeliveryAreaVisualization> {
 /// Widget for displaying delivery area information
 class DeliveryAreaInfoCard extends StatelessWidget {
   const DeliveryAreaInfoCard({
-    super.key,
-    required this.area,
+    required this.area, super.key,
     this.onTap,
   });
 
@@ -120,8 +129,7 @@ class DeliveryAreaInfoCard extends StatelessWidget {
   final VoidCallback? onTap;
 
   @override
-  Widget build(BuildContext context) {
-    return Card(
+  Widget build(BuildContext context) => Card(
       margin: const EdgeInsets.all(8),
       child: InkWell(
         onTap: onTap,
@@ -206,7 +214,6 @@ class DeliveryAreaInfoCard extends StatelessWidget {
         ),
       ),
     );
-  }
 
   /// Get color for delivery area based on radius
   Color _getAreaColor(DeliveryArea area) {
@@ -218,6 +225,13 @@ class DeliveryAreaInfoCard extends StatelessWidget {
       return Colors.red;
     }
   }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<DeliveryArea>('area', area));
+    properties.add(ObjectFlagProperty<VoidCallback?>.has('onTap', onTap));
+  }
 }
 
 /// Legend for delivery area visualization
@@ -225,8 +239,7 @@ class DeliveryAreaLegend extends StatelessWidget {
   const DeliveryAreaLegend({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
+  Widget build(BuildContext context) => Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -239,24 +252,24 @@ class DeliveryAreaLegend extends StatelessWidget {
           ),
         ],
       ),
-      child: Column(
+      child: const Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             'Delivery Areas',
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 14,
             ),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
 
           // Legend items
           _LegendItem(
             color: Colors.green,
             text: 'Fast Delivery (≤2 km)',
-            radius: 2.0,
+            radius: 2,
           ),
           _LegendItem(
             color: Colors.orange,
@@ -266,12 +279,11 @@ class DeliveryAreaLegend extends StatelessWidget {
           _LegendItem(
             color: Colors.red,
             text: 'Extended Delivery (>5 km)',
-            radius: 7.0,
+            radius: 7,
           ),
         ],
       ),
     );
-  }
 }
 
 /// Legend item widget
@@ -287,8 +299,7 @@ class _LegendItem extends StatelessWidget {
   final double radius;
 
   @override
-  Widget build(BuildContext context) {
-    return Padding(
+  Widget build(BuildContext context) => Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
         children: [
@@ -311,6 +322,13 @@ class _LegendItem extends StatelessWidget {
         ],
       ),
     );
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(ColorProperty('color', color));
+    properties.add(StringProperty('text', text));
+    properties.add(DoubleProperty('radius', radius));
   }
 }
 
@@ -320,9 +338,7 @@ class DeliveryAreaUtils {
   static bool isLocationInAnyDeliveryArea(
     Location location,
     List<DeliveryArea> deliveryAreas,
-  ) {
-    return deliveryAreas.any((area) => area.containsLocation(location));
-  }
+  ) => deliveryAreas.any((area) => area.containsLocation(location));
 
   /// Get the delivery area that contains a specific location
   static DeliveryArea? getDeliveryAreaForLocation(
@@ -339,7 +355,7 @@ class DeliveryAreaUtils {
   /// Calculate the total coverage area in square kilometers
   static double calculateTotalCoverageArea(List<DeliveryArea> deliveryAreas) {
     // Simplified calculation - in reality, you'd need to handle overlapping areas
-    return deliveryAreas.fold(0.0, (total, area) {
+    return deliveryAreas.fold(0, (total, area) {
       // Area of circle = π * r²
       return total + (3.14159 * area.radius * area.radius);
     });
@@ -351,7 +367,7 @@ class DeliveryAreaUtils {
     List<DeliveryArea> deliveryAreas,
   ) {
     DeliveryArea? bestArea;
-    double shortestDistance = double.infinity;
+    var shortestDistance = double.infinity;
 
     for (final area in deliveryAreas) {
       final distance = _calculateDistance(location, area.center);

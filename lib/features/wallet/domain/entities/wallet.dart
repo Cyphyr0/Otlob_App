@@ -9,6 +9,16 @@ class Wallet {
     this.isActive = true,
   });
 
+  factory Wallet.fromJson(Map<String, dynamic> json) => Wallet(
+      id: json['id'] as String,
+      userId: json['userId'] as String,
+      balance: (json['balance'] as num).toDouble(),
+      currency: json['currency'] as String,
+      createdAt: DateTime.parse(json['createdAt'] as String),
+      updatedAt: DateTime.parse(json['updatedAt'] as String),
+      isActive: json['isActive'] as bool? ?? true,
+    );
+
   final String id;
   final String userId;
   final double balance;
@@ -25,8 +35,7 @@ class Wallet {
     DateTime? createdAt,
     DateTime? updatedAt,
     bool? isActive,
-  }) {
-    return Wallet(
+  }) => Wallet(
       id: id ?? this.id,
       userId: userId ?? this.userId,
       balance: balance ?? this.balance,
@@ -35,10 +44,8 @@ class Wallet {
       updatedAt: updatedAt ?? this.updatedAt,
       isActive: isActive ?? this.isActive,
     );
-  }
 
-  Map<String, dynamic> toJson() {
-    return {
+  Map<String, dynamic> toJson() => {
       'id': id,
       'userId': userId,
       'balance': balance,
@@ -47,19 +54,6 @@ class Wallet {
       'updatedAt': updatedAt.toIso8601String(),
       'isActive': isActive,
     };
-  }
-
-  factory Wallet.fromJson(Map<String, dynamic> json) {
-    return Wallet(
-      id: json['id'] as String,
-      userId: json['userId'] as String,
-      balance: (json['balance'] as num).toDouble(),
-      currency: json['currency'] as String,
-      createdAt: DateTime.parse(json['createdAt'] as String),
-      updatedAt: DateTime.parse(json['updatedAt'] as String),
-      isActive: json['isActive'] as bool? ?? true,
-    );
-  }
 
   @override
   bool operator ==(Object other) {
@@ -71,7 +65,5 @@ class Wallet {
   int get hashCode => id.hashCode;
 
   @override
-  String toString() {
-    return 'Wallet(id: $id, userId: $userId, balance: $balance $currency)';
-  }
+  String toString() => 'Wallet(id: $id, userId: $userId, balance: $balance $currency)';
 }

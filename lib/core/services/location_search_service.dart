@@ -1,10 +1,11 @@
 /// Service for location-based search functionality
+library;
 import 'package:flutter/material.dart';
-import '../services/location_service.dart';
-import '../services/location_permissions_service.dart';
-import '../../features/location/domain/entities/location.dart';
-import '../../features/location/domain/usecases/search_restaurants_by_location.dart';
+
 import '../../features/home/domain/entities/restaurant.dart';
+import '../../features/location/domain/entities/location.dart';
+import '../services/location_permissions_service.dart';
+import '../services/location_service.dart';
 
 /// Service for handling location-based search operations
 class LocationSearchService {
@@ -23,7 +24,7 @@ class LocationSearchService {
   }) async {
     try {
       // Get user location if not provided and requested
-      Location searchLocation = userLocation ?? const Location(
+      var searchLocation = userLocation ?? const Location(
         latitude: 30.0444,
         longitude: 31.2357,
       );
@@ -112,11 +113,11 @@ class LocationSearchService {
 
       // Add area-based suggestions
       suggestions.addAll([
-        SearchSuggestion(
+        const SearchSuggestion(
           text: 'Downtown restaurants',
           type: SuggestionType.area,
         ),
-        SearchSuggestion(
+        const SearchSuggestion(
           text: 'Mall restaurants',
           type: SuggestionType.area,
         ),
@@ -159,8 +160,8 @@ class LocationSearchService {
 
       return commonLocations
           .where((location) =>
-              location.city?.toLowerCase().contains(query.toLowerCase()) == true ||
-              location.address?.toLowerCase().contains(query.toLowerCase()) == true)
+              location.city?.toLowerCase().contains(query.toLowerCase()) ?? false ||
+              location.address?.toLowerCase().contains(query.toLowerCase()) ?? false)
           .map((location) => PlaceSearchResult(
                 location: location,
                 displayName: location.address ?? '${location.city}, ${location.country}',
@@ -235,8 +236,7 @@ class LocationSearchResult {
     double? searchRadius,
     int? totalResults,
     DateTime? searchTime,
-  }) {
-    return LocationSearchResult(
+  }) => LocationSearchResult(
       query: query ?? this.query,
       searchLocation: searchLocation ?? this.searchLocation,
       restaurants: restaurants ?? this.restaurants,
@@ -244,7 +244,6 @@ class LocationSearchResult {
       totalResults: totalResults ?? this.totalResults,
       searchTime: searchTime ?? this.searchTime,
     );
-  }
 }
 
 /// Search suggestion for autocomplete

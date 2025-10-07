@@ -6,7 +6,5 @@ class GetRestaurantStatus {
 
   final RestaurantStatusRepository _repository;
 
-  Future<RestaurantStatus> call(String restaurantId) {
-    return _repository.getRestaurantStatus(restaurantId);
-  }
+  Future<RestaurantStatus> call(String restaurantId) => _repository.getRestaurantStatus(restaurantId);
 }

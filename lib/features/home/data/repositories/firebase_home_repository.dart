@@ -1,6 +1,6 @@
-import "../../../../core/services/firebase/firebase_firestore_service.dart";
-import "../../domain/entities/restaurant.dart";
-import "../../domain/repositories/home_repository.dart";
+import '../../../../core/services/firebase/firebase_firestore_service.dart';
+import '../../domain/entities/restaurant.dart';
+import '../../domain/repositories/home_repository.dart';
 
 class FirebaseHomeRepository implements HomeRepository {
 
@@ -8,7 +8,7 @@ class FirebaseHomeRepository implements HomeRepository {
   final FirebaseFirestoreService _firestoreService;
 
   @override
-  Future<List<Restaurant>> getRestaurants() async => await _firestoreService.getRestaurants();
+  Future<List<Restaurant>> getRestaurants() async => _firestoreService.getRestaurants();
 
   @override
   Future<List<Restaurant>> searchRestaurants(String query) async {
@@ -29,7 +29,7 @@ class FirebaseHomeRepository implements HomeRepository {
     // Restaurants with high tawseya count (community favorites)
     return _firestoreService.getRestaurants(
       limit: 10,
-      sortBy: "tawseyaCount",
+      sortBy: 'tawseyaCount',
     );
   }
 

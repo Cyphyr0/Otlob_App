@@ -1,14 +1,11 @@
-import "dart:convert";
-import "package:http/http.dart" as http;
-import "package:crypto/crypto.dart";
-import "../../domain/entities/payment.dart";
+import 'dart:convert';
+
+import 'package:crypto/crypto.dart';
+import 'package:http/http.dart' as http;
+
+import '../../domain/entities/payment.dart';
 
 class VodafoneCashPaymentService {
-  static const String _baseUrl = "https://vodafonecash.api.eg";
-  final String _merchantId;
-  final String _apiKey;
-  final String _secretKey;
-  final http.Client _client;
 
   VodafoneCashPaymentService(
     this._merchantId,
@@ -16,11 +13,16 @@ class VodafoneCashPaymentService {
     this._secretKey, {
     http.Client? client,
   }) : _client = client ?? http.Client();
+  static const String _baseUrl = 'https://vodafonecash.api.eg';
+  final String _merchantId;
+  final String _apiKey;
+  final String _secretKey;
+  final http.Client _client;
 
   Map<String, String> get _headers => {
-        "Content-Type": "application/json",
-        "Accept": "application/json",
-        "X-API-Key": _apiKey,
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'X-API-Key': _apiKey,
       };
 
   /// Create a Vodafone CASH payment request
@@ -33,24 +35,24 @@ class VodafoneCashPaymentService {
     String? description,
   }) async {
     try {
-      final String referenceNumber = _generateReferenceNumber(orderId);
-      final String signature = _generateSignature(referenceNumber, amount);
+      final referenceNumber = _generateReferenceNumber(orderId);
+      final signature = _generateSignature(referenceNumber, amount);
 
-      final Map<String, dynamic> paymentData = {
-        "merchantId": _merchantId,
-        "referenceNumber": referenceNumber,
-        "subscriberNumber": subscriberNumber,
-        "subscriberName": subscriberName ?? "Customer",
-        "amount": amount,
-        "currency": currency,
-        "description": description ?? "Order Payment - $orderId",
-        "signature": signature,
-        "callbackUrl": "https://yourapp.com/payment/callback/vodafone",
-        "language": "en",
+      final paymentData = <String, dynamic>{
+        'merchantId': _merchantId,
+        'referenceNumber': referenceNumber,
+        'subscriberNumber': subscriberNumber,
+        'subscriberName': subscriberName ?? 'Customer',
+        'amount': amount,
+        'currency': currency,
+        'description': description ?? 'Order Payment - $orderId',
+        'signature': signature,
+        'callbackUrl': 'https://yourapp.com/payment/callback/vodafone',
+        'language': 'en',
       };
 
       final response = await _client.post(
-        Uri.parse("$_baseUrl/api/payments/charge"),
+        Uri.parse('$_baseUrl/api/payments/charge'),
         headers: _headers,
         body: json.encode(paymentData),
       );
@@ -59,25 +61,25 @@ class VodafoneCashPaymentService {
         final Map<String, dynamic> responseData = json.decode(response.body);
 
         return PaymentIntent(
-          id: responseData["transactionId"] as String? ?? referenceNumber,
+          id: responseData['transactionId'] as String? ?? referenceNumber,
           orderId: orderId,
           provider: PaymentProvider.vodafoneCash,
           amount: amount,
           currency: currency,
-          clientSecret: responseData["transactionId"] as String? ?? referenceNumber,
+          clientSecret: responseData['transactionId'] as String? ?? referenceNumber,
           metadata: {
-            "referenceNumber": referenceNumber,
-            "subscriberNumber": subscriberNumber,
-            "transactionId": responseData["transactionId"],
+            'referenceNumber': referenceNumber,
+            'subscriberNumber': subscriberNumber,
+            'transactionId': responseData['transactionId'],
           },
         );
       } else {
         throw VodafoneCashPaymentException(
-          "Failed to create Vodafone CASH payment: ${response.body}",
+          'Failed to create Vodafone CASH payment: ${response.body}',
         );
       }
     } catch (e) {
-      throw VodafoneCashPaymentException("Error creating Vodafone CASH payment: $e");
+      throw VodafoneCashPaymentException('Error creating Vodafone CASH payment: $e');
     }
   }
 
@@ -85,7 +87,7 @@ class VodafoneCashPaymentService {
   Future<Payment> getPaymentStatus(String transactionId) async {
     try {
       final response = await _client.get(
-        Uri.parse("$_baseUrl/api/payments/status/$transactionId"),
+        Uri.parse('$_baseUrl/api/payments/status/$transactionId'),
         headers: _headers,
       );
 
@@ -94,11 +96,11 @@ class VodafoneCashPaymentService {
         return _mapVodafoneResponseToPayment(responseData);
       } else {
         throw VodafoneCashPaymentException(
-          "Failed to get payment status: ${response.body}",
+          'Failed to get payment status: ${response.body}',
         );
       }
     } catch (e) {
-      throw VodafoneCashPaymentException("Error getting payment status: $e");
+      throw VodafoneCashPaymentException('Error getting payment status: $e');
     }
   }
 
@@ -108,13 +110,13 @@ class VodafoneCashPaymentService {
     required String referenceNumber,
   }) async {
     try {
-      final Map<String, String> confirmationData = {
-        "transactionId": transactionId,
-        "referenceNumber": referenceNumber,
+      final confirmationData = <String, String>{
+        'transactionId': transactionId,
+        'referenceNumber': referenceNumber,
       };
 
       final response = await _client.post(
-        Uri.parse("$_baseUrl/api/payments/confirm"),
+        Uri.parse('$_baseUrl/api/payments/confirm'),
         headers: _headers,
         body: json.encode(confirmationData),
       );
@@ -124,11 +126,11 @@ class VodafoneCashPaymentService {
         return _mapVodafoneResponseToPayment(responseData);
       } else {
         throw VodafoneCashPaymentException(
-          "Failed to confirm payment: ${response.body}",
+          'Failed to confirm payment: ${response.body}',
         );
       }
     } catch (e) {
-      throw VodafoneCashPaymentException("Error confirming payment: $e");
+      throw VodafoneCashPaymentException('Error confirming payment: $e');
     }
   }
 
@@ -136,7 +138,7 @@ class VodafoneCashPaymentService {
   Future<Payment> cancelPayment(String transactionId) async {
     try {
       final response = await _client.post(
-        Uri.parse("$_baseUrl/api/payments/$transactionId/cancel"),
+        Uri.parse('$_baseUrl/api/payments/$transactionId/cancel'),
         headers: _headers,
       );
 
@@ -145,11 +147,11 @@ class VodafoneCashPaymentService {
         return _mapVodafoneResponseToPayment(responseData);
       } else {
         throw VodafoneCashPaymentException(
-          "Failed to cancel payment: ${response.body}",
+          'Failed to cancel payment: ${response.body}',
         );
       }
     } catch (e) {
-      throw VodafoneCashPaymentException("Error canceling payment: $e");
+      throw VodafoneCashPaymentException('Error canceling payment: $e');
     }
   }
 
@@ -159,13 +161,13 @@ class VodafoneCashPaymentService {
     double? amount,
   }) async {
     try {
-      final Map<String, dynamic> refundData = {
-        "transactionId": transactionId,
-        if (amount != null) "amount": amount,
+      final refundData = <String, dynamic>{
+        'transactionId': transactionId,
+        if (amount != null) 'amount': amount,
       };
 
       final response = await _client.post(
-        Uri.parse("$_baseUrl/api/payments/$transactionId/refund"),
+        Uri.parse('$_baseUrl/api/payments/$transactionId/refund'),
         headers: _headers,
         body: json.encode(refundData),
       );
@@ -175,11 +177,11 @@ class VodafoneCashPaymentService {
         return _mapVodafoneResponseToPayment(responseData);
       } else {
         throw VodafoneCashPaymentException(
-          "Failed to refund payment: ${response.body}",
+          'Failed to refund payment: ${response.body}',
         );
       }
     } catch (e) {
-      throw VodafoneCashPaymentException("Error refunding payment: $e");
+      throw VodafoneCashPaymentException('Error refunding payment: $e');
     }
   }
 
@@ -187,47 +189,47 @@ class VodafoneCashPaymentService {
   Future<double> getSubscriberBalance(String subscriberNumber) async {
     try {
       final response = await _client.get(
-        Uri.parse("$_baseUrl/api/subscriber/$subscriberNumber/balance"),
+        Uri.parse('$_baseUrl/api/subscriber/$subscriberNumber/balance'),
         headers: _headers,
       );
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = json.decode(response.body);
-        return (responseData["balance"] as num?)?.toDouble() ?? 0.0;
+        return (responseData['balance'] as num?)?.toDouble() ?? 0.0;
       } else {
         throw VodafoneCashPaymentException(
-          "Failed to get subscriber balance: ${response.body}",
+          'Failed to get subscriber balance: ${response.body}',
         );
       }
     } catch (e) {
-      throw VodafoneCashPaymentException("Error getting subscriber balance: $e");
+      throw VodafoneCashPaymentException('Error getting subscriber balance: $e');
     }
   }
 
   Payment _mapVodafoneResponseToPayment(Map<String, dynamic> responseData) {
-    final String orderId = responseData["referenceNumber"]?.toString().replaceFirst("ORDER_", "") ?? "";
+    final orderId = responseData['referenceNumber']?.toString().replaceFirst('ORDER_', '') ?? '';
 
     PaymentTransactionStatus status;
-    switch (responseData["status"]?.toString().toLowerCase()) {
-      case "success":
-      case "completed":
-      case "paid":
+    switch (responseData['status']?.toString().toLowerCase()) {
+      case 'success':
+      case 'completed':
+      case 'paid':
         status = PaymentTransactionStatus.completed;
         break;
-      case "pending":
-      case "processing":
-      case "in_progress":
+      case 'pending':
+      case 'processing':
+      case 'in_progress':
         status = PaymentTransactionStatus.processing;
         break;
-      case "cancelled":
-      case "canceled":
+      case 'cancelled':
+      case 'canceled':
         status = PaymentTransactionStatus.cancelled;
         break;
-      case "failed":
-      case "error":
+      case 'failed':
+      case 'error':
         status = PaymentTransactionStatus.failed;
         break;
-      case "refunded":
+      case 'refunded':
         status = PaymentTransactionStatus.refunded;
         break;
       default:
@@ -235,32 +237,32 @@ class VodafoneCashPaymentService {
     }
 
     return Payment(
-      id: responseData["transactionId"] as String? ?? responseData["referenceNumber"] as String? ?? "",
+      id: responseData['transactionId'] as String? ?? responseData['referenceNumber'] as String? ?? '',
       orderId: orderId,
       provider: PaymentProvider.vodafoneCash,
-      amount: (responseData["amount"] as num?)?.toDouble() ?? 0.0,
-      currency: responseData["currency"] as String? ?? "EGP",
+      amount: (responseData['amount'] as num?)?.toDouble() ?? 0.0,
+      currency: responseData['currency'] as String? ?? 'EGP',
       status: status,
-      createdAt: DateTime.parse(responseData["createdAt"] as String? ?? DateTime.now().toIso8601String()),
+      createdAt: DateTime.parse(responseData['createdAt'] as String? ?? DateTime.now().toIso8601String()),
       updatedAt: DateTime.now(),
-      transactionId: responseData["transactionId"] as String?,
-      referenceId: responseData["referenceNumber"] as String?,
+      transactionId: responseData['transactionId'] as String?,
+      referenceId: responseData['referenceNumber'] as String?,
       providerResponse: responseData,
       metadata: {
-        "subscriber_number": responseData["subscriberNumber"],
-        "subscriber_name": responseData["subscriberName"],
-        "payment_time": responseData["paymentTime"],
+        'subscriber_number': responseData['subscriberNumber'],
+        'subscriber_name': responseData['subscriberName'],
+        'payment_time': responseData['paymentTime'],
       },
     );
   }
 
   String _generateReferenceNumber(String orderId) {
     final timestamp = DateTime.now().millisecondsSinceEpoch.toString();
-    return "ORDER_${orderId}_VC_$timestamp";
+    return 'ORDER_${orderId}_VC_$timestamp';
   }
 
   String _generateSignature(String referenceNumber, double amount) {
-    final data = "$_merchantId$referenceNumber${amount.toStringAsFixed(2)}$_secretKey";
+    final data = '$_merchantId$referenceNumber${amount.toStringAsFixed(2)}$_secretKey';
     final bytes = utf8.encode(data);
     final digest = sha256.convert(bytes);
     return digest.toString();
@@ -272,10 +274,10 @@ class VodafoneCashPaymentService {
 }
 
 class VodafoneCashPaymentException implements Exception {
-  final String message;
 
   VodafoneCashPaymentException(this.message);
+  final String message;
 
   @override
-  String toString() => "VodafoneCashPaymentException: $message";
+  String toString() => 'VodafoneCashPaymentException: $message';
 }

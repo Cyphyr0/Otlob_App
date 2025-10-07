@@ -4,9 +4,9 @@ import '../entities/voting_period.dart';
 import '../repositories/tawseya_repository.dart';
 
 class CastVote {
-  final TawseyaRepository repository;
 
   const CastVote(this.repository);
+  final TawseyaRepository repository;
 
   Future<Vote> call({
     required String userId,
@@ -55,16 +55,16 @@ class CastVote {
 }
 
 class VoteAlreadyExistsException implements Exception {
-  final String message;
   const VoteAlreadyExistsException(this.message);
+  final String message;
 }
 
 class InvalidVotingPeriodException implements Exception {
-  final String message;
   const InvalidVotingPeriodException(this.message);
+  final String message;
 }
 
 class TawseyaItemNotAvailableException implements Exception {
-  final String message;
   const TawseyaItemNotAvailableException(this.message);
+  final String message;
 }

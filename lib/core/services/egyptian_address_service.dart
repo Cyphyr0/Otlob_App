@@ -116,7 +116,7 @@ class EgyptianAddressService {
       errors.add('اسم الشارع يجب أن يكون 3 أحرف على الأقل');
     }
 
-    if (address.building.length < 1) {
+    if (address.building.isEmpty) {
       errors.add('رقم المبنى مطلوب');
     }
 
@@ -232,7 +232,7 @@ class EgyptianAddressService {
 
   static void _loadFallbackGovernorates() {
     _governorates = [
-      EgyptianGovernorate(
+      const EgyptianGovernorate(
         name: 'القاهرة',
         nameEn: 'Cairo',
         districts: [
@@ -248,7 +248,7 @@ class EgyptianAddressService {
           District(name: 'المعادي', nameEn: 'Maadi'),
         ],
       ),
-      EgyptianGovernorate(
+      const EgyptianGovernorate(
         name: 'الجيزة',
         nameEn: 'Giza',
         districts: [
@@ -262,7 +262,7 @@ class EgyptianAddressService {
           District(name: 'كرداسة', nameEn: 'Kerdasa'),
         ],
       ),
-      EgyptianGovernorate(
+      const EgyptianGovernorate(
         name: 'الإسكندرية',
         nameEn: 'Alexandria',
         districts: [
@@ -276,7 +276,7 @@ class EgyptianAddressService {
           District(name: 'أبو قير', nameEn: 'Abu Qir'),
         ],
       ),
-      EgyptianGovernorate(
+      const EgyptianGovernorate(
         name: 'الشرقية',
         nameEn: 'Sharqia',
         districts: [
@@ -290,7 +290,7 @@ class EgyptianAddressService {
           District(name: 'كفر صقر', nameEn: 'Kafr Saqr'),
         ],
       ),
-      EgyptianGovernorate(
+      const EgyptianGovernorate(
         name: 'الدقهلية',
         nameEn: 'Dakahlia',
         districts: [
@@ -311,23 +311,11 @@ class EgyptianAddressService {
 
 /// Egyptian address model
 class EgyptianAddress {
-  final String governorate;
-  final String city;
-  final String district;
-  final String street;
-  final String building;
-  final String floor;
-  final String apartment;
-  final String postalCode;
-  final String phone;
-  final String specialInstructions;
 
   const EgyptianAddress({
     required this.governorate,
     required this.city,
-    this.district = '',
-    required this.street,
-    required this.building,
+    required this.street, required this.building, this.district = '',
     this.floor = '',
     this.apartment = '',
     this.postalCode = '',
@@ -336,8 +324,7 @@ class EgyptianAddress {
   });
 
   /// Create address from map
-  factory EgyptianAddress.fromMap(Map<String, dynamic> map) {
-    return EgyptianAddress(
+  factory EgyptianAddress.fromMap(Map<String, dynamic> map) => EgyptianAddress(
       governorate: map['governorate'] ?? '',
       city: map['city'] ?? '',
       district: map['district'] ?? '',
@@ -349,11 +336,19 @@ class EgyptianAddress {
       phone: map['phone'] ?? '',
       specialInstructions: map['specialInstructions'] ?? '',
     );
-  }
+  final String governorate;
+  final String city;
+  final String district;
+  final String street;
+  final String building;
+  final String floor;
+  final String apartment;
+  final String postalCode;
+  final String phone;
+  final String specialInstructions;
 
   /// Convert address to map
-  Map<String, dynamic> toMap() {
-    return {
+  Map<String, dynamic> toMap() => {
       'governorate': governorate,
       'city': city,
       'district': district,
@@ -365,7 +360,6 @@ class EgyptianAddress {
       'phone': phone,
       'specialInstructions': specialInstructions,
     };
-  }
 
   /// Get formatted address string
   String get formattedAddress => EgyptianAddressService.formatAddress(this);
@@ -391,8 +385,7 @@ class EgyptianAddress {
     String? postalCode,
     String? phone,
     String? specialInstructions,
-  }) {
-    return EgyptianAddress(
+  }) => EgyptianAddress(
       governorate: governorate ?? this.governorate,
       city: city ?? this.city,
       district: district ?? this.district,
@@ -404,14 +397,10 @@ class EgyptianAddress {
       phone: phone ?? this.phone,
       specialInstructions: specialInstructions ?? this.specialInstructions,
     );
-  }
 }
 
 /// Egyptian governorate model
 class EgyptianGovernorate {
-  final String name;
-  final String nameEn;
-  final List<District> districts;
 
   const EgyptianGovernorate({
     required this.name,
@@ -419,42 +408,36 @@ class EgyptianGovernorate {
     required this.districts,
   });
 
-  factory EgyptianGovernorate.fromJson(Map<String, dynamic> json) {
-    return EgyptianGovernorate(
+  factory EgyptianGovernorate.fromJson(Map<String, dynamic> json) => EgyptianGovernorate(
       name: json['name'] ?? '',
       nameEn: json['nameEn'] ?? '',
       districts: (json['districts'] as List<dynamic>?)
           ?.map((district) => District.fromJson(district))
           .toList() ?? [],
     );
-  }
+  final String name;
+  final String nameEn;
+  final List<District> districts;
 }
 
 /// District model
 class District {
-  final String name;
-  final String nameEn;
 
   const District({
     required this.name,
     required this.nameEn,
   });
 
-  factory District.fromJson(Map<String, dynamic> json) {
-    return District(
+  factory District.fromJson(Map<String, dynamic> json) => District(
       name: json['name'] ?? '',
       nameEn: json['nameEn'] ?? '',
     );
-  }
+  final String name;
+  final String nameEn;
 }
 
 /// Address search result
 class AddressSearchResult {
-  final AddressType type;
-  final String name;
-  final String nameEn;
-  final EgyptianGovernorate? governorate;
-  final District? district;
 
   const AddressSearchResult({
     required this.type,
@@ -463,6 +446,11 @@ class AddressSearchResult {
     this.governorate,
     this.district,
   });
+  final AddressType type;
+  final String name;
+  final String nameEn;
+  final EgyptianGovernorate? governorate;
+  final District? district;
 }
 
 /// Address type enum
@@ -474,13 +462,13 @@ enum AddressType {
 
 /// Address validation result
 class AddressValidationResult {
-  final bool isValid;
-  final List<String> errors;
 
   const AddressValidationResult({
     required this.isValid,
     required this.errors,
   });
+  final bool isValid;
+  final List<String> errors;
 }
 
 /// Extension to get first item or null

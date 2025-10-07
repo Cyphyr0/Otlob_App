@@ -1,4 +1,4 @@
-import "package:flutter/material.dart";
+import 'package:flutter/material.dart';
 
 /// Animation System
 ///
@@ -184,9 +184,7 @@ class AppAnimations {
   }) => PageRouteBuilder<T>(
       pageBuilder: (context, animation, secondaryAnimation) => page,
       transitionDuration: duration ?? normal,
-      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        return FadeTransition(opacity: animation, child: child);
-      },
+      transitionsBuilder: (context, animation, secondaryAnimation, child) => FadeTransition(opacity: animation, child: child),
     );
 
   /// Slide page route (from right)
@@ -197,15 +195,13 @@ class AppAnimations {
   }) => PageRouteBuilder<T>(
       pageBuilder: (context, animation, secondaryAnimation) => page,
       transitionDuration: duration ?? normal,
-      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        return SlideTransition(
+      transitionsBuilder: (context, animation, secondaryAnimation, child) => SlideTransition(
           position: Tween<Offset>(
             begin: begin,
             end: Offset.zero,
           ).animate(CurvedAnimation(parent: animation, curve: easeOut)),
           child: child,
-        );
-      },
+        ),
     );
 
   /// Scale page route
@@ -215,14 +211,12 @@ class AppAnimations {
   }) => PageRouteBuilder<T>(
       pageBuilder: (context, animation, secondaryAnimation) => page,
       transitionDuration: duration ?? normal,
-      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        return ScaleTransition(
+      transitionsBuilder: (context, animation, secondaryAnimation, child) => ScaleTransition(
           scale: Tween<double>(
             begin: 0.8,
-            end: 1.0,
+            end: 1,
           ).animate(CurvedAnimation(parent: animation, curve: easeOut)),
           child: FadeTransition(opacity: animation, child: child),
-        );
-      },
+        ),
     );
 }

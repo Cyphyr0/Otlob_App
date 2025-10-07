@@ -12,6 +12,22 @@ class OrderHistory {
     this.review,
   });
 
+  factory OrderHistory.fromJson(Map<String, dynamic> json) => OrderHistory(
+      id: json['id'] as String,
+      userId: json['userId'] as String,
+      restaurantId: json['restaurantId'] as String,
+      restaurantName: json['restaurantName'] as String,
+      restaurantCuisine: json['restaurantCuisine'] as String,
+      orderItems: (json['orderItems'] as List<dynamic>?)
+              ?.map((item) => OrderItem.fromJson(item as Map<String, dynamic>))
+              .toList() ??
+          [],
+      totalAmount: (json['totalAmount'] as num).toDouble(),
+      orderDate: DateTime.parse(json['orderDate'] as String),
+      rating: json['rating'] != null ? (json['rating'] as num).toDouble() : null,
+      review: json['review'] as String?,
+    );
+
   final String id;
   final String userId;
   final String restaurantId;
@@ -34,8 +50,7 @@ class OrderHistory {
     DateTime? orderDate,
     double? rating,
     String? review,
-  }) {
-    return OrderHistory(
+  }) => OrderHistory(
       id: id ?? this.id,
       userId: userId ?? this.userId,
       restaurantId: restaurantId ?? this.restaurantId,
@@ -47,10 +62,8 @@ class OrderHistory {
       rating: rating ?? this.rating,
       review: review ?? this.review,
     );
-  }
 
-  Map<String, dynamic> toJson() {
-    return {
+  Map<String, dynamic> toJson() => {
       'id': id,
       'userId': userId,
       'restaurantId': restaurantId,
@@ -62,25 +75,6 @@ class OrderHistory {
       'rating': rating,
       'review': review,
     };
-  }
-
-  factory OrderHistory.fromJson(Map<String, dynamic> json) {
-    return OrderHistory(
-      id: json['id'] as String,
-      userId: json['userId'] as String,
-      restaurantId: json['restaurantId'] as String,
-      restaurantName: json['restaurantName'] as String,
-      restaurantCuisine: json['restaurantCuisine'] as String,
-      orderItems: (json['orderItems'] as List<dynamic>?)
-              ?.map((item) => OrderItem.fromJson(item as Map<String, dynamic>))
-              .toList() ??
-          [],
-      totalAmount: (json['totalAmount'] as num).toDouble(),
-      orderDate: DateTime.parse(json['orderDate'] as String),
-      rating: json['rating'] != null ? (json['rating'] as num).toDouble() : null,
-      review: json['review'] as String?,
-    );
-  }
 
   @override
   bool operator ==(Object other) {
@@ -92,9 +86,7 @@ class OrderHistory {
   int get hashCode => id.hashCode;
 
   @override
-  String toString() {
-    return 'OrderHistory(id: $id, restaurantId: $restaurantId, restaurantName: $restaurantName, totalAmount: $totalAmount)';
-  }
+  String toString() => 'OrderHistory(id: $id, restaurantId: $restaurantId, restaurantName: $restaurantName, totalAmount: $totalAmount)';
 }
 
 class OrderItem {
@@ -105,6 +97,14 @@ class OrderItem {
     required this.quantity,
     this.category,
   });
+
+  factory OrderItem.fromJson(Map<String, dynamic> json) => OrderItem(
+      id: json['id'] as String,
+      name: json['name'] as String,
+      price: (json['price'] as num).toDouble(),
+      quantity: json['quantity'] as int,
+      category: json['category'] as String?,
+    );
 
   final String id;
   final String name;
@@ -120,35 +120,21 @@ class OrderItem {
     double? price,
     int? quantity,
     String? category,
-  }) {
-    return OrderItem(
+  }) => OrderItem(
       id: id ?? this.id,
       name: name ?? this.name,
       price: price ?? this.price,
       quantity: quantity ?? this.quantity,
       category: category ?? this.category,
     );
-  }
 
-  Map<String, dynamic> toJson() {
-    return {
+  Map<String, dynamic> toJson() => {
       'id': id,
       'name': name,
       'price': price,
       'quantity': quantity,
       'category': category,
     };
-  }
-
-  factory OrderItem.fromJson(Map<String, dynamic> json) {
-    return OrderItem(
-      id: json['id'] as String,
-      name: json['name'] as String,
-      price: (json['price'] as num).toDouble(),
-      quantity: json['quantity'] as int,
-      category: json['category'] as String?,
-    );
-  }
 
   @override
   bool operator ==(Object other) {
@@ -160,7 +146,5 @@ class OrderItem {
   int get hashCode => id.hashCode;
 
   @override
-  String toString() {
-    return 'OrderItem(id: $id, name: $name, price: $price, quantity: $quantity)';
-  }
+  String toString() => 'OrderItem(id: $id, name: $name, price: $price, quantity: $quantity)';
 }

@@ -56,19 +56,13 @@ class CulturalHospitalityService {
   ];
 
   /// Get random welcome message
-  static String getRandomWelcomeMessage() {
-    return _welcomeMessages[Random().nextInt(_welcomeMessages.length)];
-  }
+  static String getRandomWelcomeMessage() => _welcomeMessages[Random().nextInt(_welcomeMessages.length)];
 
   /// Get random order confirmation message
-  static String getRandomOrderConfirmationMessage() {
-    return _orderConfirmationMessages[Random().nextInt(_orderConfirmationMessages.length)];
-  }
+  static String getRandomOrderConfirmationMessage() => _orderConfirmationMessages[Random().nextInt(_orderConfirmationMessages.length)];
 
   /// Get random delivery greeting
-  static String getRandomDeliveryGreeting() {
-    return _deliveryGreetings[Random().nextInt(_deliveryGreetings.length)];
-  }
+  static String getRandomDeliveryGreeting() => _deliveryGreetings[Random().nextInt(_deliveryGreetings.length)];
 
   /// Get Ramadan greeting if it's Ramadan
   static String? getRamadanGreeting() {
@@ -93,9 +87,7 @@ class CulturalHospitalityService {
   }
 
   /// Get random hospitality phrase
-  static String getRandomHospitalityPhrase() {
-    return _hospitalityPhrases[Random().nextInt(_hospitalityPhrases.length)];
-  }
+  static String getRandomHospitalityPhrase() => _hospitalityPhrases[Random().nextInt(_hospitalityPhrases.length)];
 
   /// Get culturally appropriate response based on time of day
   static String getTimeBasedGreeting() {

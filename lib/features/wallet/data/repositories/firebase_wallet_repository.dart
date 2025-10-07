@@ -1,18 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart' as firestore;
 import 'package:firebase_auth/firebase_auth.dart';
-import '../../domain/entities/wallet.dart';
-import '../../domain/entities/transaction.dart';
+
 import '../../domain/entities/subscription.dart';
+import '../../domain/entities/transaction.dart';
+import '../../domain/entities/wallet.dart';
 import '../../domain/repositories/wallet_repository.dart';
-import '../models/wallet_model.dart';
-import '../models/transaction_model.dart';
 import '../models/subscription_model.dart';
+import '../models/transaction_model.dart';
+import '../models/wallet_model.dart';
 
 class FirebaseWalletRepository implements WalletRepository {
-  final firestore.FirebaseFirestore _firestore;
-  final FirebaseAuth _auth;
 
   FirebaseWalletRepository(this._firestore, this._auth);
+  final firestore.FirebaseFirestore _firestore;
+  final FirebaseAuth _auth;
 
   String get _userId => _auth.currentUser?.uid ?? '';
 
@@ -62,7 +63,7 @@ class FirebaseWalletRepository implements WalletRepository {
       final wallet = Wallet(
         id: docRef.id,
         userId: _userId,
-        balance: 0.0,
+        balance: 0,
         currency: currency,
         createdAt: now,
         updatedAt: now,
@@ -246,26 +247,20 @@ class FirebaseWalletRepository implements WalletRepository {
   }
 
   @override
-  Stream<double> watchBalance(String walletId) {
-    return _walletsCollection.doc(walletId).snapshots().map((doc) {
+  Stream<double> watchBalance(String walletId) => _walletsCollection.doc(walletId).snapshots().map((doc) {
       if (!doc.exists) return 0.0;
       final data = doc.data();
       return (data?['balance'] as num?)?.toDouble() ?? 0.0;
     });
-  }
 
   @override
-  Stream<List<Transaction>> watchTransactions(String walletId) {
-    return _transactionsCollection
+  Stream<List<Transaction>> watchTransactions(String walletId) => _transactionsCollection
         .where('walletId', isEqualTo: walletId)
         .orderBy('createdAt', descending: true)
         .snapshots()
-        .map((snapshot) {
-          return snapshot.docs
+        .map((snapshot) => snapshot.docs
               .map((doc) => TransactionModel.fromFirestore(doc).toEntity())
-              .toList();
-        });
-  }
+              .toList());
 
   @override
   Stream<List<Subscription>> watchSubscriptions() {
@@ -275,11 +270,9 @@ class FirebaseWalletRepository implements WalletRepository {
         .where('userId', isEqualTo: _userId)
         .orderBy('createdAt', descending: true)
         .snapshots()
-        .map((snapshot) {
-          return snapshot.docs
+        .map((snapshot) => snapshot.docs
               .map((doc) => SubscriptionModel.fromFirestore(doc).toEntity())
-              .toList();
-        });
+              .toList());
   }
 
   @override
@@ -397,9 +390,9 @@ class FirebaseWalletRepository implements WalletRepository {
     try {
       final transactions = await getTransactions(walletId);
 
-      double totalTopUp = 0.0;
-      double totalPayments = 0.0;
-      double totalSubscriptions = 0.0;
+      var totalTopUp = 0;
+      var totalPayments = 0;
+      var totalSubscriptions = 0;
 
       for (final transaction in transactions) {
         switch (transaction.type) {
@@ -439,7 +432,7 @@ class FirebaseWalletRepository implements WalletRepository {
     final wallet = await getWallet();
     if (wallet == null) return;
 
-    double newBalance = wallet.balance;
+    var newBalance = wallet.balance;
 
     switch (transaction.type) {
       case TransactionType.topUp:

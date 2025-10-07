@@ -1,21 +1,21 @@
-import "package:get_it/get_it.dart";
-import "../../features/auth/data/datasources/firebase_auth_datasource.dart";
-import "../../features/auth/data/repositories/firebase_auth_repository.dart";
-import "../../features/cart/data/repositories/firebase_cart_repository.dart";
-import "../../features/cart/data/repositories/firebase_order_repository.dart";
-import "../../features/home/data/repositories/firebase_home_repository.dart";
-import "../../features/home/data/repositories/mock_home_repository.dart";
-import "../../features/payment/data/repositories/firebase_payment_repository.dart";
-import "../../features/tawseya/data/repositories/firebase_tawseya_repository.dart";
-import "../../features/profile/data/datasources/firebase_profile_datasource.dart";
-import "../../features/profile/data/repositories/firebase_profile_repository.dart";
-import "../../features/profile/domain/repositories/profile_repository.dart";
-import "firebase/firebase_auth_service.dart";
-import "firebase/firebase_data_seeder.dart";
-import "firebase/firebase_firestore_service.dart";
-import "firebase/firebase_storage_service.dart";
-import "unsplash_service.dart";
-import "../config/app_config.dart";
+import 'package:get_it/get_it.dart';
+
+import '../../features/auth/data/datasources/firebase_auth_datasource.dart';
+import '../../features/auth/data/repositories/firebase_auth_repository.dart';
+import '../../features/cart/data/repositories/firebase_cart_repository.dart';
+import '../../features/cart/data/repositories/firebase_order_repository.dart';
+import '../../features/home/data/repositories/firebase_home_repository.dart';
+import '../../features/home/data/repositories/mock_home_repository.dart';
+import '../../features/payment/data/repositories/firebase_payment_repository.dart';
+import '../../features/profile/data/datasources/firebase_profile_datasource.dart';
+import '../../features/profile/data/repositories/firebase_profile_repository.dart';
+import '../../features/tawseya/data/repositories/firebase_tawseya_repository.dart';
+import '../config/app_config.dart';
+import 'firebase/firebase_auth_service.dart';
+import 'firebase/firebase_data_seeder.dart';
+import 'firebase/firebase_firestore_service.dart';
+import 'firebase/firebase_storage_service.dart';
+import 'unsplash_service.dart';
 
 final getIt = GetIt.instance;
 
@@ -56,10 +56,10 @@ void setupFirebaseServices() {
     () => FirebaseOrderRepository(getIt.get<FirebaseFirestoreService>()),
   );
   getIt.registerLazySingleton<FirebasePaymentRepository>(
-    () => FirebasePaymentRepository(),
+    FirebasePaymentRepository.new,
   );
   getIt.registerLazySingleton<FirebaseTawseyaRepository>(
-    () => FirebaseTawseyaRepository(),
+    FirebaseTawseyaRepository.new,
   );
 
   // Profile Services

@@ -1,15 +1,14 @@
-import "package:flutter/material.dart";
-import "package:flutter_riverpod/flutter_riverpod.dart";
-import "package:go_router/go_router.dart";
-import "../../../../core/theme/app_colors.dart";
-import "../../../../core/theme/app_typography.dart";
-import "../../../../core/theme/app_spacing.dart";
-import "../../../../core/widgets/branding/otlob_logo.dart";
-import "../../../../core/widgets/cards/restaurant_card.dart";
-import "../../../../core/widgets/states/empty_state.dart";
-import "../../../../core/widgets/states/empty_state.dart";
-import "../../../../core/providers.dart";
-import "../../domain/entities/favorite.dart";
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+
+import '../../../../core/providers.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_spacing.dart';
+import '../../../../core/theme/app_typography.dart';
+import '../../../../core/widgets/branding/otlob_logo.dart';
+import '../../../../core/widgets/cards/restaurant_card.dart';
+import '../../../../core/widgets/states/empty_state.dart';
 
 class FavoritesScreen extends ConsumerWidget {
   const FavoritesScreen({super.key});
@@ -45,7 +44,7 @@ class FavoritesScreen extends ConsumerWidget {
             return EmptyState.noFavorites(
               onAction: () {
                 ref.read(navigationIndexProvider.notifier).state = 0;
-                context.go("/home");
+                context.go('/home');
               },
             );
           }
@@ -62,12 +61,12 @@ class FavoritesScreen extends ConsumerWidget {
                 child: RestaurantCard(
                   restaurantId: favorite.restaurantId,
                   name: favorite.restaurantName,
-                  cuisines: [], // We don't have cuisine data in favorites
-                  rating: 0.0, // We don't have rating data in favorites
+                  cuisines: const [], // We don't have cuisine data in favorites
+                  rating: 0, // We don't have rating data in favorites
                   imageUrl: favorite.restaurantImageUrl ?? '',
                   tawseyaCount: 0, // We don't have tawseya data in favorites
                   isFavorite: true,
-                  onTap: () => context.go("/restaurant/${favorite.restaurantId}"),
+                  onTap: () => context.go('/restaurant/${favorite.restaurantId}'),
                   onFavoriteTap: () => ref
                       .read(favoritesProvider.notifier)
                       .toggleFavorite(

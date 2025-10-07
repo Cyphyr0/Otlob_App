@@ -4,8 +4,7 @@ import '../../domain/entities/restaurant_status_type.dart';
 
 class RestaurantStatusBadge extends StatelessWidget {
   const RestaurantStatusBadge({
-    super.key,
-    required this.status,
+    required this.status, super.key,
     this.compact = false,
     this.elevation = 0,
   });
@@ -15,8 +14,7 @@ class RestaurantStatusBadge extends StatelessWidget {
   final double elevation;
 
   @override
-  Widget build(BuildContext context) {
-    return Material(
+  Widget build(BuildContext context) => Material(
       elevation: elevation,
       borderRadius: BorderRadius.circular(compact ? 12 : 16),
       color: _getBackgroundColor(status.statusType),
@@ -43,7 +41,6 @@ class RestaurantStatusBadge extends StatelessWidget {
         ),
       ),
     );
-  }
 
   Color _getBackgroundColor(RestaurantStatusType statusType) {
     switch (statusType) {
@@ -59,6 +56,14 @@ class RestaurantStatusBadge extends StatelessWidget {
       case RestaurantStatusType.permanentlyClosed:
         return Colors.red.withOpacity(0.1);
     }
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<RestaurantStatus>('status', status));
+    properties.add(DiagnosticsProperty<bool>('compact', compact));
+    properties.add(DoubleProperty('elevation', elevation));
   }
 }
 
@@ -109,6 +114,13 @@ class _StatusIcon extends StatelessWidget {
       color: color,
     );
   }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(EnumProperty<RestaurantStatusType>('statusType', statusType));
+    properties.add(DoubleProperty('size', size));
+  }
 }
 
 class _StatusText extends StatelessWidget {
@@ -148,5 +160,12 @@ class _StatusText extends StatelessWidget {
       case RestaurantStatusType.permanentlyClosed:
         return Colors.red.shade700;
     }
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<RestaurantStatus>('status', status));
+    properties.add(DiagnosticsProperty<bool>('compact', compact));
   }
 }

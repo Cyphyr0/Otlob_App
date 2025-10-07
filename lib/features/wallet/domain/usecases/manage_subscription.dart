@@ -6,13 +6,9 @@ class ManageSubscription {
 
   final WalletRepository repository;
 
-  Future<Subscription?> getActiveSubscription() async {
-    return repository.getActiveSubscription();
-  }
+  Future<Subscription?> getActiveSubscription() async => repository.getActiveSubscription();
 
-  Future<List<Subscription>> getAllSubscriptions() async {
-    return repository.getSubscriptions();
-  }
+  Future<List<Subscription>> getAllSubscriptions() async => repository.getSubscriptions();
 
   Future<Subscription> createSubscription({
     required SubscriptionType type,
@@ -45,15 +41,9 @@ class ManageSubscription {
     return repository.createSubscription(subscription);
   }
 
-  Future<void> cancelSubscription(String subscriptionId) async {
-    return repository.cancelSubscription(subscriptionId);
-  }
+  Future<void> cancelSubscription(String subscriptionId) async => repository.cancelSubscription(subscriptionId);
 
-  Future<void> updateSubscription(Subscription subscription) async {
-    return repository.updateSubscription(subscription);
-  }
+  Future<void> updateSubscription(Subscription subscription) async => repository.updateSubscription(subscription);
 
-  Stream<List<Subscription>> watchSubscriptions() {
-    return repository.watchSubscriptions();
-  }
+  Stream<List<Subscription>> watchSubscriptions() => repository.watchSubscriptions();
 }
