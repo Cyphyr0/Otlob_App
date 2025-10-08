@@ -142,5 +142,34 @@ poetry.lock
 # MCP server directories (local development only)
 C\357\200\272UsershishamDocumentsClineMCPfetch-mcp/
 
+# BMAD methodology - internal development files
+.bmad-method-plan.md
+.bmad-core/
+
 # Screen examples and feature assets (local development only)
 assets/Screens&Features Examples/
+
+# Test and diagnostic files
+before_diagnostic_fix.txt
+compilation_test.txt
+
+# AI/Development prompts
+figma_prompt.txt
+prompt_improvements.md
+
+# IDE project files
+flutter_application_1.iml
+flutter_application_1/
+
+# Windows system files and executables
+nuget.exe
+nul
+
+# Firebase debug logs
+firebase-debug.log
+
+# VsCode setup directory
+.vscode/
+
+# Empty or erroneous directories
+flutter_application_1/
