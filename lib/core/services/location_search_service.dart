@@ -1,6 +1,7 @@
 /// Service for location-based search functionality
 library;
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 
 import '../../features/home/domain/entities/restaurant.dart';
 import '../../features/location/domain/entities/location.dart';
@@ -159,9 +160,14 @@ class LocationSearchService {
       ];
 
       return commonLocations
-          .where((location) =>
-              location.city?.toLowerCase().contains(query.toLowerCase()) ?? false ||
-              location.address?.toLowerCase().contains(query.toLowerCase()) ?? false)
+          .where((location) {
+            final cityLower = location.city?.toLowerCase();
+            final addressLower = location.address?.toLowerCase();
+            final queryLower = query.toLowerCase();
+
+            return (cityLower?.contains(queryLower) ?? false) ||
+                   (addressLower?.contains(queryLower) ?? false);
+          })
           .map((location) => PlaceSearchResult(
                 location: location,
                 displayName: location.address ?? '${location.city}, ${location.country}',

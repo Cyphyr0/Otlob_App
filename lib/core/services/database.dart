@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/foundation.dart';
 
 class AppDatabase {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;

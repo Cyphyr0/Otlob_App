@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/services/service_locator.dart';
 import '../../domain/entities/subscription.dart';
 import '../../domain/entities/transaction.dart';
 import '../../domain/entities/wallet.dart';
@@ -27,8 +28,7 @@ final walletProvider = StateNotifierProvider<WalletNotifier, WalletState>((ref) 
 });
 
 final walletRepositoryProvider = Provider<WalletRepository>((ref) {
-  // This will be implemented when we set up dependency injection
-  throw UnimplementedError('Wallet repository provider not implemented');
+  return getIt<WalletRepository>();
 });
 
 class WalletState {

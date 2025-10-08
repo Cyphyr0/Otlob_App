@@ -1,6 +1,7 @@
 /// Example integration of delivery area validation in restaurant detail screen
 library;
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../features/home/domain/entities/restaurant.dart';
@@ -64,19 +65,17 @@ class _DeliveryAreaIntegrationExampleState extends State<DeliveryAreaIntegration
       final isWithinArea = distance <= widget.restaurant.deliveryRadius;
 
       if (isWithinArea) {
-        final validation = DeliveryAreaValidation.withinArea(
-          restaurant: widget.restaurant,
-          userLocation: widget.userLocation,
-          distance: distance,
-          deliveryFee: 15, // Example delivery fee
-          estimatedDeliveryTime: 25, // Example delivery time
-        );
-
         setState(() {
-          _validation = validation;
+          _validation = DeliveryAreaValidation.withinArea(
+            restaurant: widget.restaurant,
+            userLocation: widget.userLocation,
+            distance: distance,
+            deliveryFee: 15, // Example delivery fee
+            estimatedDeliveryTime: 25, // Example delivery time
+          );
         });
 
-        widget.onValidationComplete?.call(validation);
+        widget.onValidationComplete?.call(_validation!);
       } else {
         final validation = DeliveryAreaValidation.outsideArea(
           restaurant: widget.restaurant,

@@ -1,6 +1,7 @@
 /// Delivery area status enumeration for different validation states
 library;
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 
 enum DeliveryAreaStatus {
   /// User is within the delivery area

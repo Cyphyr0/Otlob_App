@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart' as firestore;
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
 
 import '../../features/auth/data/datasources/firebase_auth_datasource.dart';
@@ -10,6 +12,8 @@ import '../../features/payment/data/repositories/firebase_payment_repository.dar
 import '../../features/profile/data/datasources/firebase_profile_datasource.dart';
 import '../../features/profile/data/repositories/firebase_profile_repository.dart';
 import '../../features/tawseya/data/repositories/firebase_tawseya_repository.dart';
+import '../../features/wallet/data/repositories/firebase_wallet_repository.dart';
+import '../../features/wallet/domain/repositories/wallet_repository.dart';
 import '../config/app_config.dart';
 import 'firebase/firebase_auth_service.dart';
 import 'firebase/firebase_data_seeder.dart';
@@ -68,6 +72,13 @@ void setupFirebaseServices() {
   );
   getIt.registerLazySingleton<FirebaseProfileRepository>(
     () => FirebaseProfileRepository(getIt.get<FirebaseProfileDataSource>()),
+  );
+
+  getIt.registerLazySingleton<WalletRepository>(
+    () => FirebaseWalletRepository(
+      firestore.FirebaseFirestore.instance,
+      FirebaseAuth.instance,
+    ),
   );
 
   // Firebase Data Seeder

@@ -48,7 +48,7 @@ class SmartSuggestionService {
     required List<Favorite> userFavorites,
     required List<TawseyaItem> tawseyaItems,
   }) {
-    var score = 0;
+    double score = 0;
 
     // Favorite cuisine match (40% weight)
     if (userPreferences.favoriteCuisines.contains(restaurant.cuisine)) {

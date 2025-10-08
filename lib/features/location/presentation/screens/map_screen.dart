@@ -1,9 +1,10 @@
+library;
+
+/// Map screen for restaurant discovery with location-based features
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-/// Map screen for restaurant discovery with location-based features
-library;
 
 import '../../../home/domain/entities/restaurant.dart';
 import '../../domain/entities/location.dart';

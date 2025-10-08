@@ -1,6 +1,7 @@
 /// Location filter widget for radius/distance filtering and location-based search
 library;
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../domain/entities/location.dart';

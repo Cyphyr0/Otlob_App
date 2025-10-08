@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 
 import '../theme/app_typography.dart';
 
@@ -60,7 +61,7 @@ class LocalizationHelper {
   // ============================================================================
 
   String get common_loading => 'common.loading'.tr();
-  String get common_error => 'common.error'.tr();
+  String get commonError => 'common.error'.tr();
   String get common_retry => 'common.retry'.tr();
   String get common_cancel => 'common.cancel'.tr();
   String get common_confirm => 'common.confirm'.tr();
@@ -350,29 +351,29 @@ class LocalizationHelper {
   // ERROR STRINGS
   // ============================================================================
 
-  String get errors_network_error => 'errors.network_error'.tr();
-  String get errors_connection_failed => 'errors.connection_failed'.tr();
-  String get errors_server_error => 'errors.server_error'.tr();
-  String get errors_timeout_error => 'errors.timeout_error'.tr();
-  String get errors_unauthorized => 'errors.unauthorized'.tr();
-  String get errors_forbidden => 'errors.forbidden'.tr();
-  String get errors_not_found => 'errors.not_found'.tr();
-  String get errors_internal_error => 'errors.internal_error'.tr();
-  String get errors_unknown_error => 'errors.unknown_error'.tr();
-  String get errors_retry_later => 'errors.retry_later'.tr();
-  String get errors_check_connection => 'errors.check_connection'.tr();
-  String get errors_something_wrong => 'errors.something_wrong'.tr();
-  String get errors_failed_to_load => 'errors.failed_to_load'.tr();
-  String get errors_no_data => 'errors.no_data'.tr();
-  String get errors_invalid_input => 'errors.invalid_input'.tr();
-  String get errors_required_field => 'errors.required_field'.tr();
-  String get errors_invalid_format => 'errors.invalid_format'.tr();
-  String get errors_too_short => 'errors.too_short'.tr();
-  String get errors_too_long => 'errors.too_long'.tr();
-  String get errors_invalid_email => 'errors.invalid_email'.tr();
-  String get errors_invalid_phone => 'errors.invalid_phone'.tr();
-  String get errors_password_mismatch => 'errors.password_mismatch'.tr();
-  String get errors_weak_password => 'errors.weak_password'.tr();
+  String get errorsNetworkError => 'errors.network_error'.tr();
+  String get errorsConnectionFailed => 'errors.connection_failed'.tr();
+  String get errorsServerError => 'errors.server_error'.tr();
+  String get errorsTimeoutError => 'errors.timeout_error'.tr();
+  String get errorsUnauthorized => 'errors.unauthorized'.tr();
+  String get errorsForbidden => 'errors.forbidden'.tr();
+  String get errorsNotFound => 'errors.not_found'.tr();
+  String get errorsInternalError => 'errors.internal_error'.tr();
+  String get errorsUnknownError => 'errors.unknown_error'.tr();
+  String get errorsRetryLater => 'errors.retry_later'.tr();
+  String get errorsCheckConnection => 'errors.check_connection'.tr();
+  String get errorsSomethingWrong => 'errors.something_wrong'.tr();
+  String get errorsFailedToLoad => 'errors.failed_to_load'.tr();
+  String get errorsNoData => 'errors.no_data'.tr();
+  String get errorsInvalidInput => 'errors.invalid_input'.tr();
+  String get errorsRequiredField => 'errors.required_field'.tr();
+  String get errorsInvalidFormat => 'errors.invalid_format'.tr();
+  String get errorsTooShort => 'errors.too_short'.tr();
+  String get errorsTooLong => 'errors.too_long'.tr();
+  String get errorsInvalidEmail => 'errors.invalid_email'.tr();
+  String get errorsInvalidPhone => 'errors.invalid_phone'.tr();
+  String get errorsPasswordMismatch => 'errors.password_mismatch'.tr();
+  String get errorsWeakPassword => 'errors.weak_password'.tr();
 
   // ============================================================================
   // SUCCESS STRINGS

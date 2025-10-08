@@ -1,43 +1,52 @@
+/// Base failure class for handling different types of failures in the app
 abstract class Failure {
+  const Failure(this.message, [this.code]);
 
-  const Failure({required this.message, this.error});
   final String message;
-  final dynamic error;
+  final String? code;
 }
 
+/// Network failure when API calls fail
 class NetworkFailure extends Failure {
-  const NetworkFailure({required super.message, super.error});
+  const NetworkFailure(super.message, [super.code]);
 }
 
+/// Server failure when backend returns error
 class ServerFailure extends Failure {
-
-  const ServerFailure({required super.message, this.statusCode, super.error});
-  final int? statusCode;
+  const ServerFailure(super.message, [super.code]);
 }
 
+/// Cache failure when local storage operations fail
 class CacheFailure extends Failure {
-  const CacheFailure({required super.message, super.error});
+  const CacheFailure(super.message, [super.code]);
 }
 
+/// Validation failure for input validation errors
 class ValidationFailure extends Failure {
-  const ValidationFailure({required super.message, super.error});
+  const ValidationFailure(super.message, [super.code]);
 }
 
+/// Unauthorized failure for authentication issues
 class UnauthorizedFailure extends Failure {
-  const UnauthorizedFailure({
-    super.message = 'Unauthorized access',
-    super.error,
-  });
+  const UnauthorizedFailure(super.message, [super.code]);
 }
 
-class LocationFailure extends Failure {
-  const LocationFailure({required super.message, super.error});
+/// Location permission failure
+class LocationPermissionFailure extends Failure {
+  const LocationPermissionFailure(super.message, [super.code]);
 }
 
+/// Location service failure
+class LocationServiceFailure extends Failure {
+  const LocationServiceFailure(super.message, [super.code]);
+}
+
+/// Payment failure for transaction errors
 class PaymentFailure extends Failure {
-  const PaymentFailure({required super.message, super.error});
+  const PaymentFailure(super.message, [super.code]);
 }
 
+/// Authentication failure for auth operations
 class AuthFailure extends Failure {
-  const AuthFailure({required super.message, super.error});
+  const AuthFailure(super.message, [super.code]);
 }

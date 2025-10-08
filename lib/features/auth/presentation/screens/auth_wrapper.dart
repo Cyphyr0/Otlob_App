@@ -44,7 +44,7 @@ class _AuthWrapperState extends ConsumerState<AuthWrapper>
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, constraints) {
-            final maxWidth = math.min(constraints.maxWidth * 0.95, 520);
+            final maxWidth = math.min(constraints.maxWidth * 0.95, 520.0);
             return Center(
               child: ConstrainedBox(
                 constraints: BoxConstraints(maxWidth: maxWidth),

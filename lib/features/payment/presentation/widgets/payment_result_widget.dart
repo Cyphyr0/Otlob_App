@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import '../../domain/entities/payment.dart';
 
 class PaymentResultWidget extends StatelessWidget {

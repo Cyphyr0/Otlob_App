@@ -1,6 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 
 import '../../theme/app_colors.dart';
 import '../../theme/app_spacing.dart';
@@ -18,8 +21,6 @@ import '../inputs/search_bar_widget.dart';
 import '../states/empty_state.dart';
 import '../states/loading_indicator.dart';
 import 'ui_libraries/getwidget_auth_demo.dart';
-import 'ui_libraries/modern_home_demo.dart';
-import 'ui_libraries/prime_flutter_auth_demo.dart';
 import 'ui_libraries/prokit_auth_demo.dart';
 import 'ui_libraries/prokit_home_demo.dart';
 import 'ui_libraries/shadcn_auth_demo.dart';
@@ -232,29 +233,6 @@ class _ComponentShowcaseScreenState extends State<ComponentShowcaseScreen> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) =>
-                                      const PrimeFlutterAuthDemo(),
-                                ),
-                              );
-                            },
-                            icon: const Icon(Icons.star, size: 18),
-                            label: const Text('Prime Flutter'),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColors.primaryBlack,
-                              foregroundColor: Colors.white,
-                              padding: EdgeInsets.symmetric(
-                                vertical: AppSpacing.sm,
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(width: AppSpacing.sm),
-                        Expanded(
-                          child: ElevatedButton.icon(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
                                   builder: (context) => const ProKitAuthDemo(),
                                 ),
                               );
@@ -269,6 +247,10 @@ class _ComponentShowcaseScreenState extends State<ComponentShowcaseScreen> {
                               ),
                             ),
                           ),
+                        ),
+                        SizedBox(width: AppSpacing.sm),
+                        Expanded(
+                          child: Container(width: 0), // Spacer
                         ),
                       ],
                     ),
@@ -363,72 +345,7 @@ class _ComponentShowcaseScreenState extends State<ComponentShowcaseScreen> {
             ],
           ),
 
-          // 21. Modern Home Demo
-          _buildSection(
-            title: '21. Modern Home Demo',
-            children: [
-              _buildCard(
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Modern Home Screen with Side Menu',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(height: AppSpacing.sm),
-                    const Text(
-                      'Experience a modern, Material Design 3 home screen implementation with side menu evaluation for the Otlob app. Features responsive design, accessibility, and modern navigation patterns.',
-                      style: TextStyle(fontSize: 14, color: Colors.grey),
-                    ),
-                    SizedBox(height: AppSpacing.md),
-                    SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton.icon(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const ModernHomeDemo(),
-                            ),
-                          );
-                        },
-                        icon: const Icon(Icons.design_services, size: 18),
-                        label: const Text('View Modern Home Demo'),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.primaryDark,
-                          foregroundColor: Colors.white,
-                          padding: EdgeInsets.symmetric(
-                            vertical: AppSpacing.md,
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: AppSpacing.md),
-                    Container(
-                      padding: EdgeInsets.all(AppSpacing.sm),
-                      decoration: BoxDecoration(
-                        color: AppColors.offWhite,
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(
-                          color: AppColors.lightGray.withOpacity(0.5),
-                        ),
-                      ),
-                      child: const Text(
-                        '🎨 Features: Material Design 3, Side menu (hamburger), Responsive layout, Modern app bar, Promotional carousel, Search integration, Category grid, Restaurant listings, Bottom navigation, Accessibility support.',
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontStyle: FontStyle.italic,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
+
 
           // 2. Logo Variants
           _buildSection(

@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+nimport 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -18,7 +18,6 @@ import '../../../../core/widgets/buttons/primary_button.dart';
 import '../../../../core/widgets/buttons/secondary_button.dart';
 import '../../../../core/widgets/cards/restaurant_card.dart';
 import '../../../../core/widgets/inputs/search_bar_widget.dart';
-import '../../../../core/widgets/prayer_times/prayer_times_card.dart';
 import '../../../location/presentation/screens/map_screen.dart';
 import '../../../surprise_me/presentation/screens/surprise_me_screen.dart';
 import '../../domain/entities/restaurant.dart';
@@ -122,10 +121,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         if (_priceRange != 'All') {
           switch (_priceRange) {
             case 'Budget':
-              filtered = filtered.where((r) => r.priceLevel <= 1.5).toList();
+              filtered = filtered.where((r) => r.priceLevel <= 2.0).toList();
               break;
             case 'Premium':
-              filtered = filtered.where((r) => r.priceLevel > 1.5).toList();
+              filtered = filtered.where((r) => r.priceLevel > 2.0).toList();
               break;
           }
         }
@@ -156,11 +155,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
                             // Search Bar
                             _buildSearchSection(),
-
-                            SizedBox(height: AppSpacing.md),
-
-                            // Prayer Times Card (Egyptian Market Feature)
-                            const PrayerTimesCard(),
 
                             SizedBox(height: AppSpacing.md),
 
@@ -573,26 +567,26 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 padding: EdgeInsets.only(
                   right: index < restaurants.length - 1 ? AppSpacing.md : 0,
                 ),
-                child: RestaurantCard(
-                  restaurantId: restaurant.id,
-                  imageUrl: restaurant.imageUrl!,
-                  name: restaurant.name,
-                  cuisine: restaurant.cuisine,
-                  rating: restaurant.rating,
-                  deliveryTime: null,
-                  reviewCount: null,
-                  tawseyaCount: restaurant.tawseyaCount,
-                  isFavorite: ref
-                      .watch(isFavoriteProvider(restaurant.id)),
-                  onTap: () => context.go('/restaurant/${restaurant.id}'),
-                  onFavoriteTap: () => ref
-                      .read(favoritesProvider.notifier)
-                      .toggleFavorite(
-                        restaurant.id,
-                        restaurant.name,
-                        restaurant.imageUrl,
-                      ),
-                ),
+                  child: RestaurantCard(
+                    restaurantId: restaurant.id,
+                    imageUrl: restaurant.imageUrl ?? '',
+                    name: restaurant.name,
+                    cuisine: restaurant.cuisine,
+                    rating: restaurant.rating,
+                    deliveryTime: null,
+                    reviewCount: null,
+                    tawseyaCount: restaurant.tawseyaCount,
+                    isFavorite: ref
+                        .watch(isFavoriteProvider(restaurant.id)),
+                    onTap: () => context.go('/restaurant/${restaurant.id}'),
+                    onFavoriteTap: () => ref
+                        .read(favoritesProvider.notifier)
+                        .toggleFavorite(
+                          restaurant.id,
+                          restaurant.name,
+                          restaurant.imageUrl,
+                        ),
+                  ),
               );
             },
           ),

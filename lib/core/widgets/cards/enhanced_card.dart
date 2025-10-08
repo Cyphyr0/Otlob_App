@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../theme/app_colors.dart';
 import '../../theme/app_radius.dart';
@@ -313,6 +314,7 @@ class EnhancedCardSection extends StatelessWidget {
     this.padding,
     this.margin,
     this.backgroundColor,
+    this.borderRadius,
   });
 
   /// Card header section

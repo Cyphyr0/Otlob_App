@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import '../../domain/entities/subscription.dart';
 

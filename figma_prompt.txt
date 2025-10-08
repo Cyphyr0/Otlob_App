@@ -1,0 +1,292 @@
+# Otlob Mobile App Design Prompt for Figma AI
+
+**Create a complete, modern 2025 interactive mobile experience** for a food delivery app focused on authentic Egyptian cuisine discovery.
+
+**This will be built using React Native or Flutter** - design with full interactivity and animations in mind.
+
+**Make it:** Modern • Beautiful • Interactive • Trustworthy • Uniquely Egyptian
+
+## The Core Concept
+
+Otlob (أطلب) is a revolutionary food delivery app specifically for the Egyptian market. Unlike international apps like Uber Eats or DoorDash that flood users with generic international chains, Otlob celebrates **authentic Egyptian cuisine and local heroes from ALL food creators**.
+
+**Critical Note:** The app focuses on **ALL restaurants and kitchens** - from established family businesses to home cooks who prepare food from their kitchens, cloud kitchens, and anyone passionate about Egyptian cuisine. It's an inclusive platform that democratizes food discovery for anyone who creates delicious food, not just corporate establishments.
+
+The app solves the "choice paralysis" problem where Egyptians are overwhelmed by too many options and the "trust erosion" of fake reviews manipulated by paid advertising.
+
+**Tagline/Slogan:** "Don't wait.. just Otlob"
+
+**Brand Color:** #FF5A5F (Use as main or accent color - the primary brand color for the app)
+
+**Brand Font:** Tutano CC V2 (Use this font for branding elements, headings, and the logo)
+
+**Core Value Proposition:** "Discover Egypt's authentic, hidden food gems - not generic chains. Real reviews from real people. Community votes for local heroes."
+
+**Unique Differentiation:**
+- **Tawseya System**: Monthly community voting where users get 1 precious "Tawseya" (recommendation) vote per restaurant per month
+- **Dual Rating System**: Separate ratings for food quality vs. delivery experience
+- **Authentic Discovery**: Focus on local, family-owned restaurants, home cooks, and cloud kitchens
+- **Inclusive Platform**: Anyone cooking Egyptian food can join - from home kitchens to professional setups
+- **Authentic Experience**: Egyptian cultural elements in English interface, local payment methods
+
+## Problems We're Solving
+
+**Choice Paralysis**: Egyptians visit the app overwhelmed by hundreds of similar restaurants with indistinguishable branding
+**Trust Issues**: Fake reviews and paid promotions erode confidence in ordering decisions
+**Cultural Disconnect**: International apps don't understand Egyptian tastes and preferences
+**Local Hero Support**: Genuine quality restaurants get lost in generic algorithms
+****Economic Impact**: Support local businesses instead of international corporations
+
+## User Personas & Target Audience
+
+### Primary User: "Ahmed - The Curious Food Explorer" (25-40 years old)
+- **Demographics**: Young professional, tech-savvy, middle-income Egyptians
+- **Goals**: Discover authentic local food, support local businesses, try new experiences
+- **Challenges**: Overwhelmed by choices, distrusts paid reviews, wants genuine recommendations
+- **Behaviors**: Uses app while commuting, orders 3-5 times weekly, enjoys exploring new spots
+- **App Usage**: Browses during lunch breaks, orders for dinner, shares food experiences socially
+
+### Secondary User: "Fatma - The Home Cook" (30-50 years old)
+- **Demographics**: Established home chefs, entrepreneurs, culinary enthusiasts
+- **Goals**: Share their cooking passion, build a following, generate income through catering
+- **Behaviors**: Prepares traditional Egyptian dishes, wants to connect with food lovers
+- **App Usage**: Lists menu weekly, manages orders, interacts with customers
+
+## Competitor Analysis
+
+**Direct Competitors:**
+- **Uber Eats/Delivery Hero**: Generic international chains, no community focus
+- **Talabat**: Egyptian market leader but corporate-driven, less authentic discovery
+
+**What Sets Otlob Apart:**
+- Community voting (Tawseya) vs algorithmic recommendations
+- Inclusive platform (home cooks welcome) vs only established restaurants
+- Dual ratings for transparency vs single averaged reviews
+- Egyptian cultural elements vs generic international interface
+- Local hero celebration vs brand-focused marketing
+
+## Egyptian Cuisine Categories
+
+**Traditional Categories for Filtering:**
+- Koshary (Egyptian staple rice and lentils dish)
+- Falafel & Shawarma (Popular street food)
+- Molokhiya & Mahshi (Traditional home dishes)
+- Ful & Taameya (Breakfast favorites)
+- Kunafa & Basbosa (Desserts and sweets)
+- Seafood (Nile perch, grilled fish)
+- Mezze platters (small plates and appetizers)
+
+## Inspiration & References
+
+**Food Apps to Study:**
+- DoorDash & Uber Eats (for fluidity and ease of use)
+- Resy (for discovery and curation)
+- Seamless (for filtering and sorting)
+- Yelp (for authentic reviews and trust)
+
+**Successful Egyptian Interfaces:**
+- Study local e-commerce apps, local banking apps, and Egyptian social media patterns
+- Focus on warm, welcoming aesthetics with subtle cultural elements
+- Prioritize text readability and intuitive navigation
+
+**Task: Create a complete, interactive mobile UI design experience for the Otlob food discovery app**
+
+**Make it modern, techy, and 2025-ready** with smooth interactions, beautiful animations, and intuitive mobile-first flows.
+
+**Key Interactive Elements:**
+- Search should filter results in real-time as users type
+- Filter/sort options should reorganize content dynamically
+- Restaurant cards should be tappable for detailed views
+- "Add to Cart" buttons should animate and update cart counter
+- Heart icons should toggle with satisfying feedback
+- Cart icon should show badge that updates live
+
+## Key Interactive Flows to Design
+
+**1. Restaurant Discovery Flow:**
+- Users browse curated restaurants in carousels ("Hidden Gems", "Local Heroes")
+- Search bar filters restaurants in real-time
+- Filter chips reorganize the content dynamically
+- Tap restaurant cards to view details
+- "Surprise Me" generates random recommendations
+
+**2. Ordering Flow:**
+- Browse menu items by category (Appetizers, Mains, Desserts, Drinks)
+- Add items to cart with animated feedback
+- Cart counter updates live in navigation
+- Checkout with local payment options (Fawry, Meeza, Cash on Delivery)
+
+**3. Tawseya Voting System:**
+- Monthly voting opportunity for authenticated users
+- Limited to restaurants they've actually ordered from
+- Special "magic" reveal animation for voting
+- Winners celebrated with animated badges and leaderboards
+
+**4. Interactive Elements Needed:**
+- Live search filtering
+- Dynamic filter/sort functionality
+- Cart counter that updates in real-time
+- Heart icons with toggle animations
+- Add-to-cart buttons with satisfying feedback
+- Swipe gestures for discovery
+- Pull-to-refresh animations
+- Loading skeleton states
+
+## Design Focus Areas
+
+**Make it Interactive & Engaging:**
+- All restaurant cards should be tappable and lead to detailed views
+- Search bar should show instant filtering results
+- Filter buttons should dynamically reorganize content
+- Add-to-cart buttons should update cart counter with animation
+- Heart icons should toggle favorites with satisfying feedback
+- Tawseya voting should feel magical and rewarding
+
+**Unique Egyptian Elements:**
+- Local payment methods (Fawry, Meeza, Cash on Delivery)
+- Egyptian address handling and local preferences
+- Cultural motifs and patterns inspired by Egyptian heritage
+- Community-driven aesthetics over corporate sterility
+- Nostalgic Egyptian food design elements
+
+**Navigation Structure:**
+- Bottom navigation with live cart badge
+- Swipeable carousels for discovery
+- Pull-to-refresh and infinite scroll
+- Menu icon for additional options
+
+## Design Requirements
+
+### Mobile-First Design
+- Portrait orientation (primary)
+- iOS 17+ and Android API 34+ (Android 14+) support
+- 375px-414px width range (iPhone SE to iPhone Pro Max)
+- Touch-friendly targets (44pt minimum)
+
+### Egyptian Context Considerations
+- Local Egyptian payment methods and preferences
+- Address handling for Egyptian locations
+- Local currency display (EGP)
+- Subtle Egyptian cultural elements that feel authentic, not clichéd
+
+### Accessibility & Inclusion
+- Consider accessibility best practices
+- Design for diverse users and abilities
+- Make sure the app feels welcoming and usable for everyone
+
+## Animation & Interactions
+
+### Micro-interactions
+- Heart animation for favorites
+- Tawseya voting sparkle effect
+- Add to cart bounce animation
+- Loading skeleton states
+- Success checkmarks
+
+### Page Transitions
+- Egyptian-themed loading animations
+- Slide transitions between screens
+- Scale animations for modals
+- Smooth scroll with parallax effects
+
+## Component Library Needed
+
+1. **Restaurant Cards** (multiple variants: carousel, list, compact)
+2. **Rating Components** (dual rating display, input)
+3. **Tawseya Elements** (vote buttons, winner badges, diamond icons)
+4. **Cultural Components** (Arabic text handling, Egyptian motifs)
+5. **Form Elements** (Egyptian address autocomplete, phone input)
+6. **Navigation Components** (bottom nav with badges)
+7. **Loading States** (restaurant card skeletons, progress indicators)
+
+## Mood & Visual Style
+
+**Overall Aesthetic:**
+- Clean, modern design with Egyptian warmth
+- Trust-building transparency
+- Community-focused social elements
+- Local food celebration
+- Accessible and inclusive
+
+**Key Visual Metaphors:**
+- Tawseya = Precious gems/discovery
+- Local Heroes = Championship trophies
+- Hidden Gems = Treasure hunting
+- Community = Egyptian marketplace
+
+## Project Vision & Design Freedom
+
+**Your task is to CREATE the complete UI design** for this mobile app. You have creative freedom to make beautiful, modern, and engaging designs while staying true to the core concept and user needs. Here are your design principles:
+
+### Design Freedom Guidelines
+- **Interpret the features creatively** - Don't just follow generic food app patterns
+- **Make it uniquely Egyptian** - Subtle cultural elements throughout, not just Arabic text
+- **Focus on joy and trust** - Every interaction should feel delightful and trustworthy
+- **Celebrate authenticity** - Make local heroes feel like champions
+- **Mobile-first creativity** - Think about how people actually use phones while eating, commuting, etc.
+- **Use your judgment** - If you see opportunities to make something better, more intuitive, or more beautiful, feel free to enhance it beyond what's explicitly described
+
+### Key Design Philosophy
+**"Authentic Egyptian Warmth Meets Modern Technology"**
+
+The app should feel like:
+- A trusted friend showing you the best kept secrets of Egyptian food
+- A celebration of local heroes and hidden gems
+- A community-driven platform, not just a transaction system
+- Something that makes you excited to explore new restaurants
+- A bridge between traditional Egyptian hospitality and modern convenience
+
+## Technical Requirements for Design
+- **Framework**: React Native or Flutter (design with both possibilities in mind)
+- **Platforms**: iOS 17+ and Android API 34+ (Android 14+)
+- **Supported Devices**: iPhone SE (375px) to iPhone Pro Max (428px width)
+- **Touch Targets**: 44x44 dp minimum, preferably 48x48 dp
+- **Safe Areas**: Respect system UI (notches, home indicators, status bars)
+- **Performance**: Design for smooth 60fps animations
+
+---
+
+## Deliverables Expected
+
+### Core Screens (High Fidelity)
+1. **Splash Screen** - Animated Otlob logo with Egyptian flair
+2. **Onboarding Flow** - 3 screens explaining the unique value prop
+3. **Home Screen** - The heart of discovery with carousels and search
+4. **Restaurant Detail** - Immersive menu browsing experience
+5. **Cart & Checkout** - Streamlined ordering flow
+6. **Tawseya Voting** - Magical voting experience
+7. **Profile & Settings** - Personal user hub
+
+### Component Library
+- Restaurant cards (3 variants)
+- Dual rating components
+- Tawseya voting elements
+- Authentication screens
+- Payment flows
+- Navigation patterns
+- Loading and error states
+
+### Design System
+- **Colors**: Complete palette with semantic usage
+- **Typography**: Mobile-optimized hierarchy
+- **Spacing**: 8-point grid system
+- **Animations**: Micro-interactions and transitions
+- **Icons**: Custom Egyptian-inspired iconography where appropriate
+
+---
+
+## Success Criteria for Your Design
+
+✅ **Emotional Impact**: Users should feel excited about trying new local restaurants  
+✅ **Trust Building**: Every element should feel authentic and community-driven  
+✅ **Cultural Resonance**: Feels distinctly Egyptian without being cliché  
+✅ **Joyful Discovery**: The process of finding restaurants should be fun and surprising  
+✅ **Premium Feel**: High-quality animations, spacing, and attention to detail  
+✅ **Accessible**: Works beautifully for all users, including those with disabilities  
+✅ **Performance Minded**: Animations and layouts optimized for mobile performance
+
+The end result should be a design that people love to use, that celebrates Egyptian cuisine and local heroes, and that feels like a unique alternative to generic international food apps.
+
+---
+
+**Remember: You're designing the future of food discovery in Egypt** ⚡🇪🇬

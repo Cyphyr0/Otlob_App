@@ -1,6 +1,7 @@
 /// Service for handling location permissions across the app
 library;
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart' as perm_handler;
 

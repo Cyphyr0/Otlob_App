@@ -1,6 +1,7 @@
 /// Delivery area validation result entity
 library;
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 
 import '../../../../features/home/domain/entities/restaurant.dart';
 import '../../../../features/location/domain/entities/location.dart';

@@ -23,7 +23,7 @@ class FirebaseDeliveryAreaRepository implements DeliveryAreaRepository {
       // Get restaurant details
       final restaurant = await _getRestaurantById(restaurantId);
       if (restaurant == null) {
-        throw const ValidationFailure(message: 'Restaurant not found');
+        throw const ValidationFailure('Restaurant not found');
       }
 
       // Calculate distance between user location and restaurant
@@ -38,7 +38,7 @@ class FirebaseDeliveryAreaRepository implements DeliveryAreaRepository {
       return distance <= restaurant.deliveryRadius;
     } catch (e) {
       if (e is ValidationFailure) rethrow;
-      throw ValidationFailure(message: 'Failed to check delivery area: $e');
+      throw ValidationFailure('Failed to check delivery area: $e');
     }
   }
 
@@ -47,7 +47,7 @@ class FirebaseDeliveryAreaRepository implements DeliveryAreaRepository {
     try {
       final restaurant = await _getRestaurantById(restaurantId);
       if (restaurant == null) {
-        throw const ValidationFailure(message: 'Restaurant not found');
+        throw const ValidationFailure('Restaurant not found');
       }
 
       // For now, return a single circular delivery area around the restaurant
@@ -65,7 +65,7 @@ class FirebaseDeliveryAreaRepository implements DeliveryAreaRepository {
         ),
       ];
     } catch (e) {
-      throw ValidationFailure(message: 'Failed to get delivery areas: $e');
+      throw ValidationFailure('Failed to get delivery areas: $e');
     }
   }
 
@@ -93,7 +93,7 @@ class FirebaseDeliveryAreaRepository implements DeliveryAreaRepository {
         return withinDeliveryArea && withinMaxDistance;
       }).toList();
     } catch (e) {
-      throw ValidationFailure(message: 'Failed to get available restaurants: $e');
+      throw ValidationFailure('Failed to get available restaurants: $e');
     }
   }
 
@@ -130,7 +130,7 @@ class FirebaseDeliveryAreaRepository implements DeliveryAreaRepository {
     try {
       final restaurant = await _getRestaurantById(restaurantId);
       if (restaurant == null) {
-        throw const ValidationFailure(message: 'Restaurant not found');
+        throw const ValidationFailure('Restaurant not found');
       }
 
       return _calculateDistance(
@@ -140,7 +140,7 @@ class FirebaseDeliveryAreaRepository implements DeliveryAreaRepository {
         restaurant.longitude,
       );
     } catch (e) {
-      throw ValidationFailure(message: 'Failed to calculate distance: $e');
+      throw ValidationFailure('Failed to calculate distance: $e');
     }
   }
 
@@ -162,7 +162,7 @@ class FirebaseDeliveryAreaRepository implements DeliveryAreaRepository {
 
       return baseFee + (distance * perKmFee);
     } catch (e) {
-      throw ValidationFailure(message: 'Failed to calculate delivery fee: $e');
+      throw ValidationFailure('Failed to calculate delivery fee: $e');
     }
   }
 
@@ -184,7 +184,7 @@ class FirebaseDeliveryAreaRepository implements DeliveryAreaRepository {
 
       return baseTime + (distance * perKmTime).round();
     } catch (e) {
-      throw ValidationFailure(message: 'Failed to calculate delivery time: $e');
+      throw ValidationFailure('Failed to calculate delivery time: $e');
     }
   }
 
@@ -218,7 +218,7 @@ class FirebaseDeliveryAreaRepository implements DeliveryAreaRepository {
           .map((doc) => Restaurant.fromJson(doc.data() as Map<String, dynamic>))
           .toList();
     } catch (e) {
-      throw ValidationFailure(message: 'Failed to fetch restaurants: $e');
+      throw ValidationFailure('Failed to fetch restaurants: $e');
     }
   }
 
@@ -229,7 +229,7 @@ class FirebaseDeliveryAreaRepository implements DeliveryAreaRepository {
       if (!doc.exists) return null;
       return Restaurant.fromJson(doc.data() as Map<String, dynamic>);
     } catch (e) {
-      throw ValidationFailure(message: 'Failed to fetch restaurant: $e');
+      throw ValidationFailure('Failed to fetch restaurant: $e');
     }
   }
 

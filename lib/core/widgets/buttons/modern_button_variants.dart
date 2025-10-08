@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../theme/app_animations.dart';
@@ -159,11 +160,12 @@ class ModernButton extends StatefulWidget {
   final IconData? trailingIcon;
   final VoidCallback? onPressed;
   final bool isLoading;
-  final bool isDisabled;
   final bool fullWidth;
   final bool elevation;
   final Color? customColor;
   final Color? borderColor;
+
+  bool get isDisabled => onPressed == null || isLoading;
 
   @override
   State<ModernButton> createState() => _ModernButtonState();

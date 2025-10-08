@@ -24,7 +24,7 @@ class SearchRestaurantsByLocation {
       );
       return restaurants;
     } catch (e) {
-      throw LocationFailure(message: e.toString());
+      throw LocationServiceFailure(e.toString());
     }
   }
 }

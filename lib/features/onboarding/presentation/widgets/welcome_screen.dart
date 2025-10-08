@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -82,7 +83,9 @@ class _WelcomeScreenState extends State<WelcomeScreen>
   }
 
   @override
-  Widget build(BuildContext context) => DecoratedBox(
+  Widget build(BuildContext context) => Container(
+      width: double.infinity,
+      height: double.infinity,
       decoration: const BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topCenter,
@@ -94,132 +97,133 @@ class _WelcomeScreenState extends State<WelcomeScreen>
           ],
         ),
       ),
-      child: SafeArea(
-        child: Padding(
-          padding: OtlobSpacingSystem.allLg,
-          child: SingleChildScrollView(
-            child: Container(
-              constraints: BoxConstraints(
-                minHeight: MediaQuery.of(context).size.height -
-                    (OtlobSpacingSystem.allLg.vertical * 2),
-              ),
-              child: Column(
-                children: [
-                  // Skip button
-                  Align(
-                    alignment: Alignment.topRight,
-                    child: ShadButton.outline(
-                      onPressed: () => Navigator.of(context).pop(),
-                      child: Text(
-                        'تخطي',
-                        style: OtlobTypographySystem.labelMd.copyWith(
-                          color: OtlobColorSystem.nileBlue,
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: SafeArea(
+          child: Padding(
+            padding: OtlobSpacingSystem.allLg,
+            child: AnimatedBuilder(
+              animation: Listenable.merge([
+                _logoController,
+                _contentController
+              ]),
+              builder: (context, child) => Opacity(
+                opacity: _contentFadeAnimation.value,
+                child: Column(
+                  children: [
+                    // Skip button
+                    Align(
+                      alignment: Alignment.topRight,
+                      child: ShadButton.outline(
+                        onPressed: () => Navigator.of(context).pop(),
+                        child: Text(
+                          'تخطي',
+                          style: OtlobTypographySystem.labelMd.copyWith(
+                            color: OtlobColorSystem.nileBlue,
+                          ),
                         ),
                       ),
                     ),
-                  ),
 
-                  SizedBox(height: OtlobSpacingSystem.lg),
+                    SizedBox(height: OtlobSpacingSystem.lg),
 
-                  // Main content
-                  Expanded(
-                    child: AnimatedBuilder(
-                      animation: Listenable.merge([
-                        _logoController,
-                        _contentController
-                      ]),
-                      builder: (context, child) => Opacity(
-                          opacity: _contentFadeAnimation.value,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              // Egyptian cultural elements
-                              _buildCulturalDecorations(),
+                    // Main content
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                          // Egyptian cultural elements
+                          _buildCulturalDecorations(),
 
-                              SizedBox(height: OtlobSpacingSystem.lg),
+                          SizedBox(height: OtlobSpacingSystem.lg),
 
-                              // Otlob Logo with animation
-                              ScaleTransition(
-                                scale: _logoScaleAnimation,
-                                child: Container(
-                                  padding: OtlobSpacingSystem.allXl,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    shape: BoxShape.circle,
-                                    boxShadow: OtlobComponentSystem.shadowLg,
+                          // Otlob Logo with animation
+                          ScaleTransition(
+                            scale: _logoScaleAnimation,
+                            child: Container(
+                              padding: OtlobSpacingSystem.allXl,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                shape: BoxShape.circle,
+                                boxShadow: OtlobComponentSystem.shadowLg,
+                              ),
+                              child: Text(
+                                'أطلب',
+                                style: OtlobTypographySystem.logoFont(
+                                  size: LogoSize.hero,
+                                  color: OtlobColorSystem.pharaohRed,
+                                ),
+                              ),
+                            ),
+                          ),
+
+                          SizedBox(height: OtlobSpacingSystem.lg),
+
+                          // Welcome text in Arabic and English
+                          Text(
+                            'مرحباً بك في أطلب',
+                            style: OtlobTypographySystem.displayMd.copyWith(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w700,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+
+                          SizedBox(height: OtlobSpacingSystem.md),
+
+                          Text(
+                            'Welcome to Otlob',
+                            style: OtlobTypographySystem.h3.copyWith(
+                              color: Colors.white.withOpacity(0.9),
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+
+                          SizedBox(height: OtlobSpacingSystem.md),
+
+                          Padding(
+                            padding: OtlobSpacingSystem.horizontalMd,
+                            child: Text(
+                              'اكتشف أفضل المطاعم في مصر مع توصيات مجتمع أطلب الفريدة',
+                              style: OtlobTypographySystem.bodyLgArabic.copyWith(
+                                color: Colors.white.withOpacity(0.8),
+                                height: 1.6,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+
+                          SizedBox(height: OtlobSpacingSystem.sm),
+
+                              Padding(
+                                padding: OtlobSpacingSystem.horizontalMd,
+                                child: Text(
+                                  'Discover Egypt\'s best restaurants with Otlob\'s unique community recommendations',
+                                  style: OtlobTypographySystem.bodyLg.copyWith(
+                                    color: Colors.white.withOpacity(0.8),
+                                    height: 1.6,
                                   ),
-                                  child: Text(
-                                    'أطلب',
-                                    style: OtlobTypographySystem.logoFont(
-                                      size: LogoSize.hero,
-                                      color: OtlobColorSystem.pharaohRed,
-                                    ),
-                                  ),
+                                  textAlign: TextAlign.center,
                                 ),
                               ),
-
-                              SizedBox(height: OtlobSpacingSystem.lg),
-
-                              // Welcome text in Arabic and English
-                              Text(
-                                'مرحباً بك في أطلب',
-                                style: OtlobTypographySystem.displayMd.copyWith(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-
-                              SizedBox(height: OtlobSpacingSystem.md),
-
-                              Text(
-                                'Welcome to Otlob',
-                                style: OtlobTypographySystem.h3.copyWith(
-                                  color: Colors.white.withOpacity(0.9),
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-
-                              SizedBox(height: OtlobSpacingSystem.md),
-
-                              Text(
-                                'اكتشف أفضل المطاعم في مصر مع توصيات مجتمع أطلب الفريدة',
-                                style: OtlobTypographySystem.bodyLgArabic.copyWith(
-                                  color: Colors.white.withOpacity(0.8),
-                                  height: 1.6,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-
-                              SizedBox(height: OtlobSpacingSystem.sm),
-
-                              Text(
-                                'Discover Egypt\'s best restaurants with Otlob\'s unique community recommendations',
-                                style: OtlobTypographySystem.bodyLg.copyWith(
-                                  color: Colors.white.withOpacity(0.8),
-                                  height: 1.6,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-
-                              SizedBox(height: OtlobSpacingSystem.xl),
                             ],
                           ),
                         ),
-                    ),
-                  ),
+                      ),
 
-                  // Next button
-                  FadeTransition(
-                    opacity: _contentFadeAnimation,
-                    child: PrimaryButton(
+                      SizedBox(height: OtlobSpacingSystem.lg),
+
+                    // Next button
+                    PrimaryButton(
                       text: 'ابدأ الرحلة',
                       onPressed: widget.onNext,
                     ),
-                  ),
 
-                  SizedBox(height: OtlobSpacingSystem.lg),
-                ],
+                    SizedBox(height: OtlobSpacingSystem.lg),
+                  ],
+                ),
               ),
             ),
           ),

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:flutter/foundation.dart';
 
 /// Egyptian address service for validation and autocomplete
 class EgyptianAddressService {

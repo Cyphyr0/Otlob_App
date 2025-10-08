@@ -3,6 +3,7 @@ library;
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 
 import '../../../../features/home/domain/entities/restaurant.dart';
 import 'location.dart';

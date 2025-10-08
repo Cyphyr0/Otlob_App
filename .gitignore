@@ -86,6 +86,7 @@ chroma_db/
 
 # Windows-specific files
 nuget.exe
+nul
 
 # Temporary documentation files (local development)
 QUICK_FIX_NOW.md

@@ -390,9 +390,9 @@ class FirebaseWalletRepository implements WalletRepository {
     try {
       final transactions = await getTransactions(walletId);
 
-      var totalTopUp = 0;
-      var totalPayments = 0;
-      var totalSubscriptions = 0;
+      double totalTopUp = 0;
+      double totalPayments = 0;
+      double totalSubscriptions = 0;
 
       for (final transaction in transactions) {
         switch (transaction.type) {

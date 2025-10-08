@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 
-import '../../../utils/localization_helper.dart';
+import '../../utils/localization_helper.dart';
 import '../../services/egyptian_address_service.dart';
 
 /// Egyptian address autocomplete widget
@@ -132,9 +133,11 @@ class _EgyptianAddressAutocompleteState extends State<EgyptianAddressAutocomplet
           ),
           SizedBox(height: 8.h),
         ],
-        TypeAheadFormField<AddressSearchResult>(
-          textFieldConfiguration: TextFieldConfiguration(
-            controller: _searchController,
+        TypeAheadField<AddressSearchResult>(
+          controller: _searchController,
+          builder: (context, controller, focusNode) => TextField(
+            controller: controller,
+            focusNode: focusNode,
             enabled: widget.enabled,
             decoration: InputDecoration(
               hintText: widget.hint,
@@ -211,7 +214,7 @@ class _EgyptianAddressAutocompleteState extends State<EgyptianAddressAutocomplet
                 ),
               ),
             ),
-          onSuggestionSelected: (AddressSearchResult suggestion) {
+          onSelected: (AddressSearchResult suggestion) {
             setState(() {
               if (suggestion.type == AddressType.governorate) {
                 _selectedGovernorate = suggestion.governorate;
@@ -224,7 +227,7 @@ class _EgyptianAddressAutocompleteState extends State<EgyptianAddressAutocomplet
               }
             });
           },
-          noItemsFoundBuilder: (context) => Padding(
+          emptyBuilder: (context) => Padding(
             padding: EdgeInsets.all(16.w),
             child: Text(
               'لا توجد نتائج',

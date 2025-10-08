@@ -4,11 +4,11 @@ class ProfileImagePicker {
   final ImagePicker _picker = ImagePicker();
 
   Future<String?> pickImage() async {
-    image = await _picker.pickImage(
+    final image = await _picker.pickImage(
       source: ImageSource.gallery,
       imageQuality: 70,
     );
-    
+
     return image?.path;
   }
 }

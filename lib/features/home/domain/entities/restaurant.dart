@@ -1,6 +1,5 @@
 
 class Restaurant {
-
   const Restaurant({
     required this.id,
     required this.name,

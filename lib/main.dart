@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -83,9 +84,9 @@ void _runMainApp() {
       path: 'assets/translations',
       fallbackLocale: const Locale('en', 'US'),
       startLocale: const Locale(
-        'ar',
-        'EG',
-      ), // Default to Arabic for Egyptian market
+        'en',
+        'US',
+      ), // Default to English
       useOnlyLangCode: true,
       child: const ProviderScope(child: MyApp()),
     ),
@@ -240,10 +241,6 @@ class MyApp extends ConsumerWidget {
         GoRoute(
           path: '/tawseya',
           builder: (context, state) => const TawseyaScreen(),
-        ),
-        GoRoute(
-          path: '/wallet',
-          builder: (context, state) => const WalletScreen(),
         ),
         GoRoute(
           path: '/wallet',

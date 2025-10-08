@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 
 /// Otlob App Color System
 ///
@@ -85,10 +86,10 @@ class AppColors {
   static const Color white = Color(0xFFFFFFFF);
 
   /// Secondary text (70% opacity)
-  static Color get textSecondary => primaryBlack.withOpacity(0.7);
+  static Color get textSecondary => primaryBlack.withValues(alpha: 0.7);
 
   /// Tertiary text (50% opacity)
-  static Color get textTertiary => primaryBlack.withOpacity(0.5);
+  static Color get textTertiary => primaryBlack.withValues(alpha: 0.5);
 
   // ============================================================================
   // ACCENT COLORS
@@ -150,13 +151,13 @@ class AppColors {
   // ============================================================================
 
   /// Dark overlay for modals and bottom sheets (60% opacity)
-  static Color get darkOverlay => black.withAlpha(153);
+  static Color get darkOverlay => black.withValues(alpha: 0.6);
 
   /// Light overlay for disabled states (40% opacity)
-  static Color get lightOverlay => white.withAlpha(102);
+  static Color get lightOverlay => white.withValues(alpha: 0.4);
 
   /// Subtle overlay for hover states (8% opacity)
-  static Color get hoverOverlay => primaryBlack.withAlpha(20);
+  static Color get hoverOverlay => primaryBlack.withValues(alpha: 0.08);
 
   // ============================================================================
   // CUISINE CATEGORY COLORS

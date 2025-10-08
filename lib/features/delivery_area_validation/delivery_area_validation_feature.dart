@@ -9,9 +9,10 @@ export 'domain/entities/delivery_area_status.dart';
 export 'domain/entities/delivery_area_validation.dart';
 export 'domain/repositories/delivery_area_repository.dart';
 export 'domain/services/delivery_area_validation_service.dart';
-export 'domain/usecases/calculate_delivery_fee.dart';
-export 'domain/usecases/get_delivery_areas_for_restaurant.dart';
 export 'domain/usecases/validate_user_location.dart';
-export 'presentation/widgets/delivery_area_alert_dialog.dart';
-export 'presentation/widgets/delivery_area_map_widget.dart';
+//// TODO: Implement missing use cases and widgets
+// export 'domain/usecases/calculate_delivery_fee.dart';
+// export 'domain/usecases/get_delivery_areas_for_restaurant.dart';
+// export 'presentation/widgets/delivery_area_alert_dialog.dart';
+// export 'presentation/widgets/delivery_area_map_widget.dart';
 export 'presentation/widgets/delivery_area_status_widget.dart';

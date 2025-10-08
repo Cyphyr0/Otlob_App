@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/services/service_locator.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_typography.dart';
 import '../../../../core/widgets/buttons/primary_button.dart';
 import '../../../../core/widgets/buttons/secondary_button.dart';
+import '../../../auth/presentation/providers/auth_provider.dart';
 import '../../../favorites/domain/entities/favorite.dart';
 import '../../../home/domain/entities/restaurant.dart';
 import '../../../tawseya/domain/entities/tawseya_item.dart';
@@ -17,7 +20,8 @@ import '../widgets/animated_dice_roll.dart';
 
 class SurpriseMeScreen extends ConsumerStatefulWidget {
   const SurpriseMeScreen({
-    required this.restaurants, super.key,
+    required this.restaurants,
+    super.key,
     this.userPreferences,
     this.userFavorites = const [],
     this.tawseyaItems = const [],
@@ -56,20 +60,31 @@ class _SurpriseMeScreenState extends ConsumerState<SurpriseMeScreen> {
     setState(() => _isRolling = true);
 
     try {
-      final surpriseMeService = SurpriseMeService();
+      // Get current user ID from auth provider
+      final authState = ref.read(authProvider);
+      final currentUserId = authState.hasValue && authState.value != null
+          ? authState.value!.id
+          : 'guest_user';
+
+      // Use dependency injection
+      final surpriseMeService = getIt<SurpriseMeService>();
       final result = await surpriseMeService.generateSurprise(
         restaurants: widget.restaurants,
         userPreferences: widget.userPreferences,
         userFavorites: widget.userFavorites,
         tawseyaItems: widget.tawseyaItems,
-        currentUserId: 'current_user', // TODO: Get from auth provider
+        currentUserId: currentUserId,
       );
 
       setState(() => _result = result);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: $e')),
+        SnackBar(
+          content: Text('Failed to generate surprise: $e'),
+          backgroundColor: Colors.red,
+        ),
       );
+    } finally {
       setState(() => _isRolling = false);
     }
   }
@@ -114,11 +129,16 @@ class _SurpriseMeScreenState extends ConsumerState<SurpriseMeScreen> {
             end: Alignment.bottomCenter,
           ),
         ),
-        child: Padding(
-          padding: EdgeInsets.all(AppSpacing.screenPadding),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.all(AppSpacing.screenPadding),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                minHeight: MediaQuery.of(context).size.height - kToolbarHeight - MediaQuery.of(context).padding.top,
+              ),
+              child: Column(
+                mainAxisAlignment: _result == null ? MainAxisAlignment.center : MainAxisAlignment.start,
+                children: [
               // Header text
               Text(
                 'Let\'s find you the perfect restaurant!',
@@ -210,7 +230,9 @@ class _SurpriseMeScreenState extends ConsumerState<SurpriseMeScreen> {
                     ],
                   ),
                 ),
-            ],
+                ],
+              ),
+            ),
           ),
         ),
       ),

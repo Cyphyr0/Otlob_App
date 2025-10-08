@@ -1,3 +1,20 @@
+/// Cart State Management Provider
+///
+/// This provider manages the shopping cart state across the application.
+/// It handles both authenticated (Firebase-backed) and guest (local storage) carts.
+///
+/// ARCHITECTURAL ISSUES (TO BE FIXED):
+/// ❌ Mixed concerns: Business logic, persistence, auth checking all in one class
+/// ❌ No error handling: Operations fail silently
+/// ❌ Not testable: 200+ lines of tightly coupled code
+/// ❌ State management anti-patterns: Manual state triggering
+/// ❌ No separation: UI logic mixed with data operations
+///
+/// RECOMMENDED FIX: Extract to proper Clean Architecture layers:
+/// - Use cases for business logic (validation, calculations)
+/// - Repository abstraction for data persistence
+/// - Thin provider focused only on state management
+/// - Proper error handling with Result types
 import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';

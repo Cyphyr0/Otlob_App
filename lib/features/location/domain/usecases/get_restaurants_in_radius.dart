@@ -1,5 +1,6 @@
 /// Use case for getting restaurants within a specific radius from a location
 library;
+
 import '../../../../core/errors/failures.dart';
 import '../../../home/domain/entities/restaurant.dart';
 import '../../data/repositories/map_repository.dart';
@@ -29,7 +30,7 @@ class GetRestaurantsInRadius {
       );
       return restaurants;
     } catch (e) {
-      throw LocationFailure(message: e.toString());
+      throw LocationFailure(e.toString());
     }
   }
 }
@@ -58,7 +59,7 @@ class GetRestaurantsInBounds {
       );
       return restaurants;
     } catch (e) {
-      throw LocationFailure(message: e.toString());
+      throw LocationFailure(e.toString());
     }
   }
 }
@@ -83,7 +84,7 @@ class SearchRestaurantsByLocation {
       );
       return restaurants;
     } catch (e) {
-      throw LocationFailure(message: e.toString());
+      throw LocationFailure(e.toString());
     }
   }
 }
@@ -106,7 +107,7 @@ class GetNearbyRestaurantsWithDelivery {
       );
       return restaurants;
     } catch (e) {
-      throw LocationFailure(message: e.toString());
+      throw LocationFailure(e.toString());
     }
   }
 }
@@ -129,7 +130,7 @@ class CheckLocationInDeliveryArea {
       );
       return isInArea;
     } catch (e) {
-      throw LocationFailure(message: e.toString());
+      throw LocationFailure(e.toString());
     }
   }
 }
@@ -143,17 +144,19 @@ class GetRestaurantDeliveryAreas {
   /// Execute the use case
   Future<List<DeliveryArea>> call(String restaurantId) async {
     try {
-      final deliveryAreas = await _repository.getRestaurantDeliveryAreas(restaurantId);
+      final deliveryAreas = await _repository.getRestaurantDeliveryAreas(
+        restaurantId,
+      );
       return deliveryAreas;
     } catch (e) {
-      throw LocationFailure(message: e.toString());
+      throw LocationFailure(e.toString());
     }
   }
 }
 
 /// Custom failure for location-related errors
 class LocationFailure extends Failure {
-  const LocationFailure({required super.message});
+  const LocationFailure(super.message, [super.code]);
 
   @override
   List<Object?> get props => [message];

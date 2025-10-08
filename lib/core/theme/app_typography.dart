@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'app_colors.dart';
@@ -191,125 +192,65 @@ class AppTypography {
   // ARABIC TYPOGRAPHY - Cairo Font (RTL Support)
   // ============================================================================
 
+  /// Get Arabic version of any English text style
+  ///
+  /// Usage:
+  /// ```dart
+  /// final arabicStyle = AppTypography.getArabic(displayLarge);
+  /// Text('مرحباً', style: arabicStyle);
+  /// ```
+  static TextStyle getArabic(TextStyle englishStyle) {
+    return englishStyle.copyWith(
+      fontFamily: 'Cairo',
+      height: englishStyle.height != null ? englishStyle.height! + 0.1 : 1.6,
+      letterSpacing: 0, // No letter spacing for Arabic
+    );
+  }
+
   /// Arabic Display Large - 32sp, Bold (RTL)
-  static TextStyle displayLargeArabic = GoogleFonts.cairo(
-    fontSize: 32.sp,
-    fontWeight: FontWeight.w700,
-    height: 1.3,
-    color: AppColors.primaryDark,
-  );
+  static TextStyle get displayLargeArabic => getArabic(displayLarge);
 
   /// Arabic Display Medium - 28sp, Bold (RTL)
-  static TextStyle displayMediumArabic = GoogleFonts.cairo(
-    fontSize: 28.sp,
-    fontWeight: FontWeight.w700,
-    height: 1.3,
-    color: AppColors.primaryDark,
-  );
+  static TextStyle get displayMediumArabic => getArabic(displayMedium);
 
   /// Arabic Display Small - 24sp, SemiBold (RTL)
-  static TextStyle displaySmallArabic = GoogleFonts.cairo(
-    fontSize: 24.sp,
-    fontWeight: FontWeight.w600,
-    height: 1.3,
-    color: AppColors.primaryDark,
-  );
+  static TextStyle get displaySmallArabic => getArabic(displaySmall);
 
   /// Arabic Headline Large - 24sp, SemiBold (RTL)
-  static TextStyle headlineLargeArabic = GoogleFonts.cairo(
-    fontSize: 24.sp,
-    fontWeight: FontWeight.w600,
-    height: 1.4,
-    color: AppColors.primaryDark,
-  );
+  static TextStyle get headlineLargeArabic => getArabic(headlineLarge);
 
   /// Arabic Headline Medium - 20sp, SemiBold (RTL)
-  static TextStyle headlineMediumArabic = GoogleFonts.cairo(
-    fontSize: 20.sp,
-    fontWeight: FontWeight.w600,
-    height: 1.4,
-    color: AppColors.primaryDark,
-  );
+  static TextStyle get headlineMediumArabic => getArabic(headlineMedium);
 
   /// Arabic Headline Small - 18sp, Medium (RTL)
-  static TextStyle headlineSmallArabic = GoogleFonts.cairo(
-    fontSize: 18.sp,
-    fontWeight: FontWeight.w500,
-    height: 1.4,
-    color: AppColors.primaryDark,
-  );
+  static TextStyle get headlineSmallArabic => getArabic(headlineSmall);
 
   /// Arabic Title Large - 18sp, Medium (RTL)
-  static TextStyle titleLargeArabic = GoogleFonts.cairo(
-    fontSize: 18.sp,
-    fontWeight: FontWeight.w500,
-    height: 1.5,
-    color: AppColors.darkGray,
-  );
+  static TextStyle get titleLargeArabic => getArabic(titleLarge);
 
   /// Arabic Title Medium - 16sp, Medium (RTL)
-  static TextStyle titleMediumArabic = GoogleFonts.cairo(
-    fontSize: 16.sp,
-    fontWeight: FontWeight.w500,
-    height: 1.5,
-    color: AppColors.darkGray,
-  );
+  static TextStyle get titleMediumArabic => getArabic(titleMedium);
 
   /// Arabic Title Small - 14sp, Medium (RTL)
-  static TextStyle titleSmallArabic = GoogleFonts.cairo(
-    fontSize: 14.sp,
-    fontWeight: FontWeight.w500,
-    height: 1.5,
-    color: AppColors.darkGray,
-  );
+  static TextStyle get titleSmallArabic => getArabic(titleSmall);
 
   /// Arabic Body Large - 16sp, Regular (RTL)
-  static TextStyle bodyLargeArabic = GoogleFonts.cairo(
-    fontSize: 16.sp,
-    fontWeight: FontWeight.w400,
-    height: 1.6,
-    color: AppColors.darkGray,
-  );
+  static TextStyle get bodyLargeArabic => getArabic(bodyLarge);
 
   /// Arabic Body Medium - 14sp, Regular (RTL)
-  static TextStyle bodyMediumArabic = GoogleFonts.cairo(
-    fontSize: 14.sp,
-    fontWeight: FontWeight.w400,
-    height: 1.6,
-    color: AppColors.gray,
-  );
+  static TextStyle get bodyMediumArabic => getArabic(bodyMedium);
 
   /// Arabic Body Small - 12sp, Regular (RTL)
-  static TextStyle bodySmallArabic = GoogleFonts.cairo(
-    fontSize: 12.sp,
-    fontWeight: FontWeight.w400,
-    height: 1.6,
-    color: AppColors.gray,
-  );
+  static TextStyle get bodySmallArabic => getArabic(bodySmall);
 
   /// Arabic Label Large - 14sp, Medium (RTL)
-  static TextStyle labelLargeArabic = GoogleFonts.cairo(
-    fontSize: 14.sp,
-    fontWeight: FontWeight.w500,
-    height: 1.4,
-    color: AppColors.white,
-  );
+  static TextStyle get labelLargeArabic => getArabic(labelLarge);
 
   /// Arabic Label Medium - 12sp, Medium (RTL)
-  static TextStyle labelMediumArabic = GoogleFonts.cairo(
-    fontSize: 12.sp,
-    fontWeight: FontWeight.w500,
-    height: 1.4,
-    color: AppColors.white,
-  );
+  static TextStyle get labelMediumArabic => getArabic(labelMedium);
 
   /// Arabic Label Small - 11sp, Medium (RTL)
-  static TextStyle labelSmallArabic = GoogleFonts.cairo(
-    fontSize: 11.sp,
-    fontWeight: FontWeight.w500,
-    height: 1.4,
-    color: AppColors.gray,
-  );
+  static TextStyle get labelSmallArabic => getArabic(labelSmall);
 
   // ============================================================================
   // RTL-AWARE TEXT THEME - Dynamic font selection based on locale

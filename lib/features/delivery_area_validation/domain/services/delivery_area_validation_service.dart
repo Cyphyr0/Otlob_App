@@ -123,7 +123,7 @@ class DeliveryAreaValidationService {
             .toList();
       }
 
-      throw const ValidationFailure(message: 'Failed to get available restaurants');
+      throw const ValidationFailure('Failed to get available restaurants');
     }
   }
 
